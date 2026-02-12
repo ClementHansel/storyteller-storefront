@@ -81,5 +81,5 @@ export const chapterSlugMap = Object.fromEntries(
 );
 
 export const storeName = 'Bambu Silver by Estela';
-export const storeTagline = 'Silver, Pearls. and Stones';
+export const storeTagline = 'Silver 925, Pearls, Stones';
 export const storeCurrency = 'USD';
