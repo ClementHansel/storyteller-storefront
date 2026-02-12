@@ -80,6 +80,6 @@ export const chapterSlugMap = Object.fromEntries(
   storyChapters.map((ch) => [ch.slug, ch.id])
 );
 
-export const storeName = 'Argentum & Craft';
-export const storeTagline = 'Silver Jewelry & Handcraft — Story by Story';
+export const storeName = 'Bambu Silver by Estela';
+export const storeTagline = 'Silver, Pearls. and Stones';
 export const storeCurrency = 'USD';
