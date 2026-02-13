@@ -16,7 +16,7 @@ const Index = () => {
   return (
     <Layout>
       {/* SEO */}
-      <title>{storeName} — Silver Jewelry & Handcraft</title>
+      <title>{storeName} — Silver 925 Jewelry, Pearls, Stones</title>
       <meta name="description" content={storeTagline} />
 
       {/* Hero */}
