@@ -56,24 +56,27 @@ const SearchPage = () => {
 
   return (
     <Layout>
-      <title>{query ? `Search: ${query}` : 'Browse All'} — Argentum & Craft</title>
+      <title>{query ? `Search: ${query}` : 'Shop All'} — Bambu Silver by Estela</title>
 
-      <div className="container py-10 md:py-16">
-        <div className="mb-8">
-          <h1 className="font-serif text-3xl font-bold text-foreground">
-            {query ? `Results for "${query}"` : 'Browse All Pieces'}
+      <div className="container py-12 md:py-20">
+        <div className="mb-10">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent mb-3">
+            {query ? 'Search Results' : 'All Pieces'}
+          </p>
+          <h1 className="font-serif text-4xl font-light text-foreground">
+            {query ? `"${query}"` : 'Shop'}
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">{searchResults.length} piece{searchResults.length !== 1 ? 's' : ''}</p>
+          <p className="mt-2 text-sm text-muted-foreground font-light">{searchResults.length} piece{searchResults.length !== 1 ? 's' : ''}</p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-[240px_1fr]">
+        <div className="grid gap-10 md:grid-cols-[220px_1fr]">
           <SmartFilter filters={filters} onChange={setFilters} />
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {searchResults.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
             {searchResults.length === 0 && (
-              <p className="col-span-full text-center text-muted-foreground py-12">No products match your criteria.</p>
+              <p className="col-span-full text-center text-muted-foreground font-light py-16">No products match your criteria.</p>
             )}
           </div>
         </div>

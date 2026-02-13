@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        serif: ["'Playfair Display'", "serif"],
-        sans: ["'Source Sans 3'", "sans-serif"],
+        serif: ["'Cormorant Garamond'", "serif"],
+        sans: ["'Outfit'", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -66,6 +66,7 @@ export default {
         "deep-brown": "hsl(var(--deep-brown))",
         "muted-gold": "hsl(var(--muted-gold))",
         "warm-sand": "hsl(var(--warm-sand))",
+        "rose-gold": "hsl(var(--rose-gold))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -85,11 +86,21 @@ export default {
           from: { opacity: "0", transform: "translateY(10px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
+        "fade-in-up": {
+          from: { opacity: "0", transform: "translateY(20px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        shimmer: {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.5s ease-out forwards",
+        "fade-in": "fade-in 0.6s ease-out forwards",
+        "fade-in-up": "fade-in-up 0.8s ease-out forwards",
+        shimmer: "shimmer 2s linear infinite",
       },
     },
   },

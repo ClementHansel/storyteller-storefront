@@ -10,32 +10,36 @@ import { ArrowRight } from 'lucide-react';
 const Index = () => {
   const { data: products = [] } = useProducts();
   const { data: chapters = [] } = useChapters();
-  const featured = products.slice(0, 4);
+  const featured = products.slice(0, 8);
   const featuredChapters = chapters.slice(0, 3);
 
   return (
     <Layout>
-      {/* SEO */}
       <title>{storeName} — Silver 925 Jewelry, Pearls, Stones</title>
       <meta name="description" content={storeTagline} />
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-card">
-        <div className="container py-20 md:py-32">
-          <div className="max-w-2xl space-y-6 animate-fade-in">
-            <p className="text-sm font-medium uppercase tracking-widest text-muted-gold">Handcrafted Silver</p>
-            <h1 className="font-serif text-4xl font-bold leading-tight text-foreground md:text-6xl">
-              Every Piece Tells<br />a Story
+      <section className="relative overflow-hidden min-h-[70vh] flex items-center bg-card">
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: 'radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)',
+          backgroundSize: '40px 40px',
+        }} />
+        <div className="container relative py-24 md:py-32">
+          <div className="max-w-2xl space-y-8 animate-fade-in-up">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent">Handcrafted Silver · Since 2024</p>
+            <h1 className="font-serif text-5xl font-light leading-[1.1] text-foreground md:text-7xl">
+              Every Piece<br />
+              <span className="italic">Tells a Story</span>
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed max-w-lg">
+            <p className="text-base text-muted-foreground leading-relaxed max-w-md font-light">
               {storeTagline}. Discover collections curated around the narratives that inspire our craft.
             </p>
-            <div className="flex gap-3">
-              <Button asChild size="lg">
-                <Link to="/chapters">Explore Chapters <ArrowRight className="ml-1 h-4 w-4" /></Link>
+            <div className="flex gap-4 pt-2">
+              <Button asChild size="lg" className="rounded-none px-8 tracking-wider text-xs uppercase">
+                <Link to="/chapters">Explore Collections <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
-              <Button asChild variant="outline" size="lg">
-                <Link to="/search">Browse All</Link>
+              <Button asChild variant="outline" size="lg" className="rounded-none px-8 tracking-wider text-xs uppercase">
+                <Link to="/search">Shop All</Link>
               </Button>
             </div>
           </div>
@@ -43,39 +47,65 @@ const Index = () => {
       </section>
 
       {/* Featured Chapters */}
-      <section className="container py-16 md:py-24">
-        <div className="mb-10 flex items-end justify-between">
+      <section className="container py-20 md:py-28">
+        <div className="mb-12 flex items-end justify-between">
           <div>
-            <p className="text-sm font-medium uppercase tracking-widest text-muted-gold mb-2">Our Stories</p>
-            <h2 className="font-serif text-3xl font-bold text-foreground">Story Chapters</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent mb-3">Our Stories</p>
+            <h2 className="font-serif text-4xl font-light text-foreground">Collections</h2>
           </div>
-          <Link to="/chapters" className="text-sm font-medium text-primary hover:underline hidden md:block">
-            View all chapters →
+          <Link to="/chapters" className="text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground transition-colors hidden md:block">
+            View All →
           </Link>
         </div>
-        <div className="grid gap-6 md:grid-cols-3">
-          {featuredChapters.map((ch) => (
-            <Link key={ch.id} to={`/chapters/${ch.slug}`} className="group">
-              <ProductImage src={ch.coverImage} alt={ch.name} aspectRatio="landscape" className="rounded-sm" />
-              <h3 className="mt-3 font-serif text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
-                {ch.name}
-              </h3>
-              <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{ch.shortDescription}</p>
+        <div className="grid gap-8 md:grid-cols-3">
+          {featuredChapters.map((ch, i) => (
+            <Link
+              key={ch.id}
+              to={`/chapters/${ch.slug}`}
+              className="group animate-fade-in"
+              style={{ animationDelay: `${i * 150}ms` }}
+            >
+              <div className="overflow-hidden">
+                <ProductImage
+                  src={ch.coverImage}
+                  alt={ch.name}
+                  aspectRatio="portrait"
+                  className="transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
+              <div className="mt-5">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-accent mb-1">Chapter {ch.narrativeOrder}</p>
+                <h3 className="font-serif text-2xl font-light text-foreground group-hover:text-accent transition-colors">
+                  {ch.name}
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground line-clamp-2 font-light">{ch.shortDescription}</p>
+              </div>
             </Link>
           ))}
         </div>
       </section>
 
+      {/* Divider quote */}
+      <section className="border-y border-border/50 py-16 md:py-20">
+        <div className="container text-center max-w-2xl">
+          <blockquote className="font-serif text-2xl md:text-3xl font-light italic text-foreground/80 leading-relaxed">
+            "Jewelry is a way of keeping memories close — each piece a chapter in the story of your life."
+          </blockquote>
+        </div>
+      </section>
+
       {/* Featured Products */}
-      <section className="bg-card py-16 md:py-24">
+      <section className="py-20 md:py-28">
         <div className="container">
-          <div className="mb-10">
-            <p className="text-sm font-medium uppercase tracking-widest text-muted-gold mb-2">Curated Selection</p>
-            <h2 className="font-serif text-3xl font-bold text-foreground">Featured Pieces</h2>
+          <div className="mb-12">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent mb-3">Curated Selection</p>
+            <h2 className="font-serif text-4xl font-light text-foreground">Featured Pieces</h2>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {featured.map((p) => (
-              <ProductCard key={p.id} product={p} />
+          <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+            {featured.map((p, i) => (
+              <div key={p.id} className="animate-fade-in" style={{ animationDelay: `${i * 100}ms` }}>
+                <ProductCard product={p} />
+              </div>
             ))}
           </div>
         </div>

@@ -8,19 +8,19 @@ const ChaptersPage = () => {
 
   return (
     <Layout>
-      <title>Story Chapters — Argentum & Craft</title>
+      <title>Collections — Bambu Silver by Estela</title>
       <meta name="description" content="Browse our curated Story Chapters — collections of silver jewelry and handcraft pieces, each with a unique narrative." />
 
-      <section className="container py-12 md:py-20">
-        <div className="mb-10">
-          <p className="text-sm font-medium uppercase tracking-widest text-muted-gold mb-2">Collections</p>
-          <h1 className="font-serif text-4xl font-bold text-foreground">Story Chapters</h1>
-          <p className="mt-3 text-lg text-muted-foreground max-w-xl">
-            Each chapter is a curated collection with its own story — browse them all below.
+      <section className="container py-16 md:py-24">
+        <div className="mb-14 max-w-xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent mb-3">Collections</p>
+          <h1 className="font-serif text-5xl font-light text-foreground">Our Stories</h1>
+          <p className="mt-4 text-sm text-muted-foreground font-light leading-relaxed">
+            Each collection is a chapter in our story — curated pieces bound by narrative, material, and spirit.
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-10 md:grid-cols-2">
           {chapters.map((ch, i) => (
             <Link
               key={ch.id}
@@ -28,13 +28,15 @@ const ChaptersPage = () => {
               className="group animate-fade-in"
               style={{ animationDelay: `${i * 100}ms` }}
             >
-              <ProductImage src={ch.coverImage} alt={ch.name} aspectRatio="landscape" className="rounded-sm" />
-              <div className="mt-4">
-                <span className="text-xs font-medium uppercase tracking-widest text-muted-gold">Chapter {ch.narrativeOrder}</span>
-                <h2 className="mt-1 font-serif text-2xl font-semibold text-foreground group-hover:text-primary transition-colors">
+              <div className="overflow-hidden">
+                <ProductImage src={ch.coverImage} alt={ch.name} aspectRatio="landscape" className="transition-transform duration-700 group-hover:scale-105" />
+              </div>
+              <div className="mt-5">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-accent">Chapter {ch.narrativeOrder}</p>
+                <h2 className="mt-1 font-serif text-3xl font-light text-foreground group-hover:text-accent transition-colors">
                   {ch.name}
                 </h2>
-                <p className="mt-2 text-sm text-muted-foreground">{ch.shortDescription}</p>
+                <p className="mt-2 text-sm text-muted-foreground font-light">{ch.shortDescription}</p>
               </div>
             </Link>
           ))}
