@@ -1,8 +1,20 @@
-// Zenvix API Mock Layer
-// Replace the implementations in this file with real Zenvix API calls when ready.
-// The interface stays the same — only the fetch logic changes.
+// ============================================================
+// Zenvix API Service Layer
+// ============================================================
+// When a gateway is configured, this file delegates to the
+// real Zenvix client. Otherwise it returns mock data.
+// Swap is automatic — no code changes needed in consumers.
+// ============================================================
 
 import { Product } from '@/types';
+import { isZenvixConfigured, getZenvixConfig } from '@/api/zenvix-config';
+import {
+  fetchCatalogProducts,
+  validateCheckout,
+  createZenvixCheckoutSession,
+} from '@/api/zenvix-client';
+
+// ---- Mock Data (used when gateway is not configured) ----
 
 const MOCK_PRODUCTS: Product[] = [
   // === The Craft (handmade, artisan) ===
@@ -41,30 +53,48 @@ const MOCK_PRODUCTS: Product[] = [
   { id: 'p-23', title: 'Solstice Ring — Winter 2025', slug: 'solstice-ring-winter', description: 'A wide band with a garnet cabochon set flush into the surface. Inspired by the warmth we seek in winter\'s darkest days. Edition of 20.', price: 225, currency: 'USD', images: ['https://images.unsplash.com/photo-1603561596112-0a132b757442?w=600&q=80'], tags: ['limited', 'seasonal', 'ring', 'gemstone'], material: 'Sterling Silver & Garnet', style: 'Statement', inStock: true, stockQuantity: 3, createdAt: '2025-11-15', updatedAt: '2025-12-01' },
 ];
 
-// Simulated network delay
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 // ============================================================
-// Zenvix API Interface — replace these function bodies with
-// real fetch() calls to your Zenvix Retail Module endpoints.
+// Unified API — auto-switches between mock and live Zenvix
 // ============================================================
 
 export async function fetchAllProducts(): Promise<Product[]> {
+  if (isZenvixConfigured()) {
+    const config = getZenvixConfig();
+    const res = await fetchCatalogProducts(config, { pageSize: 200 });
+    return res.products.map(mapZenvixProduct);
+  }
   await delay(300);
   return MOCK_PRODUCTS;
 }
 
 export async function fetchProductById(id: string): Promise<Product | undefined> {
+  if (isZenvixConfigured()) {
+    const config = getZenvixConfig();
+    const res = await fetchCatalogProducts(config);
+    const found = res.products.find((p) => p.id === id);
+    return found ? mapZenvixProduct(found) : undefined;
+  }
   await delay(200);
   return MOCK_PRODUCTS.find((p) => p.id === id);
 }
 
 export async function fetchProductsByIds(ids: string[]): Promise<Product[]> {
+  if (isZenvixConfigured()) {
+    const all = await fetchAllProducts();
+    return all.filter((p) => ids.includes(p.id));
+  }
   await delay(250);
   return MOCK_PRODUCTS.filter((p) => ids.includes(p.id));
 }
 
 export async function fetchProductsByTags(tags: string[]): Promise<Product[]> {
+  if (isZenvixConfigured()) {
+    const config = getZenvixConfig();
+    const res = await fetchCatalogProducts(config, { tags });
+    return res.products.map(mapZenvixProduct);
+  }
   await delay(250);
   return MOCK_PRODUCTS.filter((p) => p.tags.some((t) => tags.includes(t)));
 }
@@ -73,6 +103,17 @@ export async function fetchProductsByTags(tags: string[]): Promise<Product[]> {
 export async function verifyCartPrices(
   items: { productId: string; expectedPrice: number }[]
 ): Promise<{ valid: boolean; updates: { productId: string; currentPrice: number }[] }> {
+  if (isZenvixConfigured()) {
+    const config = getZenvixConfig();
+    const res = await validateCheckout(
+      config,
+      items.map((i) => ({ productId: i.productId, quantity: 1, expectedPrice: i.expectedPrice }))
+    );
+    return {
+      valid: res.valid,
+      updates: res.updates ?? [],
+    };
+  }
   await delay(300);
   const updates: { productId: string; currentPrice: number }[] = [];
   for (const item of items) {
@@ -84,14 +125,40 @@ export async function verifyCartPrices(
   return { valid: updates.length === 0, updates };
 }
 
-/** Simulate Zenvix checkout redirect URL generation */
+/** Create checkout session — returns redirect URL */
 export async function createCheckoutSession(
   items: { productId: string; quantity: number }[]
 ): Promise<{ checkoutUrl: string }> {
+  if (isZenvixConfigured()) {
+    const config = getZenvixConfig();
+    const res = await createZenvixCheckoutSession(config, items);
+    return { checkoutUrl: res.checkoutUrl };
+  }
   await delay(400);
-  // In production, this would return a real Zenvix hosted checkout URL
   const itemParams = items.map((i) => `${i.productId}x${i.quantity}`).join(',');
   return {
     checkoutUrl: `https://checkout.zenvix.com/session?items=${itemParams}`,
+  };
+}
+
+// ---- Mapper ----
+
+function mapZenvixProduct(zp: import('@/types/zenvix').ZenvixProduct): Product {
+  return {
+    id: zp.id,
+    title: zp.title,
+    slug: zp.slug,
+    description: zp.description,
+    price: zp.price,
+    compareAtPrice: zp.compareAtPrice,
+    currency: zp.currency,
+    images: zp.images,
+    tags: zp.tags,
+    material: zp.material,
+    style: zp.style,
+    inStock: true, // enriched by inventory endpoint in production
+    stockQuantity: 0,
+    createdAt: zp.createdAt,
+    updatedAt: zp.updatedAt,
   };
 }
