@@ -59,7 +59,7 @@ const SearchPage = () => {
       <title>{query ? `Search: ${query}` : 'Shop All'} — Bambu Silver by Estela</title>
 
       <div className="container py-12 md:py-20">
-        <div className="mb-10">
+        <div className="mb-10 text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent mb-3">
             {query ? 'Search Results' : 'All Pieces'}
           </p>
