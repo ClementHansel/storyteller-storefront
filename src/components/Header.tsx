@@ -65,15 +65,12 @@ export function Header() {
           )}
 
           {/* Wishlist */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 text-xs text-muted-foreground hover:text-foreground"
-            onClick={() => handleAuthAction('wishlist')}
-          >
-            <Heart className="h-4 w-4" />
-            <span className="hidden lg:inline">Wishlist</span>
-          </Button>
+          <Link to="/wishlist">
+            <Button variant="ghost" size="sm" className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 text-xs text-muted-foreground hover:text-foreground">
+              <Heart className="h-4 w-4" />
+              <span className="hidden lg:inline">Wishlist</span>
+            </Button>
+          </Link>
 
           {/* Cart */}
           {isAuthenticated ? (
@@ -147,7 +144,7 @@ export function Header() {
             </Link>
           </div>
           <div className="flex items-center gap-8">
-            <Link to="/admin/config" className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground/80 hover:text-accent transition-colors">
+            <Link to="/contact" className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground/80 hover:text-accent transition-colors">
               Contact Us
             </Link>
           </div>

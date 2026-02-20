@@ -14,6 +14,8 @@ import SearchPage from "./pages/SearchPage";
 import CartPage from "./pages/CartPage";
 import LoginPage from "./pages/LoginPage";
 import AdminConfigPage from "./pages/AdminConfigPage";
+import WishlistPage from "./pages/WishlistPage";
+import ContactPage from "./pages/ContactPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +37,8 @@ const App = () => (
                 <Route path="/search" element={<SearchPage />} />
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/wishlist" element={<WishlistPage />} />
+                <Route path="/contact" element={<ContactPage />} />
                 <Route path="/admin/config" element={<AdminConfigPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
+import { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { ProductImage } from '@/components/ProductImage';
 import { useProduct } from '@/hooks/use-store';
@@ -8,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ShoppingBag, ArrowLeft, Heart } from 'lucide-react';
 import { toast } from 'sonner';
+import { addToWishlist, removeFromWishlist, isInWishlist } from '@/pages/WishlistPage';
 
 const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -25,14 +27,19 @@ const ProductDetailPage = () => {
     if (product) addItem(product);
   };
 
+  const [wishlisted, setWishlisted] = useState(() => product ? isInWishlist(product.id) : false);
+
   const handleWishlist = () => {
-    if (!isAuthenticated) {
-      toast.info('Please sign in to save items', {
-        action: { label: 'Sign In', onClick: () => window.location.href = loginUrl },
-      });
-      return;
+    if (!product) return;
+    if (wishlisted) {
+      removeFromWishlist(product.id);
+      setWishlisted(false);
+      toast.success('Removed from wishlist');
+    } else {
+      addToWishlist(product);
+      setWishlisted(true);
+      toast.success('Added to wishlist');
     }
-    toast.success('Saved to wishlist');
   };
 
   if (isLoading) {
