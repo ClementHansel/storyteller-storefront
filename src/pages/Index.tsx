@@ -6,6 +6,7 @@ import { useProducts, useChapters } from '@/hooks/use-store';
 import { storeName, storeTagline } from '@/config/store-config';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import heroBg from '@/assets/hero-bg.jpg';
 
 const Index = () => {
   const { data: products = [] } = useProducts();
@@ -18,44 +19,44 @@ const Index = () => {
       <title>{storeName} — Silver 925 Jewelry, Pearls, Stones</title>
       <meta name="description" content={storeTagline} />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden min-h-[70vh] flex items-center bg-card">
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: 'radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)',
-          backgroundSize: '40px 40px',
-        }} />
-        <div className="container relative py-24 md:py-32">
-          <div className="max-w-2xl space-y-8 animate-fade-in-up">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent">Handcrafted Silver · Since 2024</p>
-            <h1 className="font-serif text-5xl font-light leading-[1.1] text-foreground md:text-7xl">
-              Every Piece<br />
-              <span className="italic">Tells a Story</span>
-            </h1>
-            <p className="text-base text-muted-foreground leading-relaxed max-w-md font-light">
-              {storeTagline}. Discover collections curated around the narratives that inspire our craft.
-            </p>
-            <div className="flex gap-4 pt-2">
-              <Button asChild size="lg" className="rounded-none px-8 tracking-wider text-xs uppercase">
-                <Link to="/chapters">Explore Collections <ArrowRight className="ml-2 h-4 w-4" /></Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-none px-8 tracking-wider text-xs uppercase">
-                <Link to="/search">Shop All</Link>
-              </Button>
-            </div>
+      {/* Hero — full-bleed background image like Yin Jewelry */}
+      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
+        {/* Background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${heroBg})` }}
+        />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/50" />
+
+        {/* Centered content */}
+        <div className="relative z-10 text-center max-w-2xl mx-auto px-6 animate-fade-in-up">
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-white/70 mb-6">
+            Handcrafted Silver · Since 2024
+          </p>
+          <h1 className="font-serif text-5xl md:text-7xl font-light leading-[1.1] text-white">
+            Every Piece<br />
+            <span className="italic">Tells a Story</span>
+          </h1>
+          <p className="mt-6 text-base text-white/70 leading-relaxed max-w-md mx-auto font-light">
+            {storeTagline}. Discover collections curated around the narratives that inspire our craft.
+          </p>
+          <div className="flex justify-center gap-4 mt-8">
+            <Button asChild size="lg" className="rounded-none px-8 tracking-wider text-xs uppercase bg-white text-black hover:bg-white/90">
+              <Link to="/chapters">Explore Collections <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="rounded-none px-8 tracking-wider text-xs uppercase border-white/40 text-white hover:bg-white/10">
+              <Link to="/search">Shop All</Link>
+            </Button>
           </div>
         </div>
       </section>
 
       {/* Featured Chapters */}
       <section className="container py-20 md:py-28">
-        <div className="mb-12 flex items-end justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent mb-3">Our Stories</p>
-            <h2 className="font-serif text-4xl font-light text-foreground">Collections</h2>
-          </div>
-          <Link to="/chapters" className="text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground transition-colors hidden md:block">
-            View All →
-          </Link>
+        <div className="mb-12 text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent mb-3">Our Stories</p>
+          <h2 className="font-serif text-4xl font-light text-foreground">Collections</h2>
         </div>
         <div className="grid gap-8 md:grid-cols-3">
           {featuredChapters.map((ch, i) => (
@@ -73,7 +74,7 @@ const Index = () => {
                   className="transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
-              <div className="mt-5">
+              <div className="mt-5 text-center">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-accent mb-1">Chapter {ch.narrativeOrder}</p>
                 <h3 className="font-serif text-2xl font-light text-foreground group-hover:text-accent transition-colors">
                   {ch.name}
@@ -82,6 +83,11 @@ const Index = () => {
               </div>
             </Link>
           ))}
+        </div>
+        <div className="mt-10 text-center">
+          <Link to="/chapters" className="text-xs font-semibold uppercase tracking-[0.2em] text-accent hover:text-foreground transition-colors">
+            View All Collections →
+          </Link>
         </div>
       </section>
 
@@ -97,7 +103,7 @@ const Index = () => {
       {/* Featured Products */}
       <section className="py-20 md:py-28">
         <div className="container">
-          <div className="mb-12">
+          <div className="mb-12 text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent mb-3">Curated Selection</p>
             <h2 className="font-serif text-4xl font-light text-foreground">Featured Pieces</h2>
           </div>

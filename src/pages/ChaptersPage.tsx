@@ -12,7 +12,7 @@ const ChaptersPage = () => {
       <meta name="description" content="Browse our curated Story Chapters — collections of silver jewelry and handcraft pieces, each with a unique narrative." />
 
       <section className="container py-16 md:py-24">
-        <div className="mb-14 max-w-xl">
+        <div className="mb-14 text-center max-w-xl mx-auto">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent mb-3">Collections</p>
           <h1 className="font-serif text-5xl font-light text-foreground">Our Stories</h1>
           <p className="mt-4 text-sm text-muted-foreground font-light leading-relaxed">
