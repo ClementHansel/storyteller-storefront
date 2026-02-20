@@ -1,13 +1,20 @@
-import { Link } from 'react-router-dom';
-import { storeName } from '@/config/store-config';
-import { FastSearch } from './FastSearch';
-import { ThemeToggle } from './ThemeToggle';
-import { useCart } from '@/contexts/CartContext';
-import { useAuth } from '@/contexts/AuthContext';
-import { ShoppingBag, Menu, Heart, User, LogOut, X } from 'lucide-react';
-import { Button } from './ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
-import { toast } from 'sonner';
+import { Link } from "react-router-dom";
+import { storeName } from "@/config/store-config";
+import { FastSearch } from "./FastSearch";
+import { ThemeToggle } from "./ThemeToggle";
+import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { ShoppingBag, Menu, Heart, User, LogOut, X } from "lucide-react";
+import { Button } from "./ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "./ui/sheet";
+import { toast } from "sonner";
+import logo from "../assets/logo.jpeg";
 
 export function Header() {
   const { itemCount } = useCart();
@@ -15,8 +22,11 @@ export function Header() {
 
   const handleAuthAction = (action: string) => {
     if (!isAuthenticated) {
-      toast.info('Please sign in to access your ' + action, {
-        action: { label: 'Sign In', onClick: () => window.location.href = loginUrl },
+      toast.info("Please sign in to access your " + action, {
+        action: {
+          label: "Sign In",
+          onClick: () => (window.location.href = loginUrl),
+        },
       });
       return false;
     }
@@ -29,9 +39,11 @@ export function Header() {
       <div className="container flex h-[72px] items-center gap-6">
         {/* Logo — left */}
         <Link to="/" className="shrink-0 group">
-          <span className="font-serif text-2xl md:text-3xl font-light tracking-tight text-foreground transition-colors group-hover:text-accent">
-            {storeName}
-          </span>
+          <img
+            src={logo}
+            alt="Logo"
+            className="h-8 w-auto object-contain transition-opacity group-hover:opacity-80"
+          />
         </Link>
 
         {/* Search — center (desktop) */}
@@ -57,7 +69,11 @@ export function Header() {
             </Button>
           ) : (
             <Link to={loginUrl}>
-              <Button variant="ghost" size="sm" className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 text-xs text-muted-foreground hover:text-foreground">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 text-xs text-muted-foreground hover:text-foreground"
+              >
                 <User className="h-4 w-4" />
                 <span className="hidden lg:inline">Login / Register</span>
               </Button>
@@ -66,7 +82,11 @@ export function Header() {
 
           {/* Wishlist */}
           <Link to="/wishlist">
-            <Button variant="ghost" size="sm" className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 text-xs text-muted-foreground hover:text-foreground">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 text-xs text-muted-foreground hover:text-foreground"
+            >
               <Heart className="h-4 w-4" />
               <span className="hidden lg:inline">Wishlist</span>
             </Button>
@@ -75,7 +95,11 @@ export function Header() {
           {/* Cart */}
           {isAuthenticated ? (
             <Link to="/cart">
-              <Button variant="ghost" size="sm" className="relative inline-flex items-center gap-1.5 h-9 px-3 text-xs text-muted-foreground hover:text-foreground">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="relative inline-flex items-center gap-1.5 h-9 px-3 text-xs text-muted-foreground hover:text-foreground"
+              >
                 <ShoppingBag className="h-4 w-4" />
                 <span className="hidden lg:inline">{itemCount} item(s)</span>
                 {itemCount > 0 && (
@@ -90,7 +114,7 @@ export function Header() {
               variant="ghost"
               size="sm"
               className="inline-flex items-center gap-1.5 h-9 px-3 text-xs text-muted-foreground hover:text-foreground"
-              onClick={() => handleAuthAction('cart')}
+              onClick={() => handleAuthAction("cart")}
             >
               <ShoppingBag className="h-4 w-4" />
             </Button>
@@ -99,28 +123,67 @@ export function Header() {
           {/* Mobile menu trigger */}
           <Sheet>
             <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon" className="h-9 w-9"><Menu className="h-5 w-5" /></Button>
+              <Button variant="ghost" size="icon" className="h-9 w-9">
+                <Menu className="h-5 w-5" />
+              </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-80">
               <SheetHeader>
-                <SheetTitle className="font-serif text-2xl font-light">{storeName}</SheetTitle>
+                <SheetTitle className="font-serif text-2xl font-light">
+                  {storeName}
+                </SheetTitle>
               </SheetHeader>
               <div className="mt-6">
                 <FastSearch />
               </div>
               <nav className="mt-8 flex flex-col gap-5">
-                <Link to="/" className="text-sm font-medium uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors">Home</Link>
-                <Link to="/chapters" className="text-sm font-medium uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors">Collections</Link>
-                <Link to="/search" className="text-sm font-medium uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors">Shop</Link>
-                <Link to="/search?category=new" className="text-sm font-medium uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors">New Arrivals</Link>
+                <Link
+                  to="/"
+                  className="text-sm font-medium uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors"
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/chapters"
+                  className="text-sm font-medium uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors"
+                >
+                  Collections
+                </Link>
+                <Link
+                  to="/search"
+                  className="text-sm font-medium uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors"
+                >
+                  Shop
+                </Link>
+                <Link
+                  to="/search?category=new"
+                  className="text-sm font-medium uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors"
+                >
+                  New Arrivals
+                </Link>
                 <div className="border-t border-border pt-4">
                   {isAuthenticated ? (
                     <>
-                      <Link to="/cart" className="block text-sm font-medium text-foreground hover:text-accent transition-colors mb-3">Cart ({itemCount})</Link>
-                      <button onClick={devLogout} className="text-sm text-muted-foreground hover:text-foreground transition-colors">Sign Out</button>
+                      <Link
+                        to="/cart"
+                        className="block text-sm font-medium text-foreground hover:text-accent transition-colors mb-3"
+                      >
+                        Cart ({itemCount})
+                      </Link>
+                      <button
+                        onClick={devLogout}
+                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        Sign Out
+                      </button>
                     </>
                   ) : (
-                    <Link to={loginUrl} className="text-sm font-medium text-accent hover:text-foreground transition-colors">Sign In</Link>
+                    <Link
+                      to={loginUrl}
+                      className="text-sm font-medium text-accent hover:text-foreground transition-colors"
+                    >
+                      Sign In
+                    </Link>
                   )}
                 </div>
               </nav>
@@ -133,18 +196,30 @@ export function Header() {
       <nav className="hidden md:block border-t border-border/30 bg-background">
         <div className="container flex h-11 items-center justify-between">
           <div className="flex items-center gap-8">
-            <Link to="/chapters" className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground/80 hover:text-accent transition-colors">
+            <Link
+              to="/chapters"
+              className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground/80 hover:text-accent transition-colors"
+            >
               Collections
             </Link>
-            <Link to="/search" className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground/80 hover:text-accent transition-colors">
+            <Link
+              to="/search"
+              className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground/80 hover:text-accent transition-colors"
+            >
               Shop All
             </Link>
-            <Link to="/search?category=new" className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground/80 hover:text-accent transition-colors">
+            <Link
+              to="/search?category=new"
+              className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground/80 hover:text-accent transition-colors"
+            >
               New Arrivals
             </Link>
           </div>
           <div className="flex items-center gap-8">
-            <Link to="/contact" className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground/80 hover:text-accent transition-colors">
+            <Link
+              to="/contact"
+              className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground/80 hover:text-accent transition-colors"
+            >
               Contact Us
             </Link>
           </div>
