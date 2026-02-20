@@ -42,7 +42,7 @@ export function Header() {
           <img
             src={logo}
             alt="Logo"
-            className="h-20 md:h-28 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+            className="h-16 md:h-20 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
           />
         </Link>
 
