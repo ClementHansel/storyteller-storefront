@@ -14,7 +14,7 @@ import {
   SheetTrigger,
 } from "./ui/sheet";
 import { toast } from "sonner";
-import logo from "../assets/logo.jpeg";
+import logo from "../assets/logo.png";
 
 export function Header() {
   const { itemCount } = useCart();
