@@ -18,7 +18,7 @@ import logo from "../assets/logo.png";
 
 export function Header() {
   const { itemCount } = useCart();
-  const { isAuthenticated, loginUrl, user, devLogout } = useAuth();
+  const { isAuthenticated, loginUrl, user, logout } = useAuth();
 
   const handleAuthAction = (action: string) => {
     if (!isAuthenticated) {
@@ -61,7 +61,7 @@ export function Header() {
               variant="ghost"
               size="sm"
               className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 text-xs text-muted-foreground hover:text-foreground"
-              onClick={devLogout}
+              onClick={logout}
               title={`Signed in as ${user?.name}`}
             >
               <User className="h-4 w-4" />
@@ -171,7 +171,7 @@ export function Header() {
                         Cart ({itemCount})
                       </Link>
                       <button
-                        onClick={devLogout}
+                        onClick={logout}
                         className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                       >
                         Sign Out

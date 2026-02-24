@@ -10,29 +10,31 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   loginUrl: string;
-  /** Stub: call this to simulate login for dev purposes */
-  devLogin: () => void;
-  devLogout: () => void;
+  login: () => void;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Stub login URL — replace with real Zenvix/SSO URL later
 const LOGIN_URL = '/login';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
-  const devLogin = useCallback(() => {
-    setUser({ id: 'dev-user-1', name: 'Test User', email: 'test@example.com' });
+  const login = useCallback(() => {
+    // Production: integrate with Zenvix SSO / OAuth provider
+    // Dev-only stub for local testing
+    if (import.meta.env.DEV) {
+      setUser({ id: 'dev-user-1', name: 'Test User', email: 'test@example.com' });
+    }
   }, []);
 
-  const devLogout = useCallback(() => {
+  const logout = useCallback(() => {
     setUser(null);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loginUrl: LOGIN_URL, devLogin, devLogout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loginUrl: LOGIN_URL, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

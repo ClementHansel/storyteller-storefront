@@ -7,10 +7,42 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { getZenvixConfig, saveZenvixConfig, clearZenvixConfig, isZenvixConfigured } from '@/api/zenvix-config';
 import { getQueueStats, clearEventQueue, processRetryQueue } from '@/api/zenvix-events';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { z } from 'zod';
 import { Settings, Wifi, WifiOff, Trash2, RefreshCw, Eye, EyeOff } from 'lucide-react';
+import { useDocumentTitle } from '@/hooks/use-document-title';
+
+const configSchema = z.object({
+  gatewayUrl: z
+    .string()
+    .trim()
+    .min(1, 'Gateway URL is required')
+    .url('Must be a valid URL')
+    .refine((url) => url.startsWith('https://'), 'Must use HTTPS'),
+  apiKey: z
+    .string()
+    .trim()
+    .min(1, 'API Key is required')
+    .max(500, 'API Key is too long'),
+  tenantId: z
+    .string()
+    .trim()
+    .min(1, 'Tenant ID is required')
+    .max(100, 'Tenant ID is too long')
+    .regex(/^[a-zA-Z0-9_-]+$/, 'Tenant ID must be alphanumeric'),
+  branchId: z
+    .string()
+    .trim()
+    .min(1, 'Branch ID is required')
+    .max(100, 'Branch ID is too long')
+    .regex(/^[a-zA-Z0-9_-]+$/, 'Branch ID must be alphanumeric'),
+});
 
 const AdminConfigPage = () => {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [gatewayUrl, setGatewayUrl] = useState('');
   const [apiKey, setApiKey] = useState('');
   const [tenantId, setTenantId] = useState('');
@@ -19,21 +51,31 @@ const AdminConfigPage = () => {
   const [queueStats, setQueueStats] = useState({ pending: 0, failed: 0, total: 0 });
   const configured = isZenvixConfigured();
 
+  useDocumentTitle('Admin — Gateway Config');
+
   useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
     const cfg = getZenvixConfig();
     setGatewayUrl(cfg.gatewayUrl);
     setApiKey(cfg.apiKey);
     setTenantId(cfg.tenantId);
     setBranchId(cfg.branchId);
     setQueueStats(getQueueStats());
-  }, []);
+  }, [isAuthenticated, navigate]);
+
+  if (!isAuthenticated) return null;
 
   const handleSave = () => {
-    if (!gatewayUrl || !apiKey || !tenantId || !branchId) {
-      toast.error('All fields are required');
+    const result = configSchema.safeParse({ gatewayUrl, apiKey, tenantId, branchId });
+    if (!result.success) {
+      const firstError = result.error.issues[0]?.message ?? 'Invalid configuration';
+      toast.error(firstError);
       return;
     }
-    saveZenvixConfig({ gatewayUrl, apiKey, tenantId, branchId });
+    saveZenvixConfig(result.data);
     toast.success('Gateway configuration saved');
   };
 
@@ -60,7 +102,6 @@ const AdminConfigPage = () => {
 
   return (
     <Layout>
-      <title>Admin — Gateway Config</title>
       <div className="container max-w-2xl py-12 md:py-20 space-y-8">
         <div className="flex items-center gap-3">
           <Settings className="h-6 w-6 text-muted-foreground" />
@@ -74,7 +115,7 @@ const AdminConfigPage = () => {
               <Wifi className="h-5 w-5 text-accent" />
               <div>
                 <p className="text-sm font-medium text-foreground">Connected to Zenvix</p>
-                <p className="text-xs text-muted-foreground">{gatewayUrl}</p>
+                <p className="text-xs text-muted-foreground">Gateway configured</p>
               </div>
               <Badge variant="outline" className="ml-auto text-accent border-accent/30">Live</Badge>
             </>
@@ -99,31 +140,13 @@ const AdminConfigPage = () => {
           <CardContent className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="gatewayUrl" className="text-xs uppercase tracking-wider">Gateway URL</Label>
-              <Input
-                id="gatewayUrl"
-                placeholder="https://api.zenvix.com/v1"
-                value={gatewayUrl}
-                onChange={(e) => setGatewayUrl(e.target.value)}
-              />
+              <Input id="gatewayUrl" placeholder="https://api.zenvix.com/v1" value={gatewayUrl} onChange={(e) => setGatewayUrl(e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="apiKey" className="text-xs uppercase tracking-wider">API Key</Label>
               <div className="relative">
-                <Input
-                  id="apiKey"
-                  type={showKey ? 'text' : 'password'}
-                  placeholder="zvx_live_..."
-                  value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value)}
-                  className="pr-10"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-0 top-0 h-full w-10 text-muted-foreground"
-                  onClick={() => setShowKey(!showKey)}
-                >
+                <Input id="apiKey" type={showKey ? 'text' : 'password'} placeholder="zvx_live_..." value={apiKey} onChange={(e) => setApiKey(e.target.value)} className="pr-10" />
+                <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full w-10 text-muted-foreground" onClick={() => setShowKey(!showKey)}>
                   {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </Button>
               </div>
@@ -131,27 +154,15 @@ const AdminConfigPage = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="tenantId" className="text-xs uppercase tracking-wider">Tenant ID</Label>
-                <Input
-                  id="tenantId"
-                  placeholder="tenant_001"
-                  value={tenantId}
-                  onChange={(e) => setTenantId(e.target.value)}
-                />
+                <Input id="tenantId" placeholder="tenant_001" value={tenantId} onChange={(e) => setTenantId(e.target.value)} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="branchId" className="text-xs uppercase tracking-wider">Branch ID</Label>
-                <Input
-                  id="branchId"
-                  placeholder="branch_main"
-                  value={branchId}
-                  onChange={(e) => setBranchId(e.target.value)}
-                />
+                <Input id="branchId" placeholder="branch_main" value={branchId} onChange={(e) => setBranchId(e.target.value)} />
               </div>
             </div>
             <div className="flex gap-3 pt-2">
-              <Button onClick={handleSave} className="rounded-none uppercase tracking-widest text-xs">
-                Save Configuration
-              </Button>
+              <Button onClick={handleSave} className="rounded-none uppercase tracking-widest text-xs">Save Configuration</Button>
               {configured && (
                 <Button variant="outline" onClick={handleClear} className="rounded-none uppercase tracking-widest text-xs">
                   <Trash2 className="mr-2 h-3 w-3" /> Reset to Mock
@@ -192,10 +203,6 @@ const AdminConfigPage = () => {
             </div>
           </CardContent>
         </Card>
-
-        <p className="text-[10px] text-center text-muted-foreground tracking-wider uppercase">
-          Configuration stored in browser localStorage — move to Cloud secrets for production
-        </p>
       </div>
     </Layout>
   );

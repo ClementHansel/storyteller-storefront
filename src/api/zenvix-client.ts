@@ -1,9 +1,6 @@
 // ============================================================
 // Zenvix Retail Gateway — API Client
 // ============================================================
-// This client sends real requests when a gateway is configured.
-// All methods throw on network errors so callers can handle.
-// ============================================================
 
 import type {
   ZenvixConfig,
@@ -27,7 +24,10 @@ function buildHeaders(config: ZenvixConfig): ZenvixHeaders {
 }
 
 async function zenvixFetch<T>(config: ZenvixConfig, path: string, init?: RequestInit): Promise<T> {
-  const url = `${config.gatewayUrl.replace(/\/$/, '')}${path}`;
+  // Sanitize path to prevent traversal
+  const safePath = path.replace(/\.{2,}/g, '').replace(/\/+/g, '/');
+  const baseUrl = config.gatewayUrl.replace(/\/$/, '');
+  const url = `${baseUrl}${safePath}`;
   const headers = buildHeaders(config);
 
   const res = await fetch(url, {
@@ -36,8 +36,8 @@ async function zenvixFetch<T>(config: ZenvixConfig, path: string, init?: Request
   });
 
   if (!res.ok) {
-    const body = await res.text().catch(() => '');
-    throw new Error(`Zenvix API ${res.status}: ${body}`);
+    // Return generic error to client — don't leak backend details
+    throw new Error(`Request failed (${res.status})`);
   }
 
   return res.json() as Promise<T>;
