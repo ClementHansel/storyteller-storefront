@@ -5,6 +5,7 @@ import { Layout } from '@/components/Layout';
 import { ProductCard } from '@/components/ProductCard';
 import { SmartFilter } from '@/components/SmartFilter';
 import { useProducts } from '@/hooks/use-store';
+import { useDocumentTitle } from '@/hooks/use-document-title';
 import { FilterState, Product } from '@/types';
 import { storyChapters } from '@/config/store-config';
 
@@ -54,9 +55,10 @@ const SearchPage = () => {
     return applyFilters(base, filters);
   }, [query, products, fuse, filters]);
 
+  useDocumentTitle(`${query ? `Search: ${query}` : 'Shop All'} — Bambu Silver by Estela`);
+
   return (
     <Layout>
-      <title>{query ? `Search: ${query}` : 'Shop All'} — Bambu Silver by Estela</title>
 
       <div className="container py-12 md:py-20">
         <div className="mb-10 text-center">

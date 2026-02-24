@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { useDocumentTitle } from '@/hooks/use-document-title';
 import { Mail, MapPin, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -46,10 +47,11 @@ const ContactPage = () => {
     }, 1000);
   };
 
+  useDocumentTitle('Contact Us — Bambu Silver by Estela');
+
   return (
     <Layout>
-      <title>Contact Us — Bambu Silver by Estela</title>
-      <meta name="description" content="Get in touch with Bambu Silver by Estela — we'd love to hear from you." />
+      
 
       <div className="container py-12 md:py-20">
         <div className="text-center mb-14">

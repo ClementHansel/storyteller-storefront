@@ -5,6 +5,7 @@ import { ProductImage } from '@/components/ProductImage';
 import { useProduct } from '@/hooks/use-store';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDocumentTitle } from '@/hooks/use-document-title';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ShoppingBag, ArrowLeft, Heart } from 'lucide-react';
@@ -62,9 +63,6 @@ const ProductDetailPage = () => {
 
   return (
     <Layout>
-      <title>{product.title} — Bambu Silver by Estela</title>
-      <meta name="description" content={product.description} />
-
       <div className="container py-8 md:py-16">
         <Link to="/search" className="mb-8 inline-flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="h-3 w-3" /> Back to Shop

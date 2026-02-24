@@ -2,6 +2,7 @@ import { Link, Navigate } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDocumentTitle } from '@/hooks/use-document-title';
 import { Button } from '@/components/ui/button';
 import { Minus, Plus, Trash2, ArrowRight, ShoppingBag } from 'lucide-react';
 import { verifyCartPrices, createCheckoutSession } from '@/api/zenvix-api';
@@ -12,6 +13,7 @@ const CartPage = () => {
   const { items, updateQuantity, removeItem, clearCart, subtotal, itemCount } = useCart();
   const { isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
+  useDocumentTitle(`Cart${itemCount > 0 ? ` (${itemCount})` : ''} — Bambu Silver by Estela`);
 
   // Gate: redirect to login if not authenticated
   if (!isAuthenticated) {
@@ -46,7 +48,6 @@ const CartPage = () => {
   if (items.length === 0) {
     return (
       <Layout>
-        <title>Cart — Bambu Silver by Estela</title>
         <div className="container py-24 text-center space-y-6">
           <ShoppingBag className="mx-auto h-12 w-12 text-muted-foreground/40" />
           <h1 className="font-serif text-3xl font-light text-foreground">Your cart is empty</h1>
@@ -61,8 +62,6 @@ const CartPage = () => {
 
   return (
     <Layout>
-      <title>Cart ({itemCount}) — Bambu Silver by Estela</title>
-
       <div className="container py-12 md:py-20">
         <h1 className="mb-10 font-serif text-4xl font-light text-foreground">Your Cart</h1>
 

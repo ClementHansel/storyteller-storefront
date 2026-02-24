@@ -4,6 +4,7 @@ import { Layout } from '@/components/Layout';
 import { ProductImage } from '@/components/ProductImage';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDocumentTitle } from '@/hooks/use-document-title';
 import { Button } from '@/components/ui/button';
 import { Product } from '@/types';
 import { Heart, ShoppingBag, Trash2, ArrowRight } from 'lucide-react';
@@ -64,10 +65,10 @@ const WishlistPage = () => {
     [isAuthenticated, loginUrl, addItem],
   );
 
+  useDocumentTitle('Wishlist — Bambu Silver by Estela');
+
   return (
     <Layout>
-      <title>Wishlist — Bambu Silver by Estela</title>
-      <meta name="description" content="Your saved items — Bambu Silver by Estela" />
 
       <div className="container py-12 md:py-20">
         <div className="text-center mb-12">
