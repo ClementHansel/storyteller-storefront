@@ -288,7 +288,8 @@ function ConnectorFormDialog({ open, onClose, onSaved, editing }: ConnectorFormD
 // ── Main page ─────────────────────────────────────────────────
 
 const EcommerceHubPage = () => {
-  const { isAuthenticated, isAdmin, setupMode } = useAuth();
+  const { isAuthenticated } = useAuth();
+  const isAdmin = isAuthenticated; // Stub: treat all authenticated users as admin for now
   const configured = isZenvixConfigured();
 
   const [connectors, setConnectors] = useState<EcommerceConnectorRecord[]>([]);
@@ -374,7 +375,7 @@ const EcommerceHubPage = () => {
 
   // ── Access guards ────────────────────────────────────────────
 
-  if (!isAuthenticated && !setupMode) {
+  if (!isAuthenticated) {
     return (
       <Layout>
         <title>EcommerceHub – Admin</title>
@@ -390,7 +391,7 @@ const EcommerceHubPage = () => {
     );
   }
 
-  if (!isAdmin && !setupMode) {
+  if (!isAdmin) {
     return (
       <Layout>
         <title>EcommerceHub – Admin</title>

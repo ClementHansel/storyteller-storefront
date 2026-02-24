@@ -3,6 +3,7 @@ import { Layout } from '@/components/Layout';
 import { ProductCard } from '@/components/ProductCard';
 import { ProductImage } from '@/components/ProductImage';
 import { useChapter, useChapterProducts } from '@/hooks/use-store';
+import { useDocumentTitle } from '@/hooks/use-document-title';
 
 const ChapterDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -21,9 +22,6 @@ const ChapterDetailPage = () => {
 
   return (
     <Layout>
-      <title>{chapter.metaTitle}</title>
-      <meta name="description" content={chapter.metaDescription} />
-
       {/* Hero */}
       <section className="relative min-h-[40vh] flex items-end">
         <ProductImage src={chapter.coverImage} alt={chapter.name} aspectRatio="landscape" className="absolute inset-0 h-full w-full" />

@@ -1,5 +1,6 @@
 import { Layout } from '@/components/Layout';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDocumentTitle } from '@/hooks/use-document-title';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,9 +8,10 @@ const LoginPage = () => {
   const { isAuthenticated, devLogin, devLogout } = useAuth();
   const navigate = useNavigate();
 
+  useDocumentTitle('Sign In — Bambu Silver by Estela');
+
   return (
     <Layout>
-      <title>Sign In — Bambu Silver by Estela</title>
       <div className="container flex items-center justify-center min-h-[60vh]">
         <div className="w-full max-w-sm space-y-8 text-center">
           <div>

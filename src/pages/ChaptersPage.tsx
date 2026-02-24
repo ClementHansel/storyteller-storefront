@@ -2,14 +2,15 @@ import { Link } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { ProductImage } from '@/components/ProductImage';
 import { useChapters } from '@/hooks/use-store';
+import { useDocumentTitle } from '@/hooks/use-document-title';
 
 const ChaptersPage = () => {
   const { data: chapters = [] } = useChapters();
 
+  useDocumentTitle('Collections — Bambu Silver by Estela');
+
   return (
     <Layout>
-      <title>Collections — Bambu Silver by Estela</title>
-      <meta name="description" content="Browse our curated Story Chapters — collections of silver jewelry and handcraft pieces, each with a unique narrative." />
 
       <section className="container py-16 md:py-24">
         <div className="mb-14 text-center max-w-xl mx-auto">

@@ -4,6 +4,7 @@ import { ProductCard } from '@/components/ProductCard';
 import { ProductImage } from '@/components/ProductImage';
 import { useProducts, useChapters } from '@/hooks/use-store';
 import { storeName, storeTagline } from '@/config/store-config';
+import { useDocumentTitle } from '@/hooks/use-document-title';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import heroBg from '@/assets/hero-bg.jpg';
@@ -14,10 +15,11 @@ const Index = () => {
   const featured = products.slice(0, 8);
   const featuredChapters = chapters.slice(0, 3);
 
+  useDocumentTitle(`${storeName} — Silver 925 Jewelry, Pearls, Stones`);
+
   return (
     <Layout>
-      <title>{storeName} — Silver 925 Jewelry, Pearls, Stones</title>
-      <meta name="description" content={storeTagline} />
+      
 
       {/* Hero — full-bleed background image like Yin Jewelry */}
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
