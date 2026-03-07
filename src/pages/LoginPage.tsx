@@ -15,20 +15,20 @@ const LoginPage = () => {
       <div className="container flex items-center justify-center min-h-[60vh]">
         <div className="w-full max-w-sm space-y-8 text-center">
           <div>
-            <h1 className="font-serif text-4xl font-light text-foreground">Welcome</h1>
+            <h1 className="font-display text-4xl font-extrabold text-foreground">Welcome</h1>
             <p className="mt-3 text-sm text-muted-foreground">
               {isAuthenticated
-                ? 'You are signed in. Enjoy shopping!'
-                : 'Sign in to access your cart, wishlist, and checkout.'}
+                ? 'You\'re in! Time to explore.'
+                : 'Sign in to access your bag, wishlist, and checkout.'}
             </p>
           </div>
 
           {isAuthenticated ? (
             <div className="space-y-3">
-              <Button className="w-full rounded-none uppercase tracking-widest text-xs" size="lg" onClick={() => navigate('/')}>
+              <Button className="w-full rounded-full font-bold uppercase tracking-widest text-xs" size="lg" onClick={() => navigate('/')}>
                 Continue Shopping
               </Button>
-              <Button variant="outline" className="w-full rounded-none uppercase tracking-widest text-xs" size="lg" onClick={logout}>
+              <Button variant="outline" className="w-full rounded-full font-bold uppercase tracking-widest text-xs" size="lg" onClick={logout}>
                 Sign Out
               </Button>
             </div>
@@ -36,7 +36,7 @@ const LoginPage = () => {
             <div className="space-y-3">
               {import.meta.env.DEV ? (
                 <>
-                  <Button className="w-full rounded-none uppercase tracking-widest text-xs" size="lg" onClick={() => { login(); navigate('/'); }}>
+                  <Button className="w-full rounded-full font-bold uppercase tracking-widest text-xs" size="lg" onClick={() => { login(); navigate('/'); }}>
                     Sign In (Dev Mode)
                   </Button>
                   <p className="text-xs text-muted-foreground">

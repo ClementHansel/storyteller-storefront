@@ -59,16 +59,15 @@ const SearchPage = () => {
 
   return (
     <Layout>
-
       <div className="container py-12 md:py-20">
         <div className="mb-10 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent mb-3">
+          <p className="text-xs font-bold uppercase tracking-widest text-primary mb-3">
             {query ? 'Search Results' : 'All Pieces'}
           </p>
-          <h1 className="font-serif text-4xl font-light text-foreground">
+          <h1 className="font-display text-4xl font-extrabold text-foreground">
             {query ? `"${query}"` : 'Shop'}
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground font-light">{searchResults.length} piece{searchResults.length !== 1 ? 's' : ''}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{searchResults.length} piece{searchResults.length !== 1 ? 's' : ''}</p>
         </div>
 
         <div className="grid gap-10 md:grid-cols-[220px_1fr]">
@@ -78,7 +77,7 @@ const SearchPage = () => {
               <ProductCard key={p.id} product={p} />
             ))}
             {searchResults.length === 0 && (
-              <p className="col-span-full text-center text-muted-foreground font-light py-16">No products match your criteria.</p>
+              <p className="col-span-full text-center text-muted-foreground py-16">No products match your criteria.</p>
             )}
           </div>
         </div>

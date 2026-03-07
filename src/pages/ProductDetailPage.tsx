@@ -43,6 +43,8 @@ const ProductDetailPage = () => {
     }
   };
 
+  useDocumentTitle(product ? `${product.title} — Bambu Silver` : 'Product — Bambu Silver');
+
   if (isLoading) {
     return (
       <Layout>
@@ -55,7 +57,7 @@ const ProductDetailPage = () => {
     return (
       <Layout>
         <div className="container py-20 text-center">
-          <h1 className="font-serif text-3xl font-light text-foreground">Product not found</h1>
+          <h1 className="font-display text-3xl font-bold text-foreground">Product not found</h1>
         </div>
       </Layout>
     );
@@ -64,63 +66,63 @@ const ProductDetailPage = () => {
   return (
     <Layout>
       <div className="container py-8 md:py-16">
-        <Link to="/search" className="mb-8 inline-flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground transition-colors">
+        <Link to="/search" className="mb-8 inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary transition-colors">
           <ArrowLeft className="h-3 w-3" /> Back to Shop
         </Link>
 
         <div className="grid gap-12 md:grid-cols-2 mt-6">
           {/* Image */}
-          <div className="overflow-hidden">
+          <div className="overflow-hidden rounded-2xl">
             <ProductImage src={product.images[0]} alt={product.title} aspectRatio="portrait" />
           </div>
 
           {/* Details */}
           <div className="flex flex-col justify-center space-y-6">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-accent mb-2">{product.material}</p>
-              <h1 className="font-serif text-4xl font-light text-foreground md:text-5xl leading-tight">{product.title}</h1>
+              <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">{product.material}</p>
+              <h1 className="font-display text-4xl font-extrabold text-foreground md:text-5xl leading-tight">{product.title}</h1>
               <div className="mt-4 flex items-baseline gap-3">
-                <span className="text-2xl font-light text-foreground">${product.price}</span>
+                <span className="text-3xl font-bold text-foreground">${product.price}</span>
                 {product.compareAtPrice && (
                   <span className="text-base text-muted-foreground line-through">${product.compareAtPrice}</span>
                 )}
               </div>
             </div>
 
-            <p className="text-sm text-muted-foreground leading-relaxed font-light">{product.description}</p>
+            <p className="text-base text-muted-foreground leading-relaxed">{product.description}</p>
 
             <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary" className="rounded-none text-[10px] uppercase tracking-wider">{product.style}</Badge>
+              <Badge className="rounded-full text-xs font-bold bg-primary/10 text-primary border-0">{product.style}</Badge>
               {product.inStock ? (
-                <Badge variant="outline" className="rounded-none text-[10px] uppercase tracking-wider">In Stock ({product.stockQuantity})</Badge>
+                <Badge variant="outline" className="rounded-full text-xs font-bold">In Stock ({product.stockQuantity})</Badge>
               ) : (
-                <Badge variant="destructive" className="rounded-none text-[10px] uppercase tracking-wider">Sold Out</Badge>
+                <Badge variant="destructive" className="rounded-full text-xs font-bold">Sold Out</Badge>
               )}
             </div>
 
             <div className="flex flex-wrap gap-2">
               {product.tags.map((t) => (
-                <span key={t} className="text-[10px] text-muted-foreground uppercase tracking-wider">#{t}</span>
+                <span key={t} className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">#{t}</span>
               ))}
             </div>
 
             <div className="flex gap-3 pt-2">
               <Button
                 size="lg"
-                className="flex-1 rounded-none uppercase tracking-widest text-xs"
+                className="flex-1 rounded-full font-bold uppercase tracking-widest text-sm"
                 onClick={handleAddToCart}
                 disabled={!product.inStock}
               >
                 <ShoppingBag className="mr-2 h-4 w-4" />
-                {product.inStock ? 'Add to Cart' : 'Sold Out'}
+                {product.inStock ? 'Add to Bag' : 'Sold Out'}
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="rounded-none"
+                className={`rounded-full ${wishlisted ? 'text-primary border-primary' : ''}`}
                 onClick={handleWishlist}
               >
-                <Heart className="h-4 w-4" />
+                <Heart className={`h-4 w-4 ${wishlisted ? 'fill-primary' : ''}`} />
               </Button>
             </div>
           </div>
