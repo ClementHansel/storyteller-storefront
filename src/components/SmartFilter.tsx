@@ -19,9 +19,9 @@ export function SmartFilter({ filters, onChange }: SmartFilterProps) {
   return (
     <aside className="space-y-8">
       <div>
-        <h4 className="mb-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Sort By</h4>
+        <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">Sort By</h4>
         <Select value={filters.sort} onValueChange={(v) => onChange({ ...filters, sort: v as SortOption })}>
-          <SelectTrigger className="w-full rounded-none text-xs"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="w-full rounded-lg text-xs"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="narrative">Curated Order</SelectItem>
             <SelectItem value="price-asc">Price: Low → High</SelectItem>
@@ -32,7 +32,7 @@ export function SmartFilter({ filters, onChange }: SmartFilterProps) {
       </div>
 
       <div>
-        <h4 className="mb-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Collections</h4>
+        <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">Collections</h4>
         <div className="space-y-2.5">
           {storyChapters.map((ch) => (
             <div key={ch.id} className="flex items-center gap-2">
@@ -41,14 +41,14 @@ export function SmartFilter({ filters, onChange }: SmartFilterProps) {
                 checked={filters.chapters.includes(ch.slug)}
                 onCheckedChange={() => onChange({ ...filters, chapters: toggleArrayItem(filters.chapters, ch.slug) })}
               />
-              <Label htmlFor={`ch-${ch.id}`} className="text-xs cursor-pointer font-light">{ch.name}</Label>
+              <Label htmlFor={`ch-${ch.id}`} className="text-xs cursor-pointer">{ch.name}</Label>
             </div>
           ))}
         </div>
       </div>
 
       <div>
-        <h4 className="mb-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Material</h4>
+        <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">Material</h4>
         <div className="space-y-2.5">
           {MATERIALS.map((m) => (
             <div key={m} className="flex items-center gap-2">
@@ -57,14 +57,14 @@ export function SmartFilter({ filters, onChange }: SmartFilterProps) {
                 checked={filters.materials.includes(m)}
                 onCheckedChange={() => onChange({ ...filters, materials: toggleArrayItem(filters.materials, m) })}
               />
-              <Label htmlFor={`mat-${m}`} className="text-xs cursor-pointer font-light">{m}</Label>
+              <Label htmlFor={`mat-${m}`} className="text-xs cursor-pointer">{m}</Label>
             </div>
           ))}
         </div>
       </div>
 
       <div>
-        <h4 className="mb-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Style</h4>
+        <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">Style</h4>
         <div className="space-y-2.5">
           {STYLES.map((s) => (
             <div key={s} className="flex items-center gap-2">
@@ -73,7 +73,7 @@ export function SmartFilter({ filters, onChange }: SmartFilterProps) {
                 checked={filters.styles.includes(s)}
                 onCheckedChange={() => onChange({ ...filters, styles: toggleArrayItem(filters.styles, s) })}
               />
-              <Label htmlFor={`sty-${s}`} className="text-xs cursor-pointer font-light">{s}</Label>
+              <Label htmlFor={`sty-${s}`} className="text-xs cursor-pointer">{s}</Label>
             </div>
           ))}
         </div>

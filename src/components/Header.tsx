@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
 import { storeName } from "@/config/store-config";
 import { FastSearch } from "./FastSearch";
-import { ThemeToggle } from "./ThemeToggle";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { ShoppingBag, Menu, Heart, User, LogOut, X } from "lucide-react";
+import { ShoppingBag, Menu, Heart, User, X } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   Sheet,
@@ -34,15 +33,14 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-background border-b border-border/40">
-      {/* Top bar: Logo | Search | Icons */}
-      <div className="container flex h-[72px] items-center gap-6">
-        {/* Logo — left */}
+    <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border">
+      <div className="container flex h-16 items-center gap-6">
+        {/* Logo */}
         <Link to="/" className="shrink-0 group">
           <img
             src={logo}
-            alt="Logo"
-            className="h-12 md:h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+            alt={storeName}
+            className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
           />
         </Link>
 
@@ -51,16 +49,14 @@ export function Header() {
           <FastSearch />
         </div>
 
-        {/* Icon cluster — right */}
-        <div className="ml-auto flex items-center gap-1.5">
-          <ThemeToggle />
-
+        {/* Icon cluster */}
+        <div className="ml-auto flex items-center gap-1">
           {/* Account */}
           {isAuthenticated ? (
             <Button
               variant="ghost"
               size="sm"
-              className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 text-xs text-muted-foreground hover:text-foreground"
+              className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 text-sm text-muted-foreground hover:text-primary"
               onClick={logout}
               title={`Signed in as ${user?.name}`}
             >
@@ -72,10 +68,10 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 text-xs text-muted-foreground hover:text-foreground"
+                className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 text-sm text-muted-foreground hover:text-primary"
               >
                 <User className="h-4 w-4" />
-                <span className="hidden lg:inline">Login / Register</span>
+                <span className="hidden lg:inline">Login</span>
               </Button>
             </Link>
           )}
@@ -85,10 +81,9 @@ export function Header() {
             <Button
               variant="ghost"
               size="sm"
-              className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 text-xs text-muted-foreground hover:text-foreground"
+              className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 text-sm text-muted-foreground hover:text-primary"
             >
               <Heart className="h-4 w-4" />
-              <span className="hidden lg:inline">Wishlist</span>
             </Button>
           </Link>
 
@@ -98,12 +93,11 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="relative inline-flex items-center gap-1.5 h-9 px-3 text-xs text-muted-foreground hover:text-foreground"
+                className="relative inline-flex items-center gap-1.5 h-9 px-3 text-sm text-muted-foreground hover:text-primary"
               >
                 <ShoppingBag className="h-4 w-4" />
-                <span className="hidden lg:inline">{itemCount} item(s)</span>
                 {itemCount > 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[9px] font-semibold text-accent-foreground lg:hidden">
+                  <span className="absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
                     {itemCount}
                   </span>
                 )}
@@ -113,75 +107,54 @@ export function Header() {
             <Button
               variant="ghost"
               size="sm"
-              className="inline-flex items-center gap-1.5 h-9 px-3 text-xs text-muted-foreground hover:text-foreground"
+              className="inline-flex items-center gap-1.5 h-9 px-3 text-sm text-muted-foreground hover:text-primary"
               onClick={() => handleAuthAction("cart")}
             >
               <ShoppingBag className="h-4 w-4" />
             </Button>
           )}
 
-          {/* Mobile menu trigger */}
+          {/* Mobile menu */}
           <Sheet>
             <SheetTrigger asChild className="md:hidden">
               <Button variant="ghost" size="icon" className="h-9 w-9">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-80">
+            <SheetContent side="left" className="w-80 bg-background">
               <SheetHeader>
-                <SheetTitle className="font-serif text-2xl font-light">
+                <SheetTitle className="font-display text-xl font-bold">
                   {storeName}
                 </SheetTitle>
               </SheetHeader>
               <div className="mt-6">
                 <FastSearch />
               </div>
-              <nav className="mt-8 flex flex-col gap-5">
-                <Link
-                  to="/"
-                  className="text-sm font-medium uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors"
-                >
+              <nav className="mt-8 flex flex-col gap-4">
+                <Link to="/" className="text-sm font-semibold uppercase tracking-wider text-foreground hover:text-primary transition-colors">
                   Home
                 </Link>
-                <Link
-                  to="/chapters"
-                  className="text-sm font-medium uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors"
-                >
+                <Link to="/chapters" className="text-sm font-semibold uppercase tracking-wider text-foreground hover:text-primary transition-colors">
                   Collections
                 </Link>
-                <Link
-                  to="/search"
-                  className="text-sm font-medium uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors"
-                >
+                <Link to="/search" className="text-sm font-semibold uppercase tracking-wider text-foreground hover:text-primary transition-colors">
                   Shop
                 </Link>
-                <Link
-                  to="/search?category=new"
-                  className="text-sm font-medium uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors"
-                >
-                  New Arrivals
+                <Link to="/contact" className="text-sm font-semibold uppercase tracking-wider text-foreground hover:text-primary transition-colors">
+                  Contact
                 </Link>
                 <div className="border-t border-border pt-4">
                   {isAuthenticated ? (
                     <>
-                      <Link
-                        to="/cart"
-                        className="block text-sm font-medium text-foreground hover:text-accent transition-colors mb-3"
-                      >
+                      <Link to="/cart" className="block text-sm font-medium text-foreground hover:text-primary transition-colors mb-3">
                         Cart ({itemCount})
                       </Link>
-                      <button
-                        onClick={logout}
-                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                      >
+                      <button onClick={logout} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                         Sign Out
                       </button>
                     </>
                   ) : (
-                    <Link
-                      to={loginUrl}
-                      className="text-sm font-medium text-accent hover:text-foreground transition-colors"
-                    >
+                    <Link to={loginUrl} className="text-sm font-medium text-primary hover:text-foreground transition-colors">
                       Sign In
                     </Link>
                   )}
@@ -192,35 +165,23 @@ export function Header() {
         </div>
       </div>
 
-      {/* Navigation bar — below (desktop) */}
-      <nav className="hidden md:block border-t border-border/30 bg-background">
-        <div className="container flex h-11 items-center justify-between">
+      {/* Nav bar — desktop */}
+      <nav className="hidden md:block border-t border-border/50">
+        <div className="container flex h-10 items-center justify-between">
           <div className="flex items-center gap-8">
-            <Link
-              to="/chapters"
-              className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground/80 hover:text-accent transition-colors"
-            >
+            <Link to="/chapters" className="text-xs font-bold uppercase tracking-widest text-foreground/70 hover:text-primary transition-colors">
               Collections
             </Link>
-            <Link
-              to="/search"
-              className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground/80 hover:text-accent transition-colors"
-            >
+            <Link to="/search" className="text-xs font-bold uppercase tracking-widest text-foreground/70 hover:text-primary transition-colors">
               Shop All
             </Link>
-            <Link
-              to="/search?category=new"
-              className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground/80 hover:text-accent transition-colors"
-            >
+            <Link to="/search?category=new" className="text-xs font-bold uppercase tracking-widest text-foreground/70 hover:text-primary transition-colors">
               New Arrivals
             </Link>
           </div>
           <div className="flex items-center gap-8">
-            <Link
-              to="/contact"
-              className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground/80 hover:text-accent transition-colors"
-            >
-              Contact Us
+            <Link to="/contact" className="text-xs font-bold uppercase tracking-widest text-foreground/70 hover:text-primary transition-colors">
+              Contact
             </Link>
           </div>
         </div>
