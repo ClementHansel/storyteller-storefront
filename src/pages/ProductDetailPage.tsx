@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { ShoppingBag, ArrowLeft, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import { addToWishlist, removeFromWishlist, isInWishlist } from '@/pages/WishlistPage';
+import { addToWishlist as apiAddToWishlist } from '@/services/wishlistService';
 
 const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,7 +31,7 @@ const ProductDetailPage = () => {
 
   const [wishlisted, setWishlisted] = useState(() => product ? isInWishlist(product.id) : false);
 
-  const handleWishlist = () => {
+  const handleWishlist = async () => {
     if (!product) return;
     if (wishlisted) {
       removeFromWishlist(product.id);
@@ -40,6 +41,10 @@ const ProductDetailPage = () => {
       addToWishlist(product);
       setWishlisted(true);
       toast.success('Added to wishlist');
+      // Also sync to server if authenticated
+      if (isAuthenticated) {
+        try { await apiAddToWishlist(product.id); } catch { /* local already saved */ }
+      }
     }
   };
 
@@ -48,7 +53,7 @@ const ProductDetailPage = () => {
   if (isLoading) {
     return (
       <Layout>
-        <div className="container py-20 text-center text-muted-foreground">Loading…</div>
+        <div className="container py-20 text-center text-muted-foreground">Loading...</div>
       </Layout>
     );
   }
@@ -71,12 +76,10 @@ const ProductDetailPage = () => {
         </Link>
 
         <div className="grid gap-12 md:grid-cols-2 mt-6">
-          {/* Image */}
           <div className="overflow-hidden rounded-2xl">
             <ProductImage src={product.images[0]} alt={product.title} aspectRatio="portrait" />
           </div>
 
-          {/* Details */}
           <div className="flex flex-col justify-center space-y-6">
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">{product.material}</p>
