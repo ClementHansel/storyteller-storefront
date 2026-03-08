@@ -4,14 +4,14 @@ import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDocumentTitle } from '@/hooks/use-document-title';
 import { Button } from '@/components/ui/button';
-import { Minus, Plus, Trash2, ArrowRight, ShoppingBag } from 'lucide-react';
-import { verifyCartPrices, createCheckoutSession } from '@/api/zenvix-api';
+import { Minus, Plus, Trash2, ArrowRight, ShoppingBag, Loader2 } from 'lucide-react';
+import { checkout, type CheckoutPayload } from '@/services/orderService';
 import { toast } from 'sonner';
 import { useState } from 'react';
 
 const CartPage = () => {
-  const { items, updateQuantity, removeItem, clearCart, subtotal, itemCount } = useCart();
-  const { isAuthenticated } = useAuth();
+  const { items, updateQuantity, removeItem, subtotal, itemCount, isLoading: cartLoading } = useCart();
+  const { isAuthenticated, user } = useAuth();
   const [loading, setLoading] = useState(false);
   useDocumentTitle(`Cart${itemCount > 0 ? ` (${itemCount})` : ''} — Bambu Silver by Estela`);
 
@@ -20,26 +20,43 @@ const CartPage = () => {
   }
 
   const handleCheckout = async () => {
+    if (!user) return;
     setLoading(true);
     try {
-      const verification = await verifyCartPrices(
-        items.map((i) => ({ productId: i.product.id, expectedPrice: i.product.price }))
-      );
-      if (!verification.valid) {
-        toast.error('Some prices have changed. Please review your cart.');
-        setLoading(false);
-        return;
+      const payload: CheckoutPayload = {
+        customerName: user.name,
+        customerEmail: user.email,
+        customerPhone: user.phone || '',
+        shippingAddress: '',
+        items: items.map((i) => ({
+          productId: i.product.id,
+          quantity: i.quantity,
+          price: String(i.product.price),
+        })),
+        paymentMethod: 'card',
+      };
+      const order = await checkout(payload);
+      if (order.paymentUrl) {
+        window.location.href = order.paymentUrl;
+      } else {
+        toast.success(`Order ${order.orderId} placed! Total: ${order.totalDisplay}`, { duration: 5000 });
       }
-      const { checkoutUrl } = await createCheckoutSession(
-        items.map((i) => ({ productId: i.product.id, quantity: i.quantity }))
-      );
-      toast.success(`Checkout session created! Redirect URL: ${checkoutUrl}`, { duration: 5000 });
-    } catch {
-      toast.error('Checkout failed. Please try again.');
+    } catch (err: any) {
+      toast.error(err?.message || 'Checkout failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
+
+  if (cartLoading) {
+    return (
+      <Layout>
+        <div className="container py-24 flex justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </Layout>
+    );
+  }
 
   if (items.length === 0) {
     return (
@@ -104,9 +121,10 @@ const CartPage = () => {
               <span className="text-2xl font-extrabold text-foreground">${subtotal.toFixed(2)}</span>
             </div>
             <Button className="w-full rounded-full font-bold uppercase tracking-widest text-xs" size="lg" onClick={handleCheckout} disabled={loading}>
-              {loading ? 'Verifying…' : 'Checkout'} <ArrowRight className="ml-2 h-4 w-4" />
+              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              {loading ? 'Processing...' : 'Checkout'} <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            <p className="text-[10px] text-center text-muted-foreground tracking-wider uppercase font-bold">Prices verified before checkout</p>
+            <p className="text-[10px] text-center text-muted-foreground tracking-wider uppercase font-bold">Secure checkout via Zenvix</p>
           </div>
         </div>
       </div>

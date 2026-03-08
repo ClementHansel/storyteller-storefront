@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useCallback, useEffect } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { ProductImage } from '@/components/ProductImage';
 import { useCart } from '@/contexts/CartContext';
@@ -7,42 +7,114 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDocumentTitle } from '@/hooks/use-document-title';
 import { Button } from '@/components/ui/button';
 import { Product } from '@/types';
-import { Heart, ShoppingBag, Trash2, ArrowRight } from 'lucide-react';
+import { Heart, ShoppingBag, Trash2, ArrowRight, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import {
+  getWishlist,
+  addToWishlist as apiAddToWishlist,
+  removeWishlistItem as apiRemoveWishlistItem,
+  type WishlistItem,
+} from '@/services/wishlistService';
 
+// ---- Lightweight local helpers for unauthenticated fallback ----
 const WISHLIST_KEY = 'bambu_wishlist';
 
-function loadWishlist(): Product[] {
+function loadLocalWishlist(): Product[] {
   try { return JSON.parse(localStorage.getItem(WISHLIST_KEY) || '[]'); } catch { return []; }
 }
 
-function saveWishlist(items: Product[]): void {
+function saveLocalWishlist(items: Product[]): void {
   localStorage.setItem(WISHLIST_KEY, JSON.stringify(items));
 }
 
-export function addToWishlist(product: Product): void {
-  const items = loadWishlist();
-  if (!items.find((p) => p.id === product.id)) { items.push(product); saveWishlist(items); }
+// ---- Exported helpers (used by ProductDetailPage etc.) ----
+
+export function addToWishlistLocal(product: Product): void {
+  const items = loadLocalWishlist();
+  if (!items.find((p) => p.id === product.id)) { items.push(product); saveLocalWishlist(items); }
 }
 
-export function removeFromWishlist(productId: string): void {
-  saveWishlist(loadWishlist().filter((p) => p.id !== productId));
+export function removeFromWishlistLocal(productId: string): void {
+  saveLocalWishlist(loadLocalWishlist().filter((p) => p.id !== productId));
 }
 
-export function isInWishlist(productId: string): boolean {
-  return loadWishlist().some((p) => p.id === productId);
+export function isInWishlistLocal(productId: string): boolean {
+  return loadLocalWishlist().some((p) => p.id === productId);
+}
+
+// Keep legacy named exports for existing imports
+export const addToWishlist = addToWishlistLocal;
+export const removeFromWishlist = removeFromWishlistLocal;
+export const isInWishlist = isInWishlistLocal;
+
+/** Map server wishlist item to Product shape */
+function mapWishlistItem(wi: WishlistItem): Product {
+  return {
+    id: wi.productId,
+    title: wi.productTitle,
+    slug: '',
+    description: '',
+    price: parseFloat(wi.price) || 0,
+    currency: 'USD',
+    images: [wi.productImage],
+    tags: [],
+    material: '',
+    style: '',
+    inStock: true,
+    stockQuantity: 99,
+    createdAt: wi.addedAt,
+    updatedAt: wi.addedAt,
+  };
 }
 
 const WishlistPage = () => {
-  const [items, setItems] = useState<Product[]>(loadWishlist);
+  const [items, setItems] = useState<Product[]>([]);
+  const [serverIds, setServerIds] = useState<Map<string, string>>(new Map()); // productId -> server item id
+  const [loading, setLoading] = useState(false);
   const { addItem } = useCart();
   const { isAuthenticated } = useAuth();
 
-  const handleRemove = useCallback((id: string) => {
-    removeFromWishlist(id);
+  // Load wishlist — from server when authenticated, otherwise local
+  useEffect(() => {
+    if (isAuthenticated) {
+      setLoading(true);
+      getWishlist()
+        .then((res) => {
+          setItems(res.items.map(mapWishlistItem));
+          const idMap = new Map<string, string>();
+          res.items.forEach((wi) => idMap.set(wi.productId, wi.id));
+          setServerIds(idMap);
+        })
+        .catch(() => {
+          // Fallback to local
+          setItems(loadLocalWishlist());
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setItems(loadLocalWishlist());
+    }
+  }, [isAuthenticated]);
+
+  const handleRemove = useCallback(async (id: string) => {
     setItems((prev) => prev.filter((p) => p.id !== id));
+
+    if (isAuthenticated) {
+      const serverId = serverIds.get(id);
+      if (serverId) {
+        try {
+          const res = await apiRemoveWishlistItem(serverId);
+          setItems(res.items.map(mapWishlistItem));
+          const idMap = new Map<string, string>();
+          res.items.forEach((wi) => idMap.set(wi.productId, wi.id));
+          setServerIds(idMap);
+        } catch { /* keep optimistic */ }
+      }
+    } else {
+      removeFromWishlistLocal(id);
+    }
+
     toast.success('Removed from wishlist');
-  }, []);
+  }, [isAuthenticated, serverIds]);
 
   const handleAddToCart = useCallback(
     (product: Product) => {
@@ -67,7 +139,11 @@ const WishlistPage = () => {
           <h1 className="font-display text-4xl md:text-5xl font-extrabold text-foreground">Your Wishlist</h1>
         </div>
 
-        {items.length === 0 ? (
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : items.length === 0 ? (
           <div className="text-center py-20 space-y-6">
             <Heart className="mx-auto h-12 w-12 text-muted-foreground/40" />
             <p className="text-muted-foreground">Your wishlist is empty.</p>
