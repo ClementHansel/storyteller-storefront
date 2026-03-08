@@ -36,7 +36,7 @@ export function isInWishlist(productId: string): boolean {
 const WishlistPage = () => {
   const [items, setItems] = useState<Product[]>(loadWishlist);
   const { addItem } = useCart();
-  const { isAuthenticated, loginUrl } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   const handleRemove = useCallback((id: string) => {
     removeFromWishlist(id);
