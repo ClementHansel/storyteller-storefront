@@ -12,6 +12,7 @@ import ProductDetailPage from "./pages/ProductDetailPage";
 import SearchPage from "./pages/SearchPage";
 import CartPage from "./pages/CartPage";
 import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 import AdminConfigPage from "./pages/AdminConfigPage";
 import WishlistPage from "./pages/WishlistPage";
 import ContactPage from "./pages/ContactPage";
