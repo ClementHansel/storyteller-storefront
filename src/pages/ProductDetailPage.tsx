@@ -104,7 +104,7 @@ const ProductDetailPage = () => {
         <div className="container relative z-10">
           <Link
             to="/search"
-            className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-white/40 hover:text-primary transition-all mb-12"
+            className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-foreground/40 hover:text-primary transition-all mb-12"
           >
             <ArrowLeft className="h-4 w-4" /> Go Back
           </Link>
@@ -112,7 +112,7 @@ const ProductDetailPage = () => {
           <div className="grid gap-16 lg:grid-cols-12 items-start">
             {/* Image Section */}
             <div className="lg:col-span-7 group relative">
-              <div className="relative aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl border border-white/5 bg-ink/20">
+              <div className="relative aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl border border-black/5 bg-black/[0.02]">
                 <ProductImage
                   src={product.images[0]}
                   alt={product.title}
@@ -140,7 +140,7 @@ const ProductDetailPage = () => {
                   {product.images.map((img, i) => (
                     <div
                       key={i}
-                      className="shrink-0 w-24 h-24 rounded-2xl overflow-hidden border border-white/10 hover:border-primary transition-colors cursor-pointer"
+                      className="shrink-0 w-24 h-24 rounded-2xl overflow-hidden border border-black/10 hover:border-primary transition-colors cursor-pointer bg-black/[0.02]"
                     >
                       <img
                         src={img}
@@ -164,16 +164,16 @@ const ProductDetailPage = () => {
                     </span>
                   </div>
 
-                  <h1 className="font-display text-5xl md:text-7xl font-black tracking-tighter text-white leading-none mb-6">
+                  <h1 className="font-display text-5xl md:text-7xl font-black tracking-tighter text-foreground leading-none mb-6">
                     {product.title}
                   </h1>
 
                   <div className="flex items-end gap-4">
-                    <span className="text-4xl font-black text-white leading-none">
+                    <span className="text-4xl font-black text-foreground leading-none">
                       ${product.price}
                     </span>
                     {product.compareAtPrice && (
-                      <span className="text-xl text-white/30 line-through font-light decoration-primary decoration-2 decoration-slice">
+                      <span className="text-xl text-foreground/30 line-through font-light decoration-primary decoration-2 decoration-slice">
                         ${product.compareAtPrice}
                       </span>
                     )}
@@ -181,7 +181,7 @@ const ProductDetailPage = () => {
                 </div>
 
                 <div className="space-y-6">
-                  <p className="text-lg text-white/50 leading-relaxed font-light">
+                  <p className="text-lg text-foreground/60 leading-relaxed font-light">
                     {product.description}
                   </p>
 
@@ -197,11 +197,11 @@ const ProductDetailPage = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-4 pt-10 border-t border-white/5">
+                <div className="flex flex-col gap-4 pt-10 border-t border-black/5">
                   <div className="flex gap-4">
                     <Button
                       size="lg"
-                      className="flex-1 h-20 rounded-full bg-primary hover:bg-white hover:text-primary transition-all duration-500 font-black text-xs uppercase tracking-[0.3em] shadow-2xl shadow-primary/20"
+                      className="flex-1 h-20 rounded-full bg-black text-white hover:bg-primary hover:text-white transition-all duration-500 font-black text-xs uppercase tracking-[0.3em] shadow-2xl shadow-black/10"
                       onClick={handleAddToCart}
                       disabled={!product.inStock}
                     >
@@ -210,7 +210,7 @@ const ProductDetailPage = () => {
                     <Button
                       variant="outline"
                       size="icon"
-                      className={`h-20 w-20 rounded-full border-white/10 hover:bg-white/5 transition-all ${wishlisted ? "bg-primary/10 border-primary/20 text-primary" : ""}`}
+                      className={`h-20 w-20 rounded-full border-black/10 hover:bg-black/5 transition-all ${wishlisted ? "bg-primary/10 border-primary/20 text-primary" : ""}`}
                       onClick={handleWishlist}
                     >
                       <Heart
@@ -218,7 +218,7 @@ const ProductDetailPage = () => {
                       />
                     </Button>
                   </div>
-                  <p className="text-center text-[10px] text-white/30 font-black uppercase tracking-widest">
+                  <p className="text-center text-[10px] text-foreground/30 font-black uppercase tracking-widest">
                     Free Shipping from Bali on all orders above $150
                   </p>
                 </div>
@@ -226,18 +226,20 @@ const ProductDetailPage = () => {
                 {/* Material info list */}
                 <div className="grid grid-cols-2 gap-4 mt-auto pt-12">
                   <div className="glass p-6 rounded-3xl">
-                    <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">
+                    <p className="text-[10px] font-black text-foreground/40 uppercase tracking-widest mb-1">
                       Material
                     </p>
-                    <p className="font-black text-sm uppercase">
+                    <p className="font-black text-sm uppercase text-foreground">
                       {product.material}
                     </p>
                   </div>
                   <div className="glass p-6 rounded-3xl">
-                    <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">
+                    <p className="text-[10px] font-black text-foreground/40 uppercase tracking-widest mb-1">
                       Hand-finished
                     </p>
-                    <p className="font-black text-sm uppercase">24h Polish</p>
+                    <p className="font-black text-sm uppercase text-foreground">
+                      24h Polish
+                    </p>
                   </div>
                 </div>
               </div>

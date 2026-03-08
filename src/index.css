@@ -6,14 +6,14 @@
 
 @layer base {
   :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
 
-    --card: 240 10% 4.9%;
-    --card-foreground: 0 0% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
 
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
 
     --primary: 340 82% 52%;
     --primary-foreground: 0 0% 100%;
@@ -21,8 +21,8 @@
     --secondary: 190 85% 48%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
 
     --accent: 45 96% 53%;
     --accent-foreground: 240 10% 8.9%;
@@ -30,36 +30,40 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
     --ring: 340 82% 52%;
 
     --radius: 1.25rem;
 
-    /* Vibrant palette tokens */
+    /* Vibrant palette tokens - slightly adjusted for white bg */
     --coral: 340 82% 52%;
     --electric-blue: 190 85% 48%;
-    --sunny: 45 96% 53%;
+    --sunny: 45 96% 51%;
     --magenta: 320 72% 55%;
     --teal: 170 65% 42%;
     --ink: 240 10% 4%;
   }
 
-  .light {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 4.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
   }
 }
 
 @layer base {
+  html {
+    overflow-x: hidden;
+  }
+
   * {
     @apply border-border;
   }
@@ -69,6 +73,7 @@
     font-family: "Outfit", sans-serif;
     font-weight: 300;
     overflow-x: hidden;
+    width: 100%;
   }
 
   h1,
@@ -86,11 +91,11 @@
 
 @layer utilities {
   .glass {
-    @apply bg-background/30 backdrop-blur-xl border border-white/10;
+    @apply bg-white/70 backdrop-blur-xl border border-black/5;
   }
 
   .glass-dark {
-    @apply bg-black/40 backdrop-blur-2xl border border-white/5;
+    @apply bg-black/90 backdrop-blur-2xl border border-white/10;
   }
 
   .text-gradient-vibrant {
@@ -111,24 +116,20 @@
   }
 
   .bg-mesh-gradient {
-    background-color: hsl(var(--background));
+    background-color: #ffffff;
     background-image:
-      radial-gradient(at 0% 0%, hsla(340, 82%, 52%, 0.15) 0px, transparent 50%),
+      radial-gradient(at 0% 0%, hsla(340, 82%, 52%, 0.1) 0px, transparent 50%),
       radial-gradient(
         at 100% 0%,
-        hsla(190, 85%, 48%, 0.15) 0px,
+        hsla(190, 85%, 48%, 0.1) 0px,
         transparent 50%
       ),
       radial-gradient(
         at 100% 100%,
-        hsla(45, 96%, 53%, 0.1) 0px,
+        hsla(45, 96%, 53%, 0.08) 0px,
         transparent 50%
       ),
-      radial-gradient(
-        at 0% 100%,
-        hsla(320, 72%, 55%, 0.15) 0px,
-        transparent 50%
-      );
+      radial-gradient(at 0% 100%, hsla(320, 72%, 55%, 0.1) 0px, transparent 50%);
   }
 
   .animate-reveal {
@@ -161,7 +162,7 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-  opacity: 0.03;
+  opacity: 0.02;
   z-index: 9999;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }

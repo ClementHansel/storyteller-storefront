@@ -77,22 +77,22 @@ const SearchPage = () => {
   return (
     <Layout>
       <div className="relative min-h-screen pt-40 pb-20">
-        <div className="container relative z-10">
+        <div className="container relative z-10 w-full overflow-hidden">
           <div className="mb-20">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
               <div>
                 <p className="text-primary text-[10px] font-black uppercase tracking-[0.5em] mb-4">
                   {query ? "Search Results" : "Catalog"}
                 </p>
-                <h1 className="font-display text-6xl md:text-8xl font-black text-white tracking-tighter leading-none uppercase">
+                <h1 className="font-display text-6xl md:text-8xl font-black text-foreground tracking-tighter leading-none uppercase">
                   {query ? `"${query}"` : "The shop."}
                 </h1>
               </div>
-              <div className="glass px-6 py-4 rounded-2xl">
-                <span className="text-2xl font-black text-white">
+              <div className="glass px-6 py-4 rounded-2xl border-black/5">
+                <span className="text-2xl font-black text-foreground">
                   {searchResults.length}
                 </span>
-                <span className="ml-2 text-[10px] font-black uppercase tracking-widest text-white/40">
+                <span className="ml-2 text-[10px] font-black uppercase tracking-widest text-foreground/40">
                   Unique Pieces Found
                 </span>
               </div>
@@ -101,7 +101,7 @@ const SearchPage = () => {
 
           <div className="grid gap-12 lg:grid-cols-[280px_1fr]">
             <aside className="lg:sticky lg:top-32 h-fit">
-              <div className="glass-dark p-8 rounded-[2rem] border-white/5 shadow-2xl">
+              <div className="glass p-8 rounded-[2rem] border-black/5 shadow-xl ring-1 ring-black/5">
                 <SmartFilter filters={filters} onChange={setFilters} />
               </div>
             </aside>
@@ -113,8 +113,8 @@ const SearchPage = () => {
                 </div>
               ))}
               {searchResults.length === 0 && (
-                <div className="col-span-full py-40 text-center glass rounded-[3rem]">
-                  <p className="text-white/40 font-black tracking-widest uppercase">
+                <div className="col-span-full py-40 text-center glass rounded-[3rem] border-black/5">
+                  <p className="text-foreground/40 font-black tracking-widest uppercase">
                     No pieces found matching your criteria.
                   </p>
                 </div>

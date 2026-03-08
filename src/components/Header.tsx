@@ -35,7 +35,7 @@ export function Header() {
   return (
     <header className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
       <div className="container max-w-7xl pointer-events-auto">
-        <nav className="glass-dark rounded-full px-6 py-2 flex items-center justify-between shadow-2xl border-white/10 ring-1 ring-white/5 transition-all duration-500 hover:ring-white/20">
+        <nav className="glass rounded-full px-6 py-2 flex items-center justify-between shadow-xl border border-black/5 ring-1 ring-black/5 transition-all duration-500 hover:ring-black/10">
           {/* Logo */}
           <Link to="/" className="shrink-0 group flex items-center gap-2">
             <img
@@ -43,7 +43,7 @@ export function Header() {
               alt={storeName}
               className="h-8 md:h-10 w-auto object-contain transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110"
             />
-            <span className="font-display font-black text-xs md:text-sm tracking-tighter text-white hidden sm:block uppercase">
+            <span className="font-display font-black text-xs md:text-sm tracking-tighter text-foreground hidden sm:block uppercase">
               Bambu Silver
             </span>
           </Link>
@@ -52,13 +52,13 @@ export function Header() {
           <div className="hidden md:flex items-center gap-8 ml-8">
             <Link
               to="/chapters"
-              className="text-[10px] font-black uppercase tracking-[0.2em] text-white/70 hover:text-primary transition-all hover:tracking-[0.3em]"
+              className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/60 hover:text-primary transition-all hover:tracking-[0.3em]"
             >
               Collections
             </Link>
             <Link
               to="/search"
-              className="text-[10px] font-black uppercase tracking-[0.2em] text-white/70 hover:text-primary transition-all hover:tracking-[0.3em]"
+              className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/60 hover:text-primary transition-all hover:tracking-[0.3em]"
             >
               Shop
             </Link>
@@ -75,7 +75,7 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-9 w-9 text-white/70 hover:text-primary hover:bg-white/5 rounded-full"
+                className="h-9 w-9 text-foreground/60 hover:text-primary hover:bg-black/5 rounded-full"
               >
                 <Heart className="h-4 w-4" />
               </Button>
@@ -86,7 +86,7 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="relative h-10 w-10 text-white hover:text-primary hover:bg-white/5 rounded-full ring-1 ring-white/10"
+                className="relative h-10 w-10 text-foreground hover:text-primary hover:bg-black/5 rounded-full ring-1 ring-black/10"
                 onClick={() => !isAuthenticated && handleAuthAction("cart")}
               >
                 <ShoppingBag className="h-5 w-5" />
@@ -103,7 +103,7 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="hidden md:flex items-center gap-2 h-9 px-4 text-[10px] font-black uppercase tracking-widest text-white/70 hover:text-primary hover:bg-white/5 rounded-full"
+                className="hidden md:flex items-center gap-2 h-9 px-4 text-[10px] font-black uppercase tracking-widest text-foreground/60 hover:text-primary hover:bg-black/5 rounded-full"
                 onClick={logout}
               >
                 <User className="h-3.5 w-3.5" />
@@ -114,7 +114,7 @@ export function Header() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-9 px-4 text-[10px] font-black uppercase tracking-widest text-white/70 hover:text-primary hover:bg-white/5 rounded-full"
+                  className="h-9 px-4 text-[10px] font-black uppercase tracking-widest text-foreground/60 hover:text-primary hover:bg-black/5 rounded-full"
                 >
                   Login
                 </Button>
@@ -127,14 +127,14 @@ export function Header() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-9 w-9 text-white"
+                  className="h-9 w-9 text-foreground"
                 >
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
               <SheetContent
                 side="top"
-                className="w-full h-fit bg-background/95 backdrop-blur-2xl border-b-white/10 pt-20"
+                className="w-full h-fit bg-background/95 backdrop-blur-2xl border-b border-black/5 pt-20"
               >
                 <nav className="flex flex-col gap-6 items-center text-center pb-12">
                   <Link

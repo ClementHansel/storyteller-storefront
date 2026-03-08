@@ -16,23 +16,23 @@ const STORE_LOCATIONS = [
 
 export function Footer() {
   return (
-    <footer className="bg-ink text-white relative overflow-hidden">
+    <footer className="bg-white text-foreground relative overflow-hidden border-t border-black/5">
       {/* Decorative background text */}
-      <div className="absolute top-0 right-0 opacity-5 select-none pointer-events-none translate-x-1/4 -translate-y-1/4">
+      <div className="absolute top-0 right-0 opacity-[0.03] select-none pointer-events-none translate-x-1/4 -translate-y-1/4">
         <span className="text-[30vw] font-black tracking-tighter italic">
           BALI
         </span>
       </div>
 
-      <div className="container py-32 relative z-10">
+      <div className="container py-32 relative z-10 w-full overflow-hidden">
         <div className="grid gap-16 md:grid-cols-2 lg:grid-cols-4">
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 overflow-hidden">
             <h3 className="font-display text-5xl md:text-7xl font-black tracking-tighter mb-8 leading-none">
               BAMBU
               <br />
               <span className="text-primary italic">SILVER.</span>
             </h3>
-            <p className="max-w-md text-white/50 text-lg font-light leading-relaxed">
+            <p className="max-w-md text-foreground/50 text-lg font-light leading-relaxed">
               We create jewelry for the bold, the vibrant, and the visionary.
               Every piece is a testament to the soul of Bali and the art of the
               handmade.
@@ -40,7 +40,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-8">
+            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground/30 mb-8">
               Navigation
             </h4>
             <nav className="flex flex-col gap-4">
@@ -72,7 +72,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-8">
+            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground/30 mb-8">
               Locations
             </h4>
             <div className="flex flex-col gap-4">
@@ -92,7 +92,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-32 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="mt-32 pt-8 border-t border-black/5 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex gap-8">
             <a
               href="https://instagram.com"
@@ -107,7 +107,7 @@ export function Footer() {
               <Mail className="h-5 w-5" />
             </a>
           </div>
-          <p className="text-[10px] font-black uppercase tracking-widest text-white/30">
+          <p className="text-[10px] font-black uppercase tracking-widest text-foreground/30">
             © {new Date().getFullYear()} BAMBU SILVER. ALL RIGHTS RESERVED.
           </p>
           <p className="text-[10px] font-black uppercase tracking-widest text-primary italic">

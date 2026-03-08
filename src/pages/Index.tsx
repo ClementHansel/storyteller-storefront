@@ -24,11 +24,11 @@ const Index = () => {
       {/* Hero — Extreme Impact */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image with Parallax-like feel */}
-        <div className="absolute inset-0 z-0 scale-105 animate-float opacity-40">
+        <div className="absolute inset-0 z-0 scale-105 animate-float opacity-20">
           <img
             src={heroModel}
             alt="Hero model"
-            className="w-full h-full object-cover grayscale"
+            className="w-full h-full object-cover"
           />
         </div>
 
@@ -36,24 +36,24 @@ const Index = () => {
         <div className="absolute top-1/4 -left-20 w-80 h-80 bg-primary/20 rounded-full blur-[120px] animate-pulse" />
         <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-secondary/20 rounded-full blur-[120px] animate-pulse" />
 
-        <div className="relative z-10 w-full text-center px-4">
+        <div className="relative z-10 w-full text-center px-4 max-w-7xl mx-auto">
           <div
-            className="inline-block px-4 py-1 border border-white/20 rounded-full mb-8 animate-reveal opacity-0"
+            className="inline-block px-4 py-1 border border-black/10 rounded-full mb-8 animate-reveal opacity-0"
             style={{ animationDelay: "200ms" }}
           >
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60">
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-foreground/40">
               Crafted in Bali • 925 Sterling
             </span>
           </div>
 
-          <h1 className="font-display text-[14vw] md:text-[10vw] font-black leading-[0.85] tracking-tighter text-white mix-blend-overlay">
+          <h1 className="font-display text-[14vw] md:text-[10vw] font-black leading-[0.85] tracking-tighter text-foreground">
             SILVER
             <br />
             <span className="text-gradient-vibrant italic">SOUL</span>
           </h1>
 
           <p
-            className="mt-8 text-lg md:text-xl text-white/50 font-light max-w-xl mx-auto uppercase tracking-widest animate-reveal opacity-0"
+            className="mt-8 text-lg md:text-xl text-foreground/40 font-light max-w-xl mx-auto uppercase tracking-widest animate-reveal opacity-0"
             style={{ animationDelay: "600ms" }}
           >
             Unapologetic jewelry for the bold and the visionary.
@@ -66,15 +66,15 @@ const Index = () => {
             <Button
               asChild
               size="lg"
-              className="rounded-full h-16 px-12 bg-white text-black hover:bg-primary hover:text-white transition-all duration-500 font-black text-xs tracking-widest uppercase"
+              className="rounded-full h-16 px-12 bg-black text-white hover:bg-primary hover:text-white transition-all duration-500 font-black text-xs tracking-widest uppercase shadow-xl"
             >
               <Link to="/search">Explore Pieces</Link>
             </Button>
             <Button
               asChild
-              variant="ghost"
+              variant="outline"
               size="lg"
-              className="rounded-full h-16 px-12 text-white hover:bg-white/10 font-black text-xs tracking-widest uppercase border border-white/10"
+              className="rounded-full h-16 px-12 text-foreground hover:bg-black hover:text-white font-black text-xs tracking-widest uppercase border-black/10"
             >
               <Link to="/chapters">The Collections</Link>
             </Button>
@@ -83,7 +83,7 @@ const Index = () => {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-          <div className="w-[1px] h-20 bg-gradient-to-b from-transparent via-white/50 to-transparent animate-shimmer" />
+          <div className="w-[1px] h-20 bg-gradient-to-b from-transparent via-black/20 to-transparent animate-shimmer" />
         </div>
       </section>
 
@@ -124,20 +124,20 @@ const Index = () => {
       </section>
 
       {/* Chapters/Collections - Masonryish grid */}
-      <section className="py-32 bg-ink/50 backdrop-blur-3xl relative overflow-hidden">
-        <div className="container relative z-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-20">
-            <div>
+      <section className="py-32 bg-muted/30 backdrop-blur-3xl relative overflow-hidden">
+        <div className="container relative z-10 w-full overflow-hidden">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+            <div className="max-w-full overflow-hidden">
               <p className="text-primary text-xs font-black uppercase tracking-[0.3em] mb-4">
                 The Narrative
               </p>
-              <h2 className="text-6xl md:text-7xl font-black tracking-tighter">
+              <h2 className="text-6xl md:text-7xl font-black tracking-tighter leading-none">
                 COLLECTIONS
               </h2>
             </div>
             <Link
               to="/chapters"
-              className="text-xs font-black uppercase tracking-widest hover:text-primary transition-colors py-4 md:py-0"
+              className="text-xs font-black uppercase tracking-widest hover:text-primary transition-colors py-4 md:py-0 whitespace-nowrap"
             >
               View All Chapters →
             </Link>
@@ -223,16 +223,16 @@ const Index = () => {
       </section>
 
       {/* Newsletter - Glassy */}
-      <section className="py-32 container">
-        <div className="glass-dark rounded-[40px] p-12 md:p-24 flex flex-col md:flex-row items-center gap-12 overflow-hidden relative">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-secondary/20 rounded-full blur-[100px]" />
-          <div className="relative z-10 flex-1">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-6">
+      <section className="py-32 container w-full overflow-hidden">
+        <div className="bg-muted/50 rounded-[40px] p-8 md:p-24 flex flex-col md:flex-row items-center gap-12 overflow-hidden relative border border-black/5 shadow-2xl">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-secondary/10 rounded-full blur-[100px]" />
+          <div className="relative z-10 flex-1 w-full">
+            <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-6 leading-none">
               JOIN THE INNER
               <br />
               <span className="text-primary italic">CIRCLE.</span>
             </h2>
-            <p className="text-white/60 font-light max-w-sm">
+            <p className="text-foreground/60 font-light max-w-sm">
               Early access to drops, exclusive events, and a peek into the soul
               of Bali.
             </p>
@@ -241,9 +241,9 @@ const Index = () => {
             <input
               type="email"
               placeholder="YOUR EMAIL"
-              className="bg-white/5 border border-white/10 rounded-full px-8 py-5 text-white w-full sm:w-[300px] font-black text-xs tracking-widest focus:outline-none focus:ring-2 focus:ring-primary"
+              className="bg-white border border-black/10 rounded-full px-8 py-5 text-foreground w-full sm:w-[300px] font-black text-xs tracking-widest focus:outline-none focus:ring-2 focus:ring-primary shadow-sm"
             />
-            <Button className="rounded-full h-16 px-10 bg-primary hover:bg-white hover:text-primary transition-all font-black text-xs uppercase tracking-widest">
+            <Button className="rounded-full h-16 px-10 bg-primary hover:bg-black hover:text-white transition-all font-black text-xs uppercase tracking-widest shadow-xl">
               Subscribe
             </Button>
           </div>

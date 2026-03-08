@@ -55,31 +55,31 @@ export function SmartFilter({ filters, onChange }: SmartFilterProps) {
           value={filters.sort}
           onValueChange={(v) => onChange({ ...filters, sort: v as SortOption })}
         >
-          <SelectTrigger className="w-full rounded-full bg-white/5 border-white/10 text-[10px] font-black uppercase tracking-widest h-12 px-6">
+          <SelectTrigger className="w-full rounded-full bg-black/[0.03] border-black/10 text-[10px] font-black uppercase tracking-widest h-12 px-6">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="bg-ink border-white/10">
+          <SelectContent className="bg-white border-black/10">
             <SelectItem
               value="narrative"
-              className="text-[10px] font-black uppercase tracking-widest text-white"
+              className="text-[10px] font-black uppercase tracking-widest text-foreground"
             >
               Curated Order
             </SelectItem>
             <SelectItem
               value="price-asc"
-              className="text-[10px] font-black uppercase tracking-widest text-white"
+              className="text-[10px] font-black uppercase tracking-widest text-foreground"
             >
               Price: Low → High
             </SelectItem>
             <SelectItem
               value="price-desc"
-              className="text-[10px] font-black uppercase tracking-widest text-white"
+              className="text-[10px] font-black uppercase tracking-widest text-foreground"
             >
               Price: High → Low
             </SelectItem>
             <SelectItem
               value="newest"
-              className="text-[10px] font-black uppercase tracking-widest text-white"
+              className="text-[10px] font-black uppercase tracking-widest text-foreground"
             >
               Newest Drops
             </SelectItem>
@@ -104,7 +104,7 @@ export function SmartFilter({ filters, onChange }: SmartFilterProps) {
               className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
                 filters.chapters.includes(ch.slug)
                   ? "bg-primary text-white shadow-lg shadow-primary/20 scale-105"
-                  : "bg-white/5 text-white/40 hover:bg-white/10 border border-white/5"
+                  : "bg-black/[0.03] text-foreground/40 hover:bg-black/[0.05] border border-black/5"
               }`}
             >
               {ch.name}
@@ -130,14 +130,14 @@ export function SmartFilter({ filters, onChange }: SmartFilterProps) {
               }
             >
               <div
-                className={`w-4 h-4 rounded flex items-center justify-center border transition-all ${filters.materials.includes(m) ? "bg-primary border-primary" : "bg-white/5 border-white/20"}`}
+                className={`w-4 h-4 rounded flex items-center justify-center border transition-all ${filters.materials.includes(m) ? "bg-primary border-primary" : "bg-black/[0.03] border-black/10"}`}
               >
                 {filters.materials.includes(m) && (
                   <div className="w-1.5 h-1.5 bg-white rounded-full" />
                 )}
               </div>
               <span
-                className={`text-[10px] font-black uppercase tracking-widest transition-colors ${filters.materials.includes(m) ? "text-white" : "text-white/40 group-hover:text-white/60"}`}
+                className={`text-[10px] font-black uppercase tracking-widest transition-colors ${filters.materials.includes(m) ? "text-foreground" : "text-foreground/40 group-hover:text-foreground/60"}`}
               >
                 {m}
               </span>
@@ -163,7 +163,7 @@ export function SmartFilter({ filters, onChange }: SmartFilterProps) {
               className={`px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all ${
                 filters.styles.includes(s)
                   ? "bg-secondary text-white shadow-lg shadow-secondary/20 scale-105"
-                  : "bg-white/5 text-white/40 hover:bg-white/10"
+                  : "bg-black/[0.03] text-foreground/40 hover:bg-black/[0.05]"
               }`}
             >
               {s}
