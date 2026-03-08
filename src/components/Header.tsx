@@ -64,7 +64,7 @@ export function Header() {
               <span className="hidden lg:inline">Account</span>
             </Button>
           ) : (
-            <Link to={loginUrl}>
+            <Link to="/login">
               <Button
                 variant="ghost"
                 size="sm"
