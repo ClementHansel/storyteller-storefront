@@ -13,12 +13,12 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
-  const { isAuthenticated, loginUrl } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   const handleAddToCart = () => {
     if (!isAuthenticated) {
       toast.info('Please sign in to add items to your cart', {
-        action: { label: 'Sign In', onClick: () => window.location.href = loginUrl },
+        action: { label: 'Sign In', onClick: () => window.location.href = '/login' },
       });
       return;
     }

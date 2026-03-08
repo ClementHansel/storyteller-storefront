@@ -17,14 +17,14 @@ import logo from "../assets/logo.png";
 
 export function Header() {
   const { itemCount } = useCart();
-  const { isAuthenticated, loginUrl, user, logout } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
 
   const handleAuthAction = (action: string) => {
     if (!isAuthenticated) {
       toast.info("Please sign in to access your " + action, {
         action: {
           label: "Sign In",
-          onClick: () => (window.location.href = loginUrl),
+          onClick: () => (window.location.href = '/login'),
         },
       });
       return false;
@@ -64,7 +64,7 @@ export function Header() {
               <span className="hidden lg:inline">Account</span>
             </Button>
           ) : (
-            <Link to={loginUrl}>
+            <Link to="/login">
               <Button
                 variant="ghost"
                 size="sm"
@@ -154,7 +154,7 @@ export function Header() {
                       </button>
                     </>
                   ) : (
-                    <Link to={loginUrl} className="text-sm font-medium text-primary hover:text-foreground transition-colors">
+                    <Link to="/login" className="text-sm font-medium text-primary hover:text-foreground transition-colors">
                       Sign In
                     </Link>
                   )}
