@@ -48,13 +48,13 @@ const WishlistPage = () => {
     (product: Product) => {
       if (!isAuthenticated) {
         toast.info('Please sign in to add items to your cart', {
-          action: { label: 'Sign In', onClick: () => (window.location.href = loginUrl) },
+          action: { label: 'Sign In', onClick: () => (window.location.href = '/login') },
         });
         return;
       }
       addItem(product);
     },
-    [isAuthenticated, loginUrl, addItem],
+    [isAuthenticated, addItem],
   );
 
   useDocumentTitle('Wishlist — Bambu Silver by Estela');

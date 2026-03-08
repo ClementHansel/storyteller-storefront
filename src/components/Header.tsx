@@ -154,7 +154,7 @@ export function Header() {
                       </button>
                     </>
                   ) : (
-                    <Link to={loginUrl} className="text-sm font-medium text-primary hover:text-foreground transition-colors">
+                    <Link to="/login" className="text-sm font-medium text-primary hover:text-foreground transition-colors">
                       Sign In
                     </Link>
                   )}
