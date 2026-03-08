@@ -16,36 +16,41 @@ import RegisterPage from "./pages/RegisterPage";
 import AdminConfigPage from "./pages/AdminConfigPage";
 import WishlistPage from "./pages/WishlistPage";
 import ContactPage from "./pages/ContactPage";
+import EcommerceHubPage from "./pages/EcommerceHubPage"; // Added import for EcommerceHubPage
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <AuthProvider>
-        <CartProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/chapters" element={<ChaptersPage />} />
-              <Route path="/chapters/:slug" element={<ChapterDetailPage />} />
-              <Route path="/products/:id" element={<ProductDetailPage />} />
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/wishlist" element={<WishlistPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/admin/config" element={<AdminConfigPage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </CartProvider>
-      </AuthProvider>
-    </TooltipProvider>
+    <AuthProvider>
+      <CartProvider>
+        <TooltipProvider>
+          <div className="relative min-h-screen bg-mesh-gradient selection:bg-primary selection:text-primary-foreground">
+            <div className="noise" />
+            <Toaster />
+            <Sonner position="top-center" expand={true} richColors />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/chapters" element={<ChaptersPage />} />
+                <Route path="/chapters/:slug" element={<ChapterDetailPage />} />
+                <Route path="/search" element={<SearchPage />} />
+                <Route path="/product/:slug" element={<ProductDetailPage />} />
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/wishlist" element={<WishlistPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/hub" element={<EcommerceHubPage />} />
+                <Route path="/admin/config" element={<AdminConfigPage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </div>
+        </TooltipProvider>
+      </CartProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 

@@ -24,7 +24,7 @@ export function Header() {
       toast.info("Please sign in to access your " + action, {
         action: {
           label: "Sign In",
-          onClick: () => (window.location.href = '/login'),
+          onClick: () => (window.location.href = "/login"),
         },
       });
       return false;
@@ -33,159 +33,143 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border">
-      <div className="container flex h-16 items-center gap-6">
-        {/* Logo */}
-        <Link to="/" className="shrink-0 group">
-          <img
-            src={logo}
-            alt={storeName}
-            className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-          />
-        </Link>
-
-        {/* Search — center (desktop) */}
-        <div className="hidden md:block flex-1 max-w-lg mx-auto">
-          <FastSearch />
-        </div>
-
-        {/* Icon cluster */}
-        <div className="ml-auto flex items-center gap-1">
-          {/* Account */}
-          {isAuthenticated ? (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 text-sm text-muted-foreground hover:text-primary"
-              onClick={logout}
-              title={`Signed in as ${user?.name}`}
-            >
-              <User className="h-4 w-4" />
-              <span className="hidden lg:inline">Account</span>
-            </Button>
-          ) : (
-            <Link to="/login">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 text-sm text-muted-foreground hover:text-primary"
-              >
-                <User className="h-4 w-4" />
-                <span className="hidden lg:inline">Login</span>
-              </Button>
-            </Link>
-          )}
-
-          {/* Wishlist */}
-          <Link to="/wishlist">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 text-sm text-muted-foreground hover:text-primary"
-            >
-              <Heart className="h-4 w-4" />
-            </Button>
+    <header className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+      <div className="container max-w-7xl pointer-events-auto">
+        <nav className="glass-dark rounded-full px-6 py-2 flex items-center justify-between shadow-2xl border-white/10 ring-1 ring-white/5 transition-all duration-500 hover:ring-white/20">
+          {/* Logo */}
+          <Link to="/" className="shrink-0 group flex items-center gap-2">
+            <img
+              src={logo}
+              alt={storeName}
+              className="h-8 md:h-10 w-auto object-contain transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110"
+            />
+            <span className="font-display font-black text-xs md:text-sm tracking-tighter text-white hidden sm:block uppercase">
+              Bambu Silver
+            </span>
           </Link>
 
-          {/* Cart */}
-          {isAuthenticated ? (
-            <Link to="/cart">
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-8 ml-8">
+            <Link
+              to="/chapters"
+              className="text-[10px] font-black uppercase tracking-[0.2em] text-white/70 hover:text-primary transition-all hover:tracking-[0.3em]"
+            >
+              Collections
+            </Link>
+            <Link
+              to="/search"
+              className="text-[10px] font-black uppercase tracking-[0.2em] text-white/70 hover:text-primary transition-all hover:tracking-[0.3em]"
+            >
+              Shop
+            </Link>
+          </div>
+
+          <div className="hidden md:flex flex-1 max-w-xs mx-auto px-4">
+            <FastSearch />
+          </div>
+
+          {/* Icon cluster */}
+          <div className="flex items-center gap-2">
+            {/* Wishlist */}
+            <Link to="/wishlist" className="hidden sm:block">
               <Button
                 variant="ghost"
-                size="sm"
-                className="relative inline-flex items-center gap-1.5 h-9 px-3 text-sm text-muted-foreground hover:text-primary"
+                size="icon"
+                className="h-9 w-9 text-white/70 hover:text-primary hover:bg-white/5 rounded-full"
               >
-                <ShoppingBag className="h-4 w-4" />
+                <Heart className="h-4 w-4" />
+              </Button>
+            </Link>
+
+            {/* Cart */}
+            <Link to={isAuthenticated ? "/cart" : "/login"}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative h-10 w-10 text-white hover:text-primary hover:bg-white/5 rounded-full ring-1 ring-white/10"
+                onClick={() => !isAuthenticated && handleAuthAction("cart")}
+              >
+                <ShoppingBag className="h-5 w-5" />
                 {itemCount > 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-black text-white shadow-lg animate-pulse">
                     {itemCount}
                   </span>
                 )}
               </Button>
             </Link>
-          ) : (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="inline-flex items-center gap-1.5 h-9 px-3 text-sm text-muted-foreground hover:text-primary"
-              onClick={() => handleAuthAction("cart")}
-            >
-              <ShoppingBag className="h-4 w-4" />
-            </Button>
-          )}
 
-          {/* Mobile menu */}
-          <Sheet>
-            <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon" className="h-9 w-9">
-                <Menu className="h-5 w-5" />
+            {/* User/Auth */}
+            {isAuthenticated ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="hidden md:flex items-center gap-2 h-9 px-4 text-[10px] font-black uppercase tracking-widest text-white/70 hover:text-primary hover:bg-white/5 rounded-full"
+                onClick={logout}
+              >
+                <User className="h-3.5 w-3.5" />
+                <span>{user?.name?.split(" ")[0]}</span>
               </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-80 bg-background">
-              <SheetHeader>
-                <SheetTitle className="font-display text-xl font-bold">
-                  {storeName}
-                </SheetTitle>
-              </SheetHeader>
-              <div className="mt-6">
-                <FastSearch />
-              </div>
-              <nav className="mt-8 flex flex-col gap-4">
-                <Link to="/" className="text-sm font-semibold uppercase tracking-wider text-foreground hover:text-primary transition-colors">
-                  Home
-                </Link>
-                <Link to="/chapters" className="text-sm font-semibold uppercase tracking-wider text-foreground hover:text-primary transition-colors">
-                  Collections
-                </Link>
-                <Link to="/search" className="text-sm font-semibold uppercase tracking-wider text-foreground hover:text-primary transition-colors">
-                  Shop
-                </Link>
-                <Link to="/contact" className="text-sm font-semibold uppercase tracking-wider text-foreground hover:text-primary transition-colors">
-                  Contact
-                </Link>
-                <div className="border-t border-border pt-4">
-                  {isAuthenticated ? (
-                    <>
-                      <Link to="/cart" className="block text-sm font-medium text-foreground hover:text-primary transition-colors mb-3">
-                        Cart ({itemCount})
-                      </Link>
-                      <button onClick={logout} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                        Sign Out
-                      </button>
-                    </>
-                  ) : (
-                    <Link to="/login" className="text-sm font-medium text-primary hover:text-foreground transition-colors">
-                      Sign In
-                    </Link>
-                  )}
-                </div>
-              </nav>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </div>
+            ) : (
+              <Link to="/login" className="hidden md:block">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 px-4 text-[10px] font-black uppercase tracking-widest text-white/70 hover:text-primary hover:bg-white/5 rounded-full"
+                >
+                  Login
+                </Button>
+              </Link>
+            )}
 
-      {/* Nav bar — desktop */}
-      <nav className="hidden md:block border-t border-border/50">
-        <div className="container flex h-10 items-center justify-between">
-          <div className="flex items-center gap-8">
-            <Link to="/chapters" className="text-xs font-bold uppercase tracking-widest text-foreground/70 hover:text-primary transition-colors">
-              Collections
-            </Link>
-            <Link to="/search" className="text-xs font-bold uppercase tracking-widest text-foreground/70 hover:text-primary transition-colors">
-              Shop All
-            </Link>
-            <Link to="/search?category=new" className="text-xs font-bold uppercase tracking-widest text-foreground/70 hover:text-primary transition-colors">
-              New Arrivals
-            </Link>
+            {/* Mobile Toggle */}
+            <Sheet>
+              <SheetTrigger asChild className="md:hidden">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-9 w-9 text-white"
+                >
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="top"
+                className="w-full h-fit bg-background/95 backdrop-blur-2xl border-b-white/10 pt-20"
+              >
+                <nav className="flex flex-col gap-6 items-center text-center pb-12">
+                  <Link
+                    to="/"
+                    className="font-display text-4xl font-black text-foreground hover:text-primary tracking-tighter uppercase transition-all"
+                  >
+                    Home
+                  </Link>
+                  <Link
+                    to="/chapters"
+                    className="font-display text-4xl font-black text-foreground hover:text-primary tracking-tighter uppercase transition-all"
+                  >
+                    Collections
+                  </Link>
+                  <Link
+                    to="/search"
+                    className="font-display text-4xl font-black text-foreground hover:text-primary tracking-tighter uppercase transition-all"
+                  >
+                    Shop All
+                  </Link>
+                  <Link
+                    to="/contact"
+                    className="font-display text-4xl font-black text-foreground hover:text-primary tracking-tighter uppercase transition-all"
+                  >
+                    Contact
+                  </Link>
+                  <div className="w-full max-w-xs mt-4">
+                    <FastSearch />
+                  </div>
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
-          <div className="flex items-center gap-8">
-            <Link to="/contact" className="text-xs font-bold uppercase tracking-widest text-foreground/70 hover:text-primary transition-colors">
-              Contact
-            </Link>
-          </div>
-        </div>
-      </nav>
+        </nav>
+      </div>
     </header>
   );
 }

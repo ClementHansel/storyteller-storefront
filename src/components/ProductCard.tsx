@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
-import { Product } from '@/types';
-import { ProductImage } from './ProductImage';
-import { Button } from './ui/button';
-import { useCart } from '@/contexts/CartContext';
-import { useAuth } from '@/contexts/AuthContext';
-import { ShoppingBag } from 'lucide-react';
-import { toast } from 'sonner';
+import { Link } from "react-router-dom";
+import { Product } from "@/types";
+import { ProductImage } from "./ProductImage";
+import { Button } from "./ui/button";
+import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { ShoppingBag } from "lucide-react";
+import { toast } from "sonner";
 
 interface ProductCardProps {
   product: Product;
@@ -17,8 +17,11 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const handleAddToCart = () => {
     if (!isAuthenticated) {
-      toast.info('Please sign in to add items to your cart', {
-        action: { label: 'Sign In', onClick: () => window.location.href = '/login' },
+      toast.info("Please sign in to add items to your cart", {
+        action: {
+          label: "Sign In",
+          onClick: () => (window.location.href = "/login"),
+        },
       });
       return;
     }
@@ -26,42 +29,69 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="group">
-      <Link to={`/products/${product.id}`} className="block">
-        <div className="relative overflow-hidden rounded-xl">
+    <div className="group relative">
+      <Link to={`/product/${product.slug}`} className="block">
+        <div className="relative overflow-hidden rounded-[2rem] bg-ink/20 border border-white/5 transition-all duration-700 hover:rounded-[1rem] hover:shadow-2xl hover:shadow-primary/20">
           <ProductImage
             src={product.images[0]}
             alt={product.title}
-            className="transition-transform duration-700 group-hover:scale-105"
+            className="transition-transform duration-1000 group-hover:scale-110 group-hover:rotate-2"
           />
-          {/* Quick add overlay */}
-          <div className="absolute inset-x-0 bottom-0 flex justify-center gap-2 p-4 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+
+          {/* Quick add floating button */}
+          <div className="absolute top-4 right-4 z-20">
             <Button
-              size="sm"
-              className="rounded-full text-xs font-bold px-5 bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg"
-              onClick={(e) => { e.preventDefault(); handleAddToCart(); }}
+              size="icon"
+              className="h-10 w-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-primary hover:text-white transition-all transform scale-0 group-hover:scale-100 duration-500"
+              onClick={(e) => {
+                e.preventDefault();
+                handleAddToCart();
+              }}
               disabled={!product.inStock}
             >
-              <ShoppingBag className="h-3.5 w-3.5 mr-1.5" />
-              {product.inStock ? 'Add to Bag' : 'Sold Out'}
+              <ShoppingBag className="h-4 w-4" />
             </Button>
           </div>
-          {product.compareAtPrice && (
-            <span className="absolute top-3 left-3 bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">
-              Sale
-            </span>
-          )}
-        </div>
-        <div className="mt-4 space-y-1">
-          <h3 className="font-display text-base font-bold text-foreground group-hover:text-primary transition-colors leading-tight">
-            {product.title}
-          </h3>
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-foreground">${product.price}</span>
+
+          {/* Tags */}
+          <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+            {!product.inStock && (
+              <span className="bg-ink text-white text-[8px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-white/10">
+                Out of Stock
+              </span>
+            )}
             {product.compareAtPrice && (
-              <span className="text-xs text-muted-foreground line-through">${product.compareAtPrice}</span>
+              <span className="bg-primary text-white text-[8px] font-black uppercase tracking-widest px-3 py-1 rounded-full animate-pulse">
+                Season Flash
+              </span>
             )}
           </div>
+
+          {/* Price overlay - artistic */}
+          <div className="absolute inset-x-0 bottom-0 p-6 z-20 flex items-end justify-between translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-black/80 to-transparent">
+            <div className="flex flex-col">
+              <span className="text-[10px] font-black text-primary uppercase tracking-widest">
+                Handcrafted
+              </span>
+              <span className="text-2xl font-black text-white leading-none">
+                ${product.price}
+              </span>
+            </div>
+            {product.compareAtPrice && (
+              <span className="text-xs text-white/50 line-through font-light">
+                ${product.compareAtPrice}
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-6">
+          <h3 className="font-display text-xl font-black text-foreground/90 uppercase tracking-tighter group-hover:text-primary transition-colors leading-tight">
+            {product.title}
+          </h3>
+          <p className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-black mt-2">
+            Bali Edition
+          </p>
         </div>
       </Link>
     </div>

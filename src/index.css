@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Outfit:wght@100..900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,14 +6,14 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 8%;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
 
-    --card: 0 0% 98%;
-    --card-foreground: 240 10% 8%;
+    --card: 240 10% 4.9%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 8%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
 
     --primary: 340 82% 52%;
     --primary-foreground: 0 0% 100%;
@@ -21,29 +21,20 @@
     --secondary: 190 85% 48%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 240 5% 94%;
-    --muted-foreground: 240 5% 46%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
 
     --accent: 45 96% 53%;
-    --accent-foreground: 240 10% 8%;
+    --accent-foreground: 240 10% 8.9%;
 
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 240 5% 90%;
-    --input: 240 5% 90%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
     --ring: 340 82% 52%;
 
-    --radius: 0.75rem;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 10% 8%;
-    --sidebar-primary: 340 82% 52%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 45 96% 53%;
-    --sidebar-accent-foreground: 240 10% 8%;
-    --sidebar-border: 240 5% 90%;
-    --sidebar-ring: 340 82% 52%;
+    --radius: 1.25rem;
 
     /* Vibrant palette tokens */
     --coral: 340 82% 52%;
@@ -51,9 +42,20 @@
     --sunny: 45 96% 53%;
     --magenta: 320 72% 55%;
     --teal: 170 65% 42%;
-    --gradient-vibrant: linear-gradient(135deg, hsl(340 82% 52%), hsl(320 72% 55%), hsl(190 85% 48%));
-    --gradient-warm: linear-gradient(135deg, hsl(340 82% 52%), hsl(45 96% 53%));
-    --gradient-cool: linear-gradient(135deg, hsl(190 85% 48%), hsl(170 65% 42%));
+    --ink: 240 10% 4%;
+  }
+
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
   }
 }
 
@@ -64,38 +66,102 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 400;
-    letter-spacing: -0.01em;
+    font-family: "Outfit", sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    letter-spacing: -0.03em;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Syne", sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
   }
 }
 
 @layer utilities {
-  .text-gradient-vibrant {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(var(--coral)), hsl(var(--magenta)), hsl(var(--electric-blue)));
+  .glass {
+    @apply bg-background/30 backdrop-blur-xl border border-white/10;
   }
 
-  .text-gradient-warm {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(var(--coral)), hsl(var(--sunny)));
+  .glass-dark {
+    @apply bg-black/40 backdrop-blur-2xl border border-white/5;
+  }
+
+  .text-gradient-vibrant {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-coral via-magenta to-electric-blue;
+  }
+
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent bg-gradient-to-b from-sunny to-orange-500;
   }
 
   .bg-vibrant-gradient {
-    background-image: linear-gradient(135deg, hsl(var(--coral)), hsl(var(--magenta)), hsl(var(--electric-blue)));
+    background: linear-gradient(
+      135deg,
+      hsl(var(--coral)),
+      hsl(var(--magenta)),
+      hsl(var(--electric-blue))
+    );
   }
 
-  .bg-warm-gradient {
-    background-image: linear-gradient(135deg, hsl(var(--coral)), hsl(var(--sunny)));
+  .bg-mesh-gradient {
+    background-color: hsl(var(--background));
+    background-image:
+      radial-gradient(at 0% 0%, hsla(340, 82%, 52%, 0.15) 0px, transparent 50%),
+      radial-gradient(
+        at 100% 0%,
+        hsla(190, 85%, 48%, 0.15) 0px,
+        transparent 50%
+      ),
+      radial-gradient(
+        at 100% 100%,
+        hsla(45, 96%, 53%, 0.1) 0px,
+        transparent 50%
+      ),
+      radial-gradient(
+        at 0% 100%,
+        hsla(320, 72%, 55%, 0.15) 0px,
+        transparent 50%
+      );
   }
 
-  .bg-cool-gradient {
-    background-image: linear-gradient(135deg, hsl(var(--electric-blue)), hsl(var(--teal)));
+  .animate-reveal {
+    animation: reveal 1s cubic-bezier(0.77, 0, 0.175, 1) forwards;
   }
+
+  .mask-blob {
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23FF0066' d='M44.7,-76.4C58.3,-69.2,70.1,-59,78.5,-46.3C86.9,-33.5,91.9,-18.3,91.2,-3.3C90.5,11.7,84.1,26.5,75.4,40.1C66.7,53.7,55.7,66.1,42.4,73.4C29.1,80.7,13.5,82.9,-1.9,85.1C-17.3,87.4,-34.7,89.7,-49.4,84.3C-64.2,78.9,-76.4,65.8,-83.1,51C-89.8,36.2,-91,19.6,-89.2,3.8C-87.5,-12.1,-82.7,-27.2,-74.7,-40.8C-66.7,-54.4,-55.5,-66.6,-42.4,-74.2C-29.4,-81.9,-14.7,-85.1,0.2,-85.4C15.1,-85.8,31.1,-83.5,44.7,-76.4Z' transform='translate(100 100)' /%3E%3C/svg%3E");
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+  }
+}
+
+@keyframes reveal {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.noise {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.03;
+  z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }

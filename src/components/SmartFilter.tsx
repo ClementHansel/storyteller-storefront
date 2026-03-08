@@ -1,11 +1,40 @@
-import { FilterState, SortOption } from '@/types';
-import { storyChapters } from '@/config/store-config';
-import { Checkbox } from './ui/checkbox';
-import { Label } from './ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { FilterState, SortOption } from "@/types";
+import { storyChapters } from "@/config/store-config";
+import { Checkbox } from "./ui/checkbox";
+import { Label } from "./ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
-const MATERIALS = ['Sterling Silver', 'Sterling Silver & Moonstone', 'Sterling Silver & Linen', 'Sterling Silver & Silk', 'Sterling Silver & Leather', 'Sterling Silver & Porcelain', 'Sterling Silver & Garnet', 'Fine Silver'];
-const STYLES = ['Minimal', 'Rustic', 'Artisan', 'Elegant', 'Contemporary', 'Bold', 'Classic', 'Romantic', 'Bohemian', 'Rugged', 'Organic', 'Avant-Garde', 'Statement'];
+const MATERIALS = [
+  "Sterling Silver",
+  "Sterling Silver & Moonstone",
+  "Sterling Silver & Linen",
+  "Sterling Silver & Silk",
+  "Sterling Silver & Leather",
+  "Sterling Silver & Porcelain",
+  "Sterling Silver & Garnet",
+  "Fine Silver",
+];
+const STYLES = [
+  "Minimal",
+  "Rustic",
+  "Artisan",
+  "Elegant",
+  "Contemporary",
+  "Bold",
+  "Classic",
+  "Romantic",
+  "Bohemian",
+  "Rugged",
+  "Organic",
+  "Avant-Garde",
+  "Statement",
+];
 
 interface SmartFilterProps {
   filters: FilterState;
@@ -17,67 +46,131 @@ export function SmartFilter({ filters, onChange }: SmartFilterProps) {
     arr.includes(item) ? arr.filter((v) => v !== item) : [...arr, item];
 
   return (
-    <aside className="space-y-8">
-      <div>
-        <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">Sort By</h4>
-        <Select value={filters.sort} onValueChange={(v) => onChange({ ...filters, sort: v as SortOption })}>
-          <SelectTrigger className="w-full rounded-lg text-xs"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="narrative">Curated Order</SelectItem>
-            <SelectItem value="price-asc">Price: Low → High</SelectItem>
-            <SelectItem value="price-desc">Price: High → Low</SelectItem>
-            <SelectItem value="newest">Newest</SelectItem>
+    <div className="space-y-10">
+      <div className="space-y-4">
+        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
+          Sort Selection
+        </h4>
+        <Select
+          value={filters.sort}
+          onValueChange={(v) => onChange({ ...filters, sort: v as SortOption })}
+        >
+          <SelectTrigger className="w-full rounded-full bg-white/5 border-white/10 text-[10px] font-black uppercase tracking-widest h-12 px-6">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-ink border-white/10">
+            <SelectItem
+              value="narrative"
+              className="text-[10px] font-black uppercase tracking-widest text-white"
+            >
+              Curated Order
+            </SelectItem>
+            <SelectItem
+              value="price-asc"
+              className="text-[10px] font-black uppercase tracking-widest text-white"
+            >
+              Price: Low → High
+            </SelectItem>
+            <SelectItem
+              value="price-desc"
+              className="text-[10px] font-black uppercase tracking-widest text-white"
+            >
+              Price: High → Low
+            </SelectItem>
+            <SelectItem
+              value="newest"
+              className="text-[10px] font-black uppercase tracking-widest text-white"
+            >
+              Newest Drops
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      <div>
-        <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">Collections</h4>
-        <div className="space-y-2.5">
+      <div className="space-y-4">
+        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
+          Collections
+        </h4>
+        <div className="flex flex-wrap gap-2">
           {storyChapters.map((ch) => (
-            <div key={ch.id} className="flex items-center gap-2">
-              <Checkbox
-                id={`ch-${ch.id}`}
-                checked={filters.chapters.includes(ch.slug)}
-                onCheckedChange={() => onChange({ ...filters, chapters: toggleArrayItem(filters.chapters, ch.slug) })}
-              />
-              <Label htmlFor={`ch-${ch.id}`} className="text-xs cursor-pointer">{ch.name}</Label>
-            </div>
+            <button
+              key={ch.id}
+              onClick={() =>
+                onChange({
+                  ...filters,
+                  chapters: toggleArrayItem(filters.chapters, ch.slug),
+                })
+              }
+              className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+                filters.chapters.includes(ch.slug)
+                  ? "bg-primary text-white shadow-lg shadow-primary/20 scale-105"
+                  : "bg-white/5 text-white/40 hover:bg-white/10 border border-white/5"
+              }`}
+            >
+              {ch.name}
+            </button>
           ))}
         </div>
       </div>
 
-      <div>
-        <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">Material</h4>
-        <div className="space-y-2.5">
+      <div className="space-y-4">
+        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
+          Materials
+        </h4>
+        <div className="flex flex-col gap-3">
           {MATERIALS.map((m) => (
-            <div key={m} className="flex items-center gap-2">
-              <Checkbox
-                id={`mat-${m}`}
-                checked={filters.materials.includes(m)}
-                onCheckedChange={() => onChange({ ...filters, materials: toggleArrayItem(filters.materials, m) })}
-              />
-              <Label htmlFor={`mat-${m}`} className="text-xs cursor-pointer">{m}</Label>
+            <div
+              key={m}
+              className="flex items-center gap-3 group cursor-pointer"
+              onClick={() =>
+                onChange({
+                  ...filters,
+                  materials: toggleArrayItem(filters.materials, m),
+                })
+              }
+            >
+              <div
+                className={`w-4 h-4 rounded flex items-center justify-center border transition-all ${filters.materials.includes(m) ? "bg-primary border-primary" : "bg-white/5 border-white/20"}`}
+              >
+                {filters.materials.includes(m) && (
+                  <div className="w-1.5 h-1.5 bg-white rounded-full" />
+                )}
+              </div>
+              <span
+                className={`text-[10px] font-black uppercase tracking-widest transition-colors ${filters.materials.includes(m) ? "text-white" : "text-white/40 group-hover:text-white/60"}`}
+              >
+                {m}
+              </span>
             </div>
           ))}
         </div>
       </div>
 
-      <div>
-        <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">Style</h4>
-        <div className="space-y-2.5">
+      <div className="space-y-4">
+        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
+          Style Vibe
+        </h4>
+        <div className="flex flex-wrap gap-2">
           {STYLES.map((s) => (
-            <div key={s} className="flex items-center gap-2">
-              <Checkbox
-                id={`sty-${s}`}
-                checked={filters.styles.includes(s)}
-                onCheckedChange={() => onChange({ ...filters, styles: toggleArrayItem(filters.styles, s) })}
-              />
-              <Label htmlFor={`sty-${s}`} className="text-xs cursor-pointer">{s}</Label>
-            </div>
+            <button
+              key={s}
+              onClick={() =>
+                onChange({
+                  ...filters,
+                  styles: toggleArrayItem(filters.styles, s),
+                })
+              }
+              className={`px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all ${
+                filters.styles.includes(s)
+                  ? "bg-secondary text-white shadow-lg shadow-secondary/20 scale-105"
+                  : "bg-white/5 text-white/40 hover:bg-white/10"
+              }`}
+            >
+              {s}
+            </button>
           ))}
         </div>
       </div>
-    </aside>
+    </div>
   );
 }
