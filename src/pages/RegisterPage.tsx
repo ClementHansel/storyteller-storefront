@@ -26,7 +26,7 @@ const RegisterPage = () => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      toast({ title: 'Passwords don't match', description: 'Please make sure both passwords are the same.', variant: 'destructive' });
+      toast({ title: 'Passwords do not match', description: 'Please make sure both passwords are the same.', variant: 'destructive' });
       return;
     }
 
