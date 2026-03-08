@@ -2,8 +2,8 @@
 // Zenvix Order Service (requires Bearer token)
 // ============================================================
 
-import zenvixClient from '@/lib/zenvixClient';
-import Decimal from 'decimal.js';
+import zenvixClient from "@/lib/zenvixClient";
+import Decimal from "decimal.js";
 
 export interface OrderItem {
   productId: string;
@@ -29,14 +29,16 @@ export interface OrderResponse {
   paymentUrl?: string;
 }
 
-export interface OrderNormalized extends Omit<OrderResponse, 'total'> {
+export interface OrderNormalized extends Omit<OrderResponse, "total"> {
   total: Decimal;
   totalDisplay: string;
 }
 
-export async function checkout(payload: CheckoutPayload): Promise<OrderNormalized> {
-  const { data } = await zenvixClient.post<OrderResponse>('/orders', payload);
-  const total = new Decimal(data.total || '0');
+export async function checkout(
+  payload: CheckoutPayload,
+): Promise<OrderNormalized> {
+  const { data } = await zenvixClient.post<OrderResponse>("orders", payload);
+  const total = new Decimal(data.total || "0");
   return {
     ...data,
     total,

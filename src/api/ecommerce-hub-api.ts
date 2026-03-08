@@ -2,7 +2,7 @@
 // EcommerceHub API — BambuSilver ↔ Zenvix backend
 // ============================================================
 
-import { getZenvixConfig } from './zenvix-config';
+import { getZenvixConfig } from "./zenvix-config";
 
 // ── Types ─────────────────────────────────────────────────────
 
@@ -13,7 +13,7 @@ export interface EcommerceConnectorRecord {
   name: string;
   platform: string;
   domain: string;
-  status: 'active' | 'revoked' | 'suspended';
+  status: "active" | "revoked" | "suspended";
   settings?: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
@@ -76,21 +76,21 @@ export interface TestResult {
 function buildHeaders(): HeadersInit {
   const cfg = getZenvixConfig();
   return {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${cfg.apiKey}`,
-    'x-tenant-id': cfg.tenantId,
-    'x-branch-id': cfg.branchId,
+    "Content-Type": "application/json",
+    "x-tenant-id": cfg.tenantId,
+    "x-client-id": cfg.clientId,
+    "x-client-secret": cfg.clientSecret,
   };
 }
 
 async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
   const cfg = getZenvixConfig();
-  if (!cfg.gatewayUrl || !cfg.apiKey) {
-    throw new Error('Gateway not configured.');
+  if (!cfg.gatewayUrl || !cfg.tenantId || !cfg.clientId || !cfg.clientSecret) {
+    throw new Error("Gateway not configured.");
   }
   // Sanitize path
-  const safePath = path.replace(/\.{2,}/g, '').replace(/^\//, '');
-  const url = `${cfg.gatewayUrl.replace(/\/$/, '')}/${safePath}`;
+  const safePath = path.replace(/\.{2,}/g, "").replace(/^\//, "");
+  const url = `${cfg.gatewayUrl.replace(/\/$/, "")}/${safePath}`;
   const res = await fetch(url, {
     ...init,
     headers: { ...buildHeaders(), ...(init.headers ?? {}) },
@@ -106,16 +106,24 @@ async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
 // ── EcommerceConnector API ─────────────────────────────────────
 
 export async function listConnectors(): Promise<EcommerceConnectorRecord[]> {
-  return apiFetch<EcommerceConnectorRecord[]>('retail/ecommerce-hub/connectors');
+  return apiFetch<EcommerceConnectorRecord[]>(
+    "retail/ecommerce-hub/connectors",
+  );
 }
 
-export async function getConnector(id: string): Promise<EcommerceConnectorRecord> {
-  return apiFetch<EcommerceConnectorRecord>(`retail/ecommerce-hub/connectors/${encodeURIComponent(id)}`);
+export async function getConnector(
+  id: string,
+): Promise<EcommerceConnectorRecord> {
+  return apiFetch<EcommerceConnectorRecord>(
+    `retail/ecommerce-hub/connectors/${encodeURIComponent(id)}`,
+  );
 }
 
-export async function createConnector(payload: CreateConnectorPayload): Promise<ConnectorCreateResult> {
-  return apiFetch<ConnectorCreateResult>('retail/ecommerce-hub/connectors', {
-    method: 'POST',
+export async function createConnector(
+  payload: CreateConnectorPayload,
+): Promise<ConnectorCreateResult> {
+  return apiFetch<ConnectorCreateResult>("retail/ecommerce-hub/connectors", {
+    method: "POST",
     body: JSON.stringify(payload),
   });
 }
@@ -124,44 +132,61 @@ export async function updateConnector(
   id: string,
   payload: Partial<CreateConnectorPayload> & { status?: string },
 ): Promise<EcommerceConnectorRecord> {
-  return apiFetch<EcommerceConnectorRecord>(`retail/ecommerce-hub/connectors/${encodeURIComponent(id)}`, {
-    method: 'PUT',
-    body: JSON.stringify(payload),
-  });
+  return apiFetch<EcommerceConnectorRecord>(
+    `retail/ecommerce-hub/connectors/${encodeURIComponent(id)}`,
+    {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    },
+  );
 }
 
-export async function deleteConnector(id: string): Promise<{ deleted: boolean }> {
-  return apiFetch<{ deleted: boolean }>(`retail/ecommerce-hub/connectors/${encodeURIComponent(id)}`, {
-    method: 'DELETE',
-  });
+export async function deleteConnector(
+  id: string,
+): Promise<{ deleted: boolean }> {
+  return apiFetch<{ deleted: boolean }>(
+    `retail/ecommerce-hub/connectors/${encodeURIComponent(id)}`,
+    {
+      method: "DELETE",
+    },
+  );
 }
 
-export async function rotateConnectorKey(id: string): Promise<{ plainApiKey: string; warning: string }> {
+export async function rotateConnectorKey(
+  id: string,
+): Promise<{ plainApiKey: string; warning: string }> {
   return apiFetch<{ plainApiKey: string; warning: string }>(
     `retail/ecommerce-hub/connectors/${encodeURIComponent(id)}/rotate-key`,
-    { method: 'POST' },
+    { method: "POST" },
   );
 }
 
 export async function testConnector(id: string): Promise<TestResult> {
-  return apiFetch<TestResult>(`retail/ecommerce-hub/connectors/${encodeURIComponent(id)}/test`, {
-    method: 'POST',
-  });
+  return apiFetch<TestResult>(
+    `retail/ecommerce-hub/connectors/${encodeURIComponent(id)}/test`,
+    {
+      method: "POST",
+    },
+  );
 }
 
 // ── RetailChannel API ──────────────────────────────────────────
 
 export async function listChannels(): Promise<ChannelRecord[]> {
-  return apiFetch<ChannelRecord[]>('retail/ecommerce-hub/channels');
+  return apiFetch<ChannelRecord[]>("retail/ecommerce-hub/channels");
 }
 
 export async function getChannel(id: string): Promise<ChannelRecord> {
-  return apiFetch<ChannelRecord>(`retail/ecommerce-hub/channels/${encodeURIComponent(id)}`);
+  return apiFetch<ChannelRecord>(
+    `retail/ecommerce-hub/channels/${encodeURIComponent(id)}`,
+  );
 }
 
-export async function createChannel(payload: CreateChannelPayload): Promise<ChannelCreateResult> {
-  return apiFetch<ChannelCreateResult>('retail/ecommerce-hub/channels', {
-    method: 'POST',
+export async function createChannel(
+  payload: CreateChannelPayload,
+): Promise<ChannelCreateResult> {
+  return apiFetch<ChannelCreateResult>("retail/ecommerce-hub/channels", {
+    method: "POST",
     body: JSON.stringify(payload),
   });
 }
@@ -170,30 +195,44 @@ export async function updateChannel(
   id: string,
   payload: Partial<CreateChannelPayload> & { status?: string },
 ): Promise<ChannelRecord> {
-  return apiFetch<ChannelRecord>(`retail/ecommerce-hub/channels/${encodeURIComponent(id)}`, {
-    method: 'PUT',
-    body: JSON.stringify(payload),
-  });
-}
-
-export async function deleteChannel(id: string): Promise<{ deleted: boolean }> {
-  return apiFetch<{ deleted: boolean }>(`retail/ecommerce-hub/channels/${encodeURIComponent(id)}`, {
-    method: 'DELETE',
-  });
-}
-
-export async function rotateChannelCredentials(
-  id: string,
-): Promise<{ plainClientId: string; plainClientSecret: string; warning: string }> {
-  return apiFetch<{ plainClientId: string; plainClientSecret: string; warning: string }>(
-    `retail/ecommerce-hub/channels/${encodeURIComponent(id)}/rotate-credentials`,
-    { method: 'POST' },
+  return apiFetch<ChannelRecord>(
+    `retail/ecommerce-hub/channels/${encodeURIComponent(id)}`,
+    {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    },
   );
 }
 
-export async function revokeChannelCredentials(id: string): Promise<{ revoked: boolean }> {
+export async function deleteChannel(id: string): Promise<{ deleted: boolean }> {
+  return apiFetch<{ deleted: boolean }>(
+    `retail/ecommerce-hub/channels/${encodeURIComponent(id)}`,
+    {
+      method: "DELETE",
+    },
+  );
+}
+
+export async function rotateChannelCredentials(id: string): Promise<{
+  plainClientId: string;
+  plainClientSecret: string;
+  warning: string;
+}> {
+  return apiFetch<{
+    plainClientId: string;
+    plainClientSecret: string;
+    warning: string;
+  }>(
+    `retail/ecommerce-hub/channels/${encodeURIComponent(id)}/rotate-credentials`,
+    { method: "POST" },
+  );
+}
+
+export async function revokeChannelCredentials(
+  id: string,
+): Promise<{ revoked: boolean }> {
   return apiFetch<{ revoked: boolean }>(
     `retail/ecommerce-hub/channels/${encodeURIComponent(id)}/revoke-credentials`,
-    { method: 'POST' },
+    { method: "POST" },
   );
 }

@@ -6,17 +6,18 @@
 
 export interface ZenvixConfig {
   gatewayUrl: string;
-  apiKey: string;
   tenantId: string;
-  branchId: string;
-  channel: 'ecommerce';
+  clientId: string;
+  clientSecret: string;
+  channel: "ecommerce";
 }
 
 export interface ZenvixHeaders {
-  Authorization: string;
-  'X-Zenvix-Tenant': string;
-  'X-Zenvix-Branch': string;
-  'Content-Type': 'application/json';
+  "x-tenant-id": string;
+  "x-client-id": string;
+  "x-client-secret": string;
+  "Content-Type": "application/json";
+  Authorization?: string;
 }
 
 // ---- Catalog ----
@@ -51,7 +52,7 @@ export interface ZenvixCategory {
 export interface ZenvixPromotion {
   id: string;
   name: string;
-  type: 'percentage' | 'fixed' | 'bogo' | 'bundle';
+  type: "percentage" | "fixed" | "bogo" | "bundle";
   value: number;
   applicableProductIds?: string[];
   applicableCategoryIds?: string[];
@@ -92,13 +93,13 @@ export interface InventoryStatusResponse {
 // ---- Webhook Events ----
 
 export type ZenvixWebhookEventType =
-  | 'product.updated'
-  | 'product.created'
-  | 'product.deleted'
-  | 'inventory.changed'
-  | 'price.changed'
-  | 'promo.updated'
-  | 'category.updated';
+  | "product.updated"
+  | "product.created"
+  | "product.deleted"
+  | "inventory.changed"
+  | "price.changed"
+  | "promo.updated"
+  | "category.updated";
 
 export interface ZenvixWebhookPayload {
   event: ZenvixWebhookEventType;
@@ -111,22 +112,22 @@ export interface ZenvixWebhookPayload {
 // ---- User / Storefront Events ----
 
 export type ZenvixUserEventType =
-  | 'user.register'
-  | 'user.login'
-  | 'user.logout'
-  | 'wishlist.add'
-  | 'wishlist.remove'
-  | 'cart.add'
-  | 'cart.remove'
-  | 'cart.update'
-  | 'checkout.start'
-  | 'payment.completed'
-  | 'order.placed';
+  | "user.register"
+  | "user.login"
+  | "user.logout"
+  | "wishlist.add"
+  | "wishlist.remove"
+  | "cart.add"
+  | "cart.remove"
+  | "cart.update"
+  | "checkout.start"
+  | "payment.completed"
+  | "order.placed";
 
 export interface ZenvixUserEvent {
   tenantId: string;
   branchId: string;
-  channel: 'ecommerce';
+  channel: "ecommerce";
   userId: string;
   timestamp: string;
   eventType: ZenvixUserEventType;
@@ -156,5 +157,5 @@ export interface QueuedEvent {
   retries: number;
   maxRetries: number;
   nextRetryAt: number;
-  status: 'pending' | 'failed' | 'sent';
+  status: "pending" | "failed" | "sent";
 }

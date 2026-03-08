@@ -12,21 +12,26 @@ import type {
   ZenvixCheckoutValidation,
   ZenvixCheckoutSession,
   ZenvixUserEvent,
-} from '@/types/zenvix';
+} from "@/types/zenvix";
 
 function buildHeaders(config: ZenvixConfig): ZenvixHeaders {
-  return {
-    Authorization: `Bearer ${config.apiKey}`,
-    'X-Zenvix-Tenant': config.tenantId,
-    'X-Zenvix-Branch': config.branchId,
-    'Content-Type': 'application/json',
+  const headers: ZenvixHeaders = {
+    "x-tenant-id": config.tenantId,
+    "x-client-id": config.clientId,
+    "x-client-secret": config.clientSecret,
+    "Content-Type": "application/json",
   };
+  return headers;
 }
 
-async function zenvixFetch<T>(config: ZenvixConfig, path: string, init?: RequestInit): Promise<T> {
+async function zenvixFetch<T>(
+  config: ZenvixConfig,
+  path: string,
+  init?: RequestInit,
+): Promise<T> {
   // Sanitize path to prevent traversal
-  const safePath = path.replace(/\.{2,}/g, '').replace(/\/+/g, '/');
-  const baseUrl = config.gatewayUrl.replace(/\/$/, '');
+  const safePath = path.replace(/\.{2,}/g, "").replace(/\/+/g, "/");
+  const baseUrl = config.gatewayUrl.replace(/\/$/, "");
   const url = `${baseUrl}${safePath}`;
   const headers = buildHeaders(config);
 
@@ -45,25 +50,34 @@ async function zenvixFetch<T>(config: ZenvixConfig, path: string, init?: Request
 
 // ---- Catalog ----
 
-export function fetchCatalogProducts(config: ZenvixConfig, params?: { page?: number; pageSize?: number; tags?: string[] }) {
+export function fetchCatalogProducts(
+  config: ZenvixConfig,
+  params?: { page?: number; pageSize?: number; tags?: string[] },
+) {
   const qs = new URLSearchParams();
-  if (params?.page) qs.set('page', String(params.page));
-  if (params?.pageSize) qs.set('pageSize', String(params.pageSize));
-  if (params?.tags?.length) qs.set('tags', params.tags.join(','));
+  if (params?.page) qs.set("page", String(params.page));
+  if (params?.pageSize) qs.set("pageSize", String(params.pageSize));
+  if (params?.tags?.length) qs.set("tags", params.tags.join(","));
   const query = qs.toString();
-  return zenvixFetch<CatalogProductsResponse>(config, `/catalog/products${query ? `?${query}` : ''}`);
+  return zenvixFetch<CatalogProductsResponse>(
+    config,
+    `/catalog/products${query ? `?${query}` : ""}`,
+  );
 }
 
 export function fetchCatalogCategories(config: ZenvixConfig) {
-  return zenvixFetch<CatalogCategoriesResponse>(config, '/catalog/categories');
+  return zenvixFetch<CatalogCategoriesResponse>(config, "/catalog/categories");
 }
 
 export function fetchCatalogPromotions(config: ZenvixConfig) {
-  return zenvixFetch<CatalogPromotionsResponse>(config, '/catalog/promotions');
+  return zenvixFetch<CatalogPromotionsResponse>(config, "/catalog/promotions");
 }
 
-export function fetchInventoryStatus(config: ZenvixConfig, productIds?: string[]) {
-  const qs = productIds?.length ? `?productIds=${productIds.join(',')}` : '';
+export function fetchInventoryStatus(
+  config: ZenvixConfig,
+  productIds?: string[],
+) {
+  const qs = productIds?.length ? `?productIds=${productIds.join(",")}` : "";
   return zenvixFetch<InventoryStatusResponse>(config, `/inventory/status${qs}`);
 }
 
@@ -73,8 +87,8 @@ export function validateCheckout(
   config: ZenvixConfig,
   items: { productId: string; quantity: number; expectedPrice: number }[],
 ) {
-  return zenvixFetch<ZenvixCheckoutValidation>(config, '/checkout/validate', {
-    method: 'POST',
+  return zenvixFetch<ZenvixCheckoutValidation>(config, "/checkout/validate", {
+    method: "POST",
     body: JSON.stringify({ items }),
   });
 }
@@ -83,8 +97,8 @@ export function createZenvixCheckoutSession(
   config: ZenvixConfig,
   items: { productId: string; quantity: number }[],
 ) {
-  return zenvixFetch<ZenvixCheckoutSession>(config, '/checkout/session', {
-    method: 'POST',
+  return zenvixFetch<ZenvixCheckoutSession>(config, "/checkout/session", {
+    method: "POST",
     body: JSON.stringify({ items }),
   });
 }
@@ -93,7 +107,7 @@ export function createZenvixCheckoutSession(
 
 export function sendUserEvent(config: ZenvixConfig, event: ZenvixUserEvent) {
   return zenvixFetch<{ ok: true }>(config, `/events/${event.eventType}`, {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify(event),
   });
 }

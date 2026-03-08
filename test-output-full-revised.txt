@@ -1,0 +1,90 @@
+[dotenv@17.3.1] injecting env (13) from .env.local -- tip: ΓÜí∩╕Å secrets for agents: https://dotenvx.com/as2
+============================================================
+  Zenvix Gateway ΓÇö Connection Test
+============================================================
+  Tenant    : comp-demo-a
+  Branch    : branch_main
+  Gateway   : http://localhost:3001/api/retail/public/events
+  Base URL  : http://localhost:3001/api/retail/public
+  Auth via  : x-api-key header
+============================================================
+
+[1_EVENTS_GATEWAY] POST http://localhost:3001/api/retail/public/events
+  ΓåÆ status: 201 | ok: true
+  ΓåÆ response: {
+  "success": true,
+  "data": {
+    "key": "audit:retail:2f804b0a-3171-454c-8b62-5d1544f0fa3c",
+    "count": 1
+  }
+}
+
+[2_PRODUCTS_CATALOG] GET http://localhost:3001/api/retail/public/products
+  ΓåÆ status: 200 | ok: true
+  ΓåÆ response: [
+  {
+    "id": "10d4e0e0-deed-48b2-a566-0281b4ecbc40",
+    "name": "Cotton T-Shirt Black",
+    "sku": "CLOTH-TSHIRT-BLK",
+    "price": 150000,
+    "stockLevel": "IN_STOCK",
+    "category": "5c902563-da29-4d46-8f78-4f57e48df2cb",
+    "maxQuantity": 999
+  },
+  {
+    "id": "f765960f-3926-479f-9c75-4499ac07ba0b",
+    "name": "Fuji Apple",
+    "sku": "GROC-FRUIT-APL",
+    "price": 50000,
+    "stockLev
+
+[3_CART_EVENT_TEST] POST http://localhost:3001/api/retail/public/events
+  ΓåÆ status: 201 | ok: true
+  ΓåÆ response: {
+  "success": true,
+  "data": {
+    "key": "audit:retail:dd9d3647-b6c7-4dc3-be96-a41c1c8aa60d",
+    "count": 1
+  }
+}
+
+[4_CATEGORIES] GET http://localhost:3001/api/retail/public/categories
+  ΓåÆ status: 404 | ok: false
+  ΓÜá error body: {"message":"Cannot GET /api/retail/public/categories","error":"Not Found","statusCode":404}
+
+[5_PROMOTIONS] GET http://localhost:3001/api/retail/public/promotions
+  ΓÜá error body: {"message":"Cannot GET /api/retail/public/promotions","error":"Not Found","statusCode":404}
+  ΓåÆ status: 404 | ok: false
+
+[6_AUTH_REGISTER] POST http://localhost:3001/api/retail/public/auth/register
+  ΓåÆ status: 500 | ok: false
+  ΓÜá error body: {"statusCode":500,"message":"Internal server error"}
+
+[7_AUTH_LOGIN] POST http://localhost:3001/api/retail/public/auth/login
+  ΓåÆ status: 401 | ok: false
+  ΓÜá error body: {"message":"Invalid email or password","error":"Unauthorized","statusCode":401}
+
+[8_GET_CART] GET http://localhost:3001/api/retail/public/cart
+  ΓåÆ status: 401 | ok: false
+  ΓÜá error body: {"message":"Missing access token","error":"Unauthorized","statusCode":401}
+
+[9_CREATE_ORDER] POST http://localhost:3001/api/retail/public/orders
+  ΓåÆ status: 500 | ok: false
+  ΓÜá error body: {"statusCode":500,"message":"Internal server error"}
+
+============================================================
+  Test Summary
+============================================================
+  Γ£ô  1_EVENTS_GATEWAY       status=201
+  Γ£ô  2_PRODUCTS_CATALOG     status=200
+  Γ£ô  3_CART_EVENT_TEST      status=201
+  Γ£ù  4_CATEGORIES           status=404
+  Γ£ù  5_PROMOTIONS           status=404
+  Γ£ù  6_AUTH_REGISTER        status=500
+  Γ£ù  7_AUTH_LOGIN           status=401
+  Γ£ù  8_GET_CART             status=401
+  Γ£ù  9_CREATE_ORDER         status=500
+
+ΓÜá∩╕Å  One or more steps failed. Check Gateway logs and credentials.
+
+============================================================

@@ -8,21 +8,23 @@
 // - Global structured error handling
 // ============================================================
 
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import {
   getAccessToken,
   getRefreshToken,
   setAccessToken,
   setRefreshToken,
   clearTokens,
-} from './tokenManager';
+} from "./tokenManager";
 
 // ---- Config from env ----
 
-const BASE_URL = import.meta.env.VITE_ZENVIX_API_URL || 'http://localhost:3001/api/retail/public';
-const TENANT_ID = import.meta.env.VITE_ZENVIX_TENANT_ID || '';
-const CLIENT_ID = import.meta.env.VITE_ZENVIX_CLIENT_ID || '';
-const CLIENT_SECRET = import.meta.env.VITE_ZENVIX_CLIENT_SECRET || '';
+const BASE_URL =
+  import.meta.env.VITE_ZENVIX_API_URL ||
+  "https://brown-ducks-stare.loca.lt/api/retail/public";
+const TENANT_ID = import.meta.env.VITE_ZENVIX_TENANT_ID || "";
+const CLIENT_ID = import.meta.env.VITE_ZENVIX_CLIENT_ID || "";
+const CLIENT_SECRET = import.meta.env.VITE_ZENVIX_CLIENT_SECRET || "";
 
 // ---- Structured API Error ----
 
@@ -40,7 +42,7 @@ export class ZenvixApiError extends Error {
 
   constructor(error: ApiError) {
     super(error.message);
-    this.name = 'ZenvixApiError';
+    this.name = "ZenvixApiError";
     this.status = error.status;
     this.code = error.code;
     this.details = error.details;
@@ -50,10 +52,10 @@ export class ZenvixApiError extends Error {
 // ---- Axios instance ----
 
 const zenvixClient = axios.create({
-  baseURL: BASE_URL,
+  baseURL: BASE_URL.endsWith("/") ? BASE_URL : `${BASE_URL}/`,
   timeout: 15_000,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -61,14 +63,14 @@ const zenvixClient = axios.create({
 
 zenvixClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   // Tenant & client credentials on every request
-  config.headers.set('x-tenant-id', TENANT_ID);
-  config.headers.set('x-client-id', CLIENT_ID);
-  config.headers.set('x-client-secret', CLIENT_SECRET);
+  config.headers.set("x-tenant-id", TENANT_ID);
+  config.headers.set("x-client-id", CLIENT_ID);
+  config.headers.set("x-client-secret", CLIENT_SECRET);
 
   // Bearer token if available
   const token = getAccessToken();
   if (token) {
-    config.headers.set('Authorization', `Bearer ${token}`);
+    config.headers.set("Authorization", `Bearer ${token}`);
   }
 
   return config;
@@ -91,7 +93,9 @@ function onTokenRefreshed(token: string) {
 zenvixClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
 
     // ---- Token refresh on 401 ----
     if (error.response?.status === 401 && !originalRequest._retry) {
@@ -105,7 +109,7 @@ zenvixClient.interceptors.response.use(
         // Queue this request until refresh completes
         return new Promise((resolve) => {
           subscribeTokenRefresh((newToken: string) => {
-            originalRequest.headers.set('Authorization', `Bearer ${newToken}`);
+            originalRequest.headers.set("Authorization", `Bearer ${newToken}`);
             resolve(zenvixClient(originalRequest));
           });
         });
@@ -115,27 +119,35 @@ zenvixClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const res = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken: refresh }, {
-          headers: {
-            'Content-Type': 'application/json',
-            'x-tenant-id': TENANT_ID,
-            'x-client-id': CLIENT_ID,
-            'x-client-secret': CLIENT_SECRET,
+        const res = await axios.post(
+          `${BASE_URL}/auth/refresh`,
+          { refreshToken: refresh },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "x-tenant-id": TENANT_ID,
+              "x-client-id": CLIENT_ID,
+              "x-client-secret": CLIENT_SECRET,
+            },
           },
-        });
+        );
 
         const { accessToken, refreshToken: newRefresh } = res.data;
         setAccessToken(accessToken);
         if (newRefresh) setRefreshToken(newRefresh);
 
         onTokenRefreshed(accessToken);
-        originalRequest.headers.set('Authorization', `Bearer ${accessToken}`);
+        originalRequest.headers.set("Authorization", `Bearer ${accessToken}`);
         return zenvixClient(originalRequest);
       } catch {
         clearTokens();
-        onTokenRefreshed('');
+        onTokenRefreshed("");
         return Promise.reject(
-          new ZenvixApiError({ status: 401, message: 'Session expired. Please sign in again.', code: 'TOKEN_EXPIRED' })
+          new ZenvixApiError({
+            status: 401,
+            message: "Session expired. Please sign in again.",
+            code: "TOKEN_EXPIRED",
+          }),
         );
       } finally {
         isRefreshing = false;
@@ -143,7 +155,7 @@ zenvixClient.interceptors.response.use(
     }
 
     return Promise.reject(toApiError(error));
-  }
+  },
 );
 
 // ---- Error normalizer ----
@@ -153,7 +165,7 @@ function toApiError(error: AxiosError): ZenvixApiError {
     const data = error.response.data as Record<string, unknown> | undefined;
     return new ZenvixApiError({
       status: error.response.status,
-      message: (data?.message as string) || 'An error occurred',
+      message: (data?.message as string) || "An error occurred",
       code: (data?.code as string) || undefined,
       details: (data?.details as Record<string, unknown>) || undefined,
     });
@@ -162,15 +174,15 @@ function toApiError(error: AxiosError): ZenvixApiError {
   if (error.request) {
     return new ZenvixApiError({
       status: 0,
-      message: 'Network error. Please check your connection.',
-      code: 'NETWORK_ERROR',
+      message: "Network error. Please check your connection.",
+      code: "NETWORK_ERROR",
     });
   }
 
   return new ZenvixApiError({
     status: 0,
-    message: error.message || 'An unexpected error occurred',
-    code: 'UNKNOWN',
+    message: error.message || "An unexpected error occurred",
+    code: "UNKNOWN",
   });
 }
 

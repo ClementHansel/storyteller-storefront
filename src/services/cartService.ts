@@ -2,8 +2,8 @@
 // Zenvix Cart Service (requires Bearer token)
 // ============================================================
 
-import zenvixClient from '@/lib/zenvixClient';
-import Decimal from 'decimal.js';
+import zenvixClient from "@/lib/zenvixClient";
+import Decimal from "decimal.js";
 
 export interface CartItemRaw {
   id: string;
@@ -43,8 +43,8 @@ export interface CartNormalized {
 }
 
 function normalizeCartItem(item: CartItemRaw): CartItemNormalized {
-  const price = new Decimal(item.price || '0');
-  const subtotal = new Decimal(item.subtotal || '0');
+  const price = new Decimal(item.price || "0");
+  const subtotal = new Decimal(item.subtotal || "0");
   return {
     ...item,
     price,
@@ -55,7 +55,7 @@ function normalizeCartItem(item: CartItemRaw): CartItemNormalized {
 }
 
 function normalizeCart(data: CartResponse): CartNormalized {
-  const total = new Decimal(data.total || '0');
+  const total = new Decimal(data.total || "0");
   return {
     items: data.items.map(normalizeCartItem),
     total,
@@ -66,23 +66,37 @@ function normalizeCart(data: CartResponse): CartNormalized {
 }
 
 export async function getCart(): Promise<CartNormalized> {
-  const { data } = await zenvixClient.get<CartResponse>('/cart');
+  const { data } = await zenvixClient.get<CartResponse>("cart");
   return normalizeCart(data);
 }
 
-export async function addToCart(productId: string, quantity: number = 1): Promise<CartNormalized> {
-  const { data } = await zenvixClient.post<CartResponse>('/cart/items', { productId, quantity });
+export async function addToCart(
+  productId: string,
+  quantity: number = 1,
+): Promise<CartNormalized> {
+  const { data } = await zenvixClient.post<CartResponse>("cart/items", {
+    productId,
+    quantity,
+  });
   return normalizeCart(data);
 }
 
-export async function updateCartItem(itemId: string, quantity: number): Promise<CartNormalized> {
+export async function updateCartItem(
+  itemId: string,
+  quantity: number,
+): Promise<CartNormalized> {
   const safeId = encodeURIComponent(itemId);
-  const { data } = await zenvixClient.patch<CartResponse>(`/cart/items/${safeId}`, { quantity });
+  const { data } = await zenvixClient.patch<CartResponse>(
+    `cart/items/${safeId}`,
+    { quantity },
+  );
   return normalizeCart(data);
 }
 
 export async function removeCartItem(itemId: string): Promise<CartNormalized> {
   const safeId = encodeURIComponent(itemId);
-  const { data } = await zenvixClient.delete<CartResponse>(`/cart/items/${safeId}`);
+  const { data } = await zenvixClient.delete<CartResponse>(
+    `cart/items/${safeId}`,
+  );
   return normalizeCart(data);
 }

@@ -3,12 +3,12 @@
 // Handles accessToken (sessionStorage) and refresh flow
 // ============================================================
 
-const ACCESS_TOKEN_KEY = 'zenvix_access_token';
-const REFRESH_TOKEN_KEY = 'zenvix_refresh_token';
+const ACCESS_TOKEN_KEY = "zenvix_access_token";
+let memoryRefreshToken: string | null = null;
 
 export function getAccessToken(): string | null {
   try {
-    return sessionStorage.getItem(ACCESS_TOKEN_KEY);
+    return localStorage.getItem(ACCESS_TOKEN_KEY);
   } catch {
     return null;
   }
@@ -16,32 +16,24 @@ export function getAccessToken(): string | null {
 
 export function setAccessToken(token: string): void {
   try {
-    sessionStorage.setItem(ACCESS_TOKEN_KEY, token);
+    localStorage.setItem(ACCESS_TOKEN_KEY, token);
   } catch {
-    // sessionStorage unavailable (e.g. incognito in some browsers)
+    // localStorage unavailable
   }
 }
 
 export function getRefreshToken(): string | null {
-  try {
-    return sessionStorage.getItem(REFRESH_TOKEN_KEY);
-  } catch {
-    return null;
-  }
+  return memoryRefreshToken;
 }
 
 export function setRefreshToken(token: string): void {
-  try {
-    sessionStorage.setItem(REFRESH_TOKEN_KEY, token);
-  } catch {
-    // fallback silently
-  }
+  memoryRefreshToken = token;
 }
 
 export function clearTokens(): void {
   try {
-    sessionStorage.removeItem(ACCESS_TOKEN_KEY);
-    sessionStorage.removeItem(REFRESH_TOKEN_KEY);
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    memoryRefreshToken = null;
   } catch {
     // silent
   }

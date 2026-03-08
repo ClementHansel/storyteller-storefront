@@ -2,8 +2,8 @@
 // Zenvix Catalog Service (no JWT required)
 // ============================================================
 
-import zenvixClient from '@/lib/zenvixClient';
-import Decimal from 'decimal.js';
+import zenvixClient from "@/lib/zenvixClient";
+import Decimal from "decimal.js";
 
 export interface CatalogProduct {
   id: string;
@@ -24,7 +24,10 @@ export interface CatalogProduct {
   updatedAt: string;
 }
 
-export interface CatalogProductNormalized extends Omit<CatalogProduct, 'price' | 'compareAtPrice'> {
+export interface CatalogProductNormalized extends Omit<
+  CatalogProduct,
+  "price" | "compareAtPrice"
+> {
   price: Decimal;
   compareAtPrice?: Decimal;
   priceDisplay: string;
@@ -54,14 +57,18 @@ export interface CategoriesResponse {
 
 /** Normalize raw product prices to Decimal instances */
 function normalizeProduct(p: CatalogProduct): CatalogProductNormalized {
-  const price = new Decimal(p.price || '0');
-  const compareAtPrice = p.compareAtPrice ? new Decimal(p.compareAtPrice) : undefined;
+  const price = new Decimal(p.price || "0");
+  const compareAtPrice = p.compareAtPrice
+    ? new Decimal(p.compareAtPrice)
+    : undefined;
   return {
     ...p,
     price,
     compareAtPrice,
     priceDisplay: `$${price.toFixed(2)}`,
-    compareAtPriceDisplay: compareAtPrice ? `$${compareAtPrice.toFixed(2)}` : undefined,
+    compareAtPriceDisplay: compareAtPrice
+      ? `$${compareAtPrice.toFixed(2)}`
+      : undefined,
   };
 }
 
@@ -71,21 +78,30 @@ export async function getProducts(params?: {
   tags?: string[];
   categoryId?: string;
   search?: string;
-}): Promise<{ products: CatalogProductNormalized[]; total: number; page: number; pageSize: number }> {
-  const { data } = await zenvixClient.get<ProductsResponse>('/products', { params });
+}): Promise<{
+  products: CatalogProductNormalized[];
+  total: number;
+  page: number;
+  pageSize: number;
+}> {
+  const { data } = await zenvixClient.get<ProductsResponse>("products", {
+    params,
+  });
   return {
     ...data,
     products: data.products.map(normalizeProduct),
   };
 }
 
-export async function getProductById(id: string): Promise<CatalogProductNormalized> {
+export async function getProductById(
+  id: string,
+): Promise<CatalogProductNormalized> {
   const safeId = encodeURIComponent(id);
-  const { data } = await zenvixClient.get<CatalogProduct>(`/products/${safeId}`);
+  const { data } = await zenvixClient.get<CatalogProduct>(`products/${safeId}`);
   return normalizeProduct(data);
 }
 
 export async function getCategories(): Promise<CatalogCategory[]> {
-  const { data } = await zenvixClient.get<CategoriesResponse>('/categories');
+  const { data } = await zenvixClient.get<CategoriesResponse>("categories");
   return data.categories;
 }

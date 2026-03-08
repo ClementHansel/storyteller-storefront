@@ -2,7 +2,7 @@
 // Zenvix Wishlist Service (requires Bearer token)
 // ============================================================
 
-import zenvixClient from '@/lib/zenvixClient';
+import zenvixClient from "@/lib/zenvixClient";
 
 export interface WishlistItem {
   id: string;
@@ -19,17 +19,25 @@ export interface WishlistResponse {
 }
 
 export async function getWishlist(): Promise<WishlistResponse> {
-  const { data } = await zenvixClient.get<WishlistResponse>('/wishlist');
+  const { data } = await zenvixClient.get<WishlistResponse>("wishlist");
   return data;
 }
 
-export async function addToWishlist(productId: string): Promise<WishlistResponse> {
-  const { data } = await zenvixClient.post<WishlistResponse>('/wishlist/items', { productId });
+export async function addToWishlist(
+  productId: string,
+): Promise<WishlistResponse> {
+  const { data } = await zenvixClient.post<WishlistResponse>("wishlist/items", {
+    productId,
+  });
   return data;
 }
 
-export async function removeWishlistItem(itemId: string): Promise<WishlistResponse> {
+export async function removeWishlistItem(
+  itemId: string,
+): Promise<WishlistResponse> {
   const safeId = encodeURIComponent(itemId);
-  const { data } = await zenvixClient.delete<WishlistResponse>(`/wishlist/items/${safeId}`);
+  const { data } = await zenvixClient.delete<WishlistResponse>(
+    `wishlist/items/${safeId}`,
+  );
   return data;
 }
