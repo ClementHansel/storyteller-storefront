@@ -80,6 +80,8 @@ function buildHeaders(): HeadersInit {
     "x-tenant-id": cfg.tenantId,
     "x-client-id": cfg.clientId,
     "x-client-secret": cfg.clientSecret,
+    "ngrok-skip-browser-warning": "true",
+    "Bypass-Tunnel-Reminder": "true",
   };
 }
 

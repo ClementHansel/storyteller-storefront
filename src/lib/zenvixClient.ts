@@ -67,6 +67,10 @@ zenvixClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   config.headers.set("x-client-id", CLIENT_ID);
   config.headers.set("x-client-secret", CLIENT_SECRET);
 
+  // Bypass tunnel warnings (ngrok & localtunnel)
+  config.headers.set("ngrok-skip-browser-warning", "true");
+  config.headers.set("Bypass-Tunnel-Reminder", "true");
+
   // Bearer token if available
   const token = getAccessToken();
   if (token) {
