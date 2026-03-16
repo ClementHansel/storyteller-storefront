@@ -184,16 +184,11 @@ const CartPage = () => {
                 </span>
               </div>
               <Button
-                className="w-full h-16 rounded-full bg-black text-white hover:bg-primary hover:text-white transition-all font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-black/10"
+                className="w-full h-16 rounded-full bg-foreground text-background hover:bg-primary hover:text-primary-foreground transition-all font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-black/10"
                 size="lg"
                 onClick={handleCheckout}
-                disabled={loading}
               >
-                {loading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  "SECURE CHECKOUT"
-                )}
+                Proceed to Checkout
               </Button>
               <div className="flex items-center justify-center gap-2 opacity-30 grayscale hover:grayscale-0 transition-all duration-500">
                 <div className="w-8 h-8 rounded-full bg-foreground/10 flex items-center justify-center text-[10px] font-black">
