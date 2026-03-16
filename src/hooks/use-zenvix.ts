@@ -107,7 +107,7 @@ export function usePromotions() {
     queryFn: async () => {
       if (!isZenvixConfigured()) return [];
       const res = await fetchCatalogPromotions(getZenvixConfig());
-      return res.data;
+      return res.promotions;
     },
     staleTime: 5 * 60 * 1000,
   });
