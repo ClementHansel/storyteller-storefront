@@ -31,36 +31,8 @@ const CartPage = () => {
     return <Navigate to="/login" replace />;
   }
 
-  const handleCheckout = async () => {
-    if (!user) return;
-    setLoading(true);
-    try {
-      const payload: CheckoutPayload = {
-        customerName: user.name,
-        customerEmail: user.email,
-        customerPhone: user.phone || "",
-        shippingAddress: "",
-        items: items.map((i) => ({
-          productId: i.product.id,
-          quantity: i.quantity,
-          price: String(i.product.price),
-        })),
-        paymentMethod: "card",
-      };
-      const order = await checkout(payload);
-      if (order.paymentUrl) {
-        window.location.href = order.paymentUrl;
-      } else {
-        toast.success(
-          `Order ${order.orderId} placed! Total: ${order.totalDisplay}`,
-          { duration: 5000 },
-        );
-      }
-    } catch (err: any) {
-      toast.error(err?.message || "Checkout failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+  const handleCheckout = () => {
+    navigate("/checkout");
   };
 
   if (cartLoading) {
