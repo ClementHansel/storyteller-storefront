@@ -136,7 +136,7 @@ const Index = () => {
           <span className="text-[40vw] font-black tracking-tighter text-white whitespace-nowrap animate-shimmer">BAMBU</span>
         </div>
         <div className="container relative z-10 text-center">
-          <h2 className="text-4xl sm:text-5xl md:text-9xl font-black text-white italic tracking-tighter mb-8 md:mb-12">
+          <h2 className="text-2xl sm:text-3xl md:text-7xl font-black text-white italic tracking-tighter mb-8 md:mb-12">
             BE UNFORGETTABLE.
           </h2>
           <Button asChild className="rounded-full bg-white text-primary hover:bg-foreground hover:text-background transition-all size-28 md:size-32 text-xs font-black uppercase tracking-widest flex flex-col gap-2">
