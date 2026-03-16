@@ -121,7 +121,7 @@ export function useInventory(productIds?: string[]) {
     queryFn: async () => {
       if (!isZenvixConfigured()) return [];
       const res = await fetchInventoryStatus(getZenvixConfig(), productIds);
-      return res.data;
+      return res.inventory;
     },
     staleTime: 2 * 60 * 1000,
     enabled: isZenvixConfigured(),

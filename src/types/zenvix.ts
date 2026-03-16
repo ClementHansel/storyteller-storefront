@@ -9,6 +9,8 @@ export interface ZenvixConfig {
   tenantId: string;
   clientId: string;
   clientSecret: string;
+  apiKey?: string;
+  branchId?: string;
   channel: "ecommerce";
 }
 
