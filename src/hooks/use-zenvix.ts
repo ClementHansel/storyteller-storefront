@@ -93,7 +93,7 @@ export function useCategories() {
     queryFn: async () => {
       if (!isZenvixConfigured()) return [];
       const res = await fetchCatalogCategories(getZenvixConfig());
-      return res.data;
+      return res.categories;
     },
     staleTime: 10 * 60 * 1000,
   });
