@@ -1,4 +1,4 @@
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -8,13 +8,9 @@ import {
   Minus,
   Plus,
   Trash2,
-  ArrowRight,
   ShoppingBag,
   Loader2,
 } from "lucide-react";
-import { checkout, type CheckoutPayload } from "@/services/orderService";
-import { toast } from "sonner";
-import { useState } from "react";
 
 const CartPage = () => {
   const {
@@ -25,8 +21,8 @@ const CartPage = () => {
     itemCount,
     isLoading: cartLoading,
   } = useCart();
-  const { isAuthenticated, user } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   useDocumentTitle(
     `Cart${itemCount > 0 ? ` (${itemCount})` : ""} — Bambu Silver by Estela`,
   );
