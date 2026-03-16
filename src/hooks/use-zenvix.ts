@@ -93,7 +93,7 @@ export function useCategories() {
     queryFn: async () => {
       if (!isZenvixConfigured()) return [];
       const res = await fetchCatalogCategories(getZenvixConfig());
-      return res.data;
+      return res.categories;
     },
     staleTime: 10 * 60 * 1000,
   });
@@ -107,7 +107,7 @@ export function usePromotions() {
     queryFn: async () => {
       if (!isZenvixConfigured()) return [];
       const res = await fetchCatalogPromotions(getZenvixConfig());
-      return res.data;
+      return res.promotions;
     },
     staleTime: 5 * 60 * 1000,
   });
@@ -121,7 +121,7 @@ export function useInventory(productIds?: string[]) {
     queryFn: async () => {
       if (!isZenvixConfigured()) return [];
       const res = await fetchInventoryStatus(getZenvixConfig(), productIds);
-      return res.data;
+      return res.inventory;
     },
     staleTime: 2 * 60 * 1000,
     enabled: isZenvixConfigured(),

@@ -86,7 +86,7 @@ const ProductDetailPage = () => {
           <h1 className="font-display text-4xl font-black text-foreground mb-8">
             PRODUCT NOT FOUND
           </h1>
-          <Button asChild rounded-full px-12>
+          <Button asChild className="rounded-full px-12">
             <Link to="/search">BACK TO SHOP</Link>
           </Button>
         </div>

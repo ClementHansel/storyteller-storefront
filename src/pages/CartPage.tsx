@@ -1,4 +1,4 @@
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -8,13 +8,9 @@ import {
   Minus,
   Plus,
   Trash2,
-  ArrowRight,
   ShoppingBag,
   Loader2,
 } from "lucide-react";
-import { checkout, type CheckoutPayload } from "@/services/orderService";
-import { toast } from "sonner";
-import { useState } from "react";
 
 const CartPage = () => {
   const {
@@ -25,8 +21,8 @@ const CartPage = () => {
     itemCount,
     isLoading: cartLoading,
   } = useCart();
-  const { isAuthenticated, user } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   useDocumentTitle(
     `Cart${itemCount > 0 ? ` (${itemCount})` : ""} — Bambu Silver by Estela`,
   );
@@ -35,36 +31,8 @@ const CartPage = () => {
     return <Navigate to="/login" replace />;
   }
 
-  const handleCheckout = async () => {
-    if (!user) return;
-    setLoading(true);
-    try {
-      const payload: CheckoutPayload = {
-        customerName: user.name,
-        customerEmail: user.email,
-        customerPhone: user.phone || "",
-        shippingAddress: "",
-        items: items.map((i) => ({
-          productId: i.product.id,
-          quantity: i.quantity,
-          price: String(i.product.price),
-        })),
-        paymentMethod: "card",
-      };
-      const order = await checkout(payload);
-      if (order.paymentUrl) {
-        window.location.href = order.paymentUrl;
-      } else {
-        toast.success(
-          `Order ${order.orderId} placed! Total: ${order.totalDisplay}`,
-          { duration: 5000 },
-        );
-      }
-    } catch (err: any) {
-      toast.error(err?.message || "Checkout failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+  const handleCheckout = () => {
+    navigate("/checkout");
   };
 
   if (cartLoading) {
@@ -216,16 +184,11 @@ const CartPage = () => {
                 </span>
               </div>
               <Button
-                className="w-full h-16 rounded-full bg-black text-white hover:bg-primary hover:text-white transition-all font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-black/10"
+                className="w-full h-16 rounded-full bg-foreground text-background hover:bg-primary hover:text-primary-foreground transition-all font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-black/10"
                 size="lg"
                 onClick={handleCheckout}
-                disabled={loading}
               >
-                {loading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  "SECURE CHECKOUT"
-                )}
+                Proceed to Checkout
               </Button>
               <div className="flex items-center justify-center gap-2 opacity-30 grayscale hover:grayscale-0 transition-all duration-500">
                 <div className="w-8 h-8 rounded-full bg-foreground/10 flex items-center justify-center text-[10px] font-black">

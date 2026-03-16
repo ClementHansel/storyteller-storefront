@@ -11,12 +11,15 @@ import ChapterDetailPage from "./pages/ChapterDetailPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import SearchPage from "./pages/SearchPage";
 import CartPage from "./pages/CartPage";
+import CheckoutPage from "./pages/CheckoutPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import AdminConfigPage from "./pages/AdminConfigPage";
+import AdminArticlesPage from "./pages/AdminArticlesPage";
 import WishlistPage from "./pages/WishlistPage";
 import ContactPage from "./pages/ContactPage";
-import EcommerceHubPage from "./pages/EcommerceHubPage"; // Added import for EcommerceHubPage
+import ShopDetailPage from "./pages/ShopDetailPage";
+import EcommerceHubPage from "./pages/EcommerceHubPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,10 +43,13 @@ const App = () => (
                 <Route path="/search" element={<SearchPage />} />
                 <Route path="/product/:slug" element={<ProductDetailPage />} />
                 <Route path="/cart" element={<CartPage />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/wishlist" element={<WishlistPage />} />
                 <Route path="/contact" element={<ContactPage />} />
+                <Route path="/shop/:slug" element={<ShopDetailPage />} />
                 <Route path="/hub" element={<EcommerceHubPage />} />
                 <Route path="/admin/config" element={<AdminConfigPage />} />
+                <Route path="/admin/articles" element={<AdminArticlesPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
