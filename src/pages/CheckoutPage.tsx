@@ -68,7 +68,11 @@ const CheckoutPage = () => {
     setLoading(true);
     try {
       const payload: CheckoutPayload = {
-        ...result.data,
+        customerName: result.data.customerName,
+        customerEmail: result.data.customerEmail,
+        customerPhone: result.data.customerPhone,
+        shippingAddress: result.data.shippingAddress,
+        paymentMethod: result.data.paymentMethod,
         items: items.map((i) => ({
           productId: i.product.id,
           quantity: i.quantity,
