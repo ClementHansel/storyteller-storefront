@@ -30,14 +30,17 @@ const LoginPage = () => {
         description: "You are now signed in.",
       });
       navigate("/");
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast({
         title: "Sign in failed",
         description:
-          err?.message || "Please check your credentials and try again.",
+          err instanceof Error
+            ? err.message
+            : "Please check your credentials and try again.",
         variant: "destructive",
       });
     }
+
   };
 
   if (isAuthenticated) {

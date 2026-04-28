@@ -50,13 +50,17 @@ const RegisterPage = () => {
         description: "Welcome to Bambu Silver.",
       });
       navigate("/");
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast({
         title: "Registration failed",
-        description: err?.message || "Something went wrong. Please try again.",
+        description:
+          err instanceof Error
+            ? err.message
+            : "Something went wrong. Please try again.",
         variant: "destructive",
       });
     }
+
   };
 
   return (
