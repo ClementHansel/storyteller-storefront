@@ -46,14 +46,15 @@ export async function trackEvent(
   const config = getZenvixConfig();
 
   const event: ZenvixUserEvent = {
-    tenantId: config.tenantId || 'dev',
-    branchId: config.branchId || 'dev',
-    channel: 'ecommerce',
-    userId,
+    type: eventType,
+    actor: {
+      id: userId || 'anonymous',
+      type: userId ? 'customer' : 'guest',
+    },
     timestamp: new Date().toISOString(),
-    eventType,
     payload,
   };
+
 
   if (!isZenvixConfigured()) {
     // In dev/mock mode — log and queue silently

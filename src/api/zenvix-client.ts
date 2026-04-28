@@ -61,53 +61,36 @@ export function fetchCatalogProducts(
   const query = qs.toString();
   return zenvixFetch<CatalogProductsResponse>(
     config,
-    `/catalog/products${query ? `?${query}` : ""}`,
+    `/products${query ? `?${query}` : ""}`,
   );
 }
 
 export function fetchCatalogCategories(config: ZenvixConfig) {
-  return zenvixFetch<CatalogCategoriesResponse>(config, "/catalog/categories");
+  return zenvixFetch<CatalogCategoriesResponse>(config, "/categories");
 }
 
 export function fetchCatalogPromotions(config: ZenvixConfig) {
-  return zenvixFetch<CatalogPromotionsResponse>(config, "/catalog/promotions");
+  return zenvixFetch<CatalogPromotionsResponse>(config, "/promotions");
 }
 
-export function fetchInventoryStatus(
-  config: ZenvixConfig,
-  productIds?: string[],
-) {
-  const qs = productIds?.length ? `?productIds=${productIds.join(",")}` : "";
-  return zenvixFetch<InventoryStatusResponse>(config, `/inventory/status${qs}`);
-}
+// ---- Orders / Checkout ----
 
-// ---- Checkout ----
-
-export function validateCheckout(
+export function createZenvixOrder(
   config: ZenvixConfig,
-  items: { productId: string; quantity: number; expectedPrice: number }[],
+  order: ZenvixOrderRequest,
 ) {
-  return zenvixFetch<ZenvixCheckoutValidation>(config, "/checkout/validate", {
+  return zenvixFetch<ZenvixOrderResponse>(config, "/orders", {
     method: "POST",
-    body: JSON.stringify({ items }),
-  });
-}
-
-export function createZenvixCheckoutSession(
-  config: ZenvixConfig,
-  items: { productId: string; quantity: number }[],
-) {
-  return zenvixFetch<ZenvixCheckoutSession>(config, "/checkout/session", {
-    method: "POST",
-    body: JSON.stringify({ items }),
+    body: JSON.stringify(order),
   });
 }
 
 // ---- Event Forwarding ----
 
 export function sendUserEvent(config: ZenvixConfig, event: ZenvixUserEvent) {
-  return zenvixFetch<{ ok: true }>(config, `/events/${event.eventType}`, {
+  return zenvixFetch<{ success: boolean }>(config, "/events", {
     method: "POST",
     body: JSON.stringify(event),
   });
 }
+

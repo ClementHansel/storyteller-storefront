@@ -2,13 +2,15 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
 import { useProducts, useChapters } from "@/hooks/use-store";
-import { storeName } from "@/config/store-config";
-import { useDocumentTitle } from "@/hooks/use-document-title";
+import { storeName, storeTagline } from "@/config/store-config";
+import { SEO } from "@/components/SEO";
+
 import { Button } from "@/components/ui/button";
 import { HomeBoutiqueSection } from "@/components/HomeBoutiqueSection";
 import { HomeBlogSection } from "@/components/HomeBlogSection";
 import heroModel from "@/assets/hero-model.jpg";
 import modelRings from "@/assets/model-rings.jpg";
+
 
 const Index = () => {
   const { data: products = [] } = useProducts();
@@ -16,11 +18,15 @@ const Index = () => {
   const featured = products.slice(0, 8);
   const featuredChapters = chapters.slice(0, 4);
 
-  useDocumentTitle(`${storeName} — Bold Silver Jewelry, Bali`);
-
   return (
     <Layout>
-      {/* Hero */}
+      <SEO 
+        title="Bold Artisan Silver Jewelry" 
+        description="Explore the soul of Bali through hand-forged .925 sterling silver jewelry. Unapologetic pieces for the bold and visionary."
+      />
+
+      {/* Hero — Extreme Impact */}
+
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0 scale-105 animate-float opacity-20">
           <img src={heroModel} alt="Bambu Silver hero" className="w-full h-full object-cover" />

@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { useDocumentTitle } from "@/hooks/use-document-title";
+import { SEO } from "@/components/SEO";
+
+
 import { Button } from "@/components/ui/button";
 import {
   Minus,
@@ -21,11 +24,9 @@ const CartPage = () => {
     itemCount,
     isLoading: cartLoading,
   } = useCart();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
-  useDocumentTitle(
-    `Cart${itemCount > 0 ? ` (${itemCount})` : ""} — Bambu Silver by Estela`,
-  );
+  const [loading, setLoading] = useState(false);
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
@@ -48,17 +49,18 @@ const CartPage = () => {
   if (items.length === 0) {
     return (
       <Layout>
-        <div className="container py-24 text-center space-y-6">
+        <SEO title="Your Bag is Empty" description="Discover our collections and find something bold." />
+        <div className="container py-24 text-center space-y-6 pt-40">
           <ShoppingBag className="mx-auto h-12 w-12 text-muted-foreground/40" />
-          <h1 className="font-display text-3xl font-bold text-foreground">
+          <h1 className="font-display text-3xl font-black text-foreground uppercase tracking-tighter">
             Your bag is empty
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground uppercase tracking-widest">
             Discover our collections and find something bold.
           </p>
           <Button
             asChild
-            className="rounded-full font-bold uppercase tracking-widest text-xs"
+            className="rounded-full h-16 px-10 font-black uppercase tracking-widest text-xs"
           >
             <Link to="/chapters">Explore Collections</Link>
           </Button>
@@ -69,7 +71,13 @@ const CartPage = () => {
 
   return (
     <Layout>
+      <SEO 
+        title={itemCount > 0 ? `Cart (${itemCount})` : "Your Bag"} 
+        description="Review your selected artisan silver pieces and proceed to secure checkout."
+      />
+
       <div className="container min-h-screen pt-40 pb-20 w-full overflow-hidden">
+
         <h1 className="mb-16 font-display text-5xl md:text-7xl font-black text-foreground tracking-tighter uppercase leading-none">
           YOUR <br />
           <span className="text-primary italic font-black">BAG.</span>

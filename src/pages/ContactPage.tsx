@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { useDocumentTitle } from '@/hooks/use-document-title';
+import { SEO } from "@/components/SEO";
+
 import { Mail, MapPin, Clock, Phone, Building2, Store } from 'lucide-react';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -85,10 +86,13 @@ const ContactPage = () => {
     }, 1000);
   };
 
-  useDocumentTitle('Contact Us — Bambu Silver by Estela');
-
   return (
     <Layout>
+      <SEO 
+        title="Contact Us" 
+        description="Visit our stores in Seminyak, Double Six, or Sahadewa. Reach out for custom artisan silver inquiries." 
+      />
+
       <div className="container py-12 md:py-20">
         {/* Header */}
         <div className="text-center mb-14">

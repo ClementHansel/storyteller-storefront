@@ -3,16 +3,12 @@ import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductImage } from "@/components/ProductImage";
 import { useChapter, useChapterProducts } from "@/hooks/use-store";
-import { useDocumentTitle } from "@/hooks/use-document-title";
+import { SEO } from "@/components/SEO";
 
 const ChapterDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const { data: chapter } = useChapter(slug || "");
   const { data: products = [] } = useChapterProducts(chapter);
-
-  useDocumentTitle(
-    chapter ? `${chapter.name} — Bambu Silver` : "Collection — Bambu Silver",
-  );
 
   if (!chapter) {
     return (
@@ -28,6 +24,12 @@ const ChapterDetailPage = () => {
 
   return (
     <Layout>
+      <SEO 
+        title={chapter.name} 
+        description={chapter.shortDescription} 
+        image={chapter.coverImage} 
+      />
+
       {/* Editorial Hero */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">

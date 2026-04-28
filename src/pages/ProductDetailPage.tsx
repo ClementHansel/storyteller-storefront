@@ -5,7 +5,7 @@ import { ProductImage } from "@/components/ProductImage";
 import { useProduct } from "@/hooks/use-store";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { useDocumentTitle } from "@/hooks/use-document-title";
+import { SEO } from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingBag, ArrowLeft, Heart } from "lucide-react";
@@ -16,6 +16,7 @@ import {
   isInWishlist,
 } from "@/pages/WishlistPage";
 import { addToWishlist as apiAddToWishlist } from "@/services/wishlistService";
+
 
 const ProductDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -65,10 +66,6 @@ const ProductDetailPage = () => {
     }
   };
 
-  useDocumentTitle(
-    product ? `${product.title} — Bambu Silver` : "Product — Bambu Silver",
-  );
-
   if (isLoading) {
     return (
       <Layout>
@@ -96,7 +93,14 @@ const ProductDetailPage = () => {
 
   return (
     <Layout>
+      <SEO 
+        title={product.title} 
+        description={product.description} 
+        image={product.images[0]} 
+        type="product" 
+      />
       <div className="relative min-h-screen pt-32 pb-20 overflow-hidden">
+
         {/* Decorative background elements */}
         <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-primary/5 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-[40vw] h-[40vw] bg-secondary/5 rounded-full blur-[150px] translate-y-1/2 -translate-x-1/2" />

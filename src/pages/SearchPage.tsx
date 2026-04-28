@@ -5,7 +5,8 @@ import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
 import { SmartFilter } from "@/components/SmartFilter";
 import { useProducts } from "@/hooks/use-store";
-import { useDocumentTitle } from "@/hooks/use-document-title";
+import { SEO } from "@/components/SEO";
+
 import { FilterState, Product } from "@/types";
 import { storyChapters } from "@/config/store-config";
 
@@ -72,11 +73,14 @@ const SearchPage = () => {
     return applyFilters(base, filters);
   }, [query, products, fuse, filters]);
 
-  useDocumentTitle(`${query ? `Search: ${query}` : "Shop All"} — Bambu Silver`);
-
   return (
     <Layout>
+      <SEO 
+        title={query ? `Search: ${query}` : "The Shop"} 
+        description="Shop all handcrafted silver jewelry from Bambu Silver. Filter by collection, material, or style."
+      />
       <div className="relative min-h-screen pt-40 pb-20">
+
         <div className="container relative z-10 w-full overflow-hidden">
           <div className="mb-20">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">

@@ -2,17 +2,20 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { ProductImage } from "@/components/ProductImage";
 import { useChapters } from "@/hooks/use-store";
-import { useDocumentTitle } from "@/hooks/use-document-title";
+import { SEO } from "@/components/SEO";
 
 import { Button } from "@/components/ui/button";
 
 const ChaptersPage = () => {
   const { data: chapters = [] } = useChapters();
 
-  useDocumentTitle("Collections — Bambu Silver");
-
   return (
     <Layout>
+      <SEO 
+        title="The Collections" 
+        description="Discover the narrative collections of Bambu Silver. From raw artisan crafts to signature silver pieces, each chapter tells a story of Bali."
+      />
+
       <section className="container pt-40 pb-32">
         <div className="mb-24 px-4">
           <p className="text-primary text-[10px] font-black uppercase tracking-[0.5em] mb-4">

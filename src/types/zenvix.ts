@@ -26,90 +26,43 @@ export interface ZenvixHeaders {
 
 export interface ZenvixProduct {
   id: string;
-  title: string;
-  slug: string;
-  description: string;
+  name: string;
+  sku: string;
   price: number;
-  compareAtPrice?: number;
-  currency: string;
-  images: string[];
-  tags: string[];
-  material: string;
-  style: string;
-  categoryIds: string[];
-  createdAt: string;
-  updatedAt: string;
+  stock_levels: "IN_STOCK" | "LOW_STOCK" | "OUT_OF_STOCK";
+  category: string;
+  maxQuantity: number;
+  // Optional fields that might be returned in detailed view
+  description?: string;
+  images?: string[];
+  tags?: string[];
+  material?: string;
+  style?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ZenvixCategory {
   id: string;
   name: string;
   slug: string;
-  description: string;
-  parentId?: string;
-  image?: string;
-  sortOrder: number;
+  children?: ZenvixCategory[];
 }
 
 export interface ZenvixPromotion {
   id: string;
-  name: string;
-  type: "percentage" | "fixed" | "bogo" | "bundle";
+  code: string;
+  label: string;
+  discountType: "PERCENT" | "FIXED";
   value: number;
-  applicableProductIds?: string[];
-  applicableCategoryIds?: string[];
-  startsAt: string;
-  endsAt: string;
-  active: boolean;
+  scope: "CATEGORY" | "GLOBAL";
 }
 
-export interface ZenvixInventoryStatus {
-  productId: string;
-  inStock: boolean;
-  stockQuantity: number;
-  reservedQuantity: number;
-  updatedAt: string;
-}
+// ---- Responses ----
 
-// ---- Catalog Responses ----
-
-export interface CatalogProductsResponse {
-  products: ZenvixProduct[];
-  total: number;
-  page: number;
-  pageSize: number;
-}
-
-export interface CatalogCategoriesResponse {
-  categories: ZenvixCategory[];
-}
-
-export interface CatalogPromotionsResponse {
-  promotions: ZenvixPromotion[];
-}
-
-export interface InventoryStatusResponse {
-  inventory: ZenvixInventoryStatus[];
-}
-
-// ---- Webhook Events ----
-
-export type ZenvixWebhookEventType =
-  | "product.updated"
-  | "product.created"
-  | "product.deleted"
-  | "inventory.changed"
-  | "price.changed"
-  | "promo.updated"
-  | "category.updated";
-
-export interface ZenvixWebhookPayload {
-  event: ZenvixWebhookEventType;
-  timestamp: string;
-  tenantId: string;
-  branchId: string;
-  data: Record<string, unknown>;
-}
+export type CatalogProductsResponse = ZenvixProduct[];
+export type CatalogCategoriesResponse = ZenvixCategory[];
+export type CatalogPromotionsResponse = ZenvixPromotion[];
 
 // ---- User / Storefront Events ----
 
@@ -124,31 +77,48 @@ export type ZenvixUserEventType =
   | "cart.update"
   | "checkout.start"
   | "payment.completed"
-  | "order.placed";
+  | "order.placed"
+  | "chat.initiated";
+
 
 export interface ZenvixUserEvent {
-  tenantId: string;
-  branchId: string;
-  channel: "ecommerce";
-  userId: string;
+  type: ZenvixUserEventType;
+  actor: {
+    id: string;
+    type: "customer" | "guest";
+  };
   timestamp: string;
-  eventType: ZenvixUserEventType;
   payload: Record<string, unknown>;
+  audit?: {
+    traceId?: string;
+  };
 }
 
-// ---- Checkout ----
+// ---- Checkout / Orders ----
 
-export interface ZenvixCheckoutValidation {
-  valid: boolean;
-  orderId?: string;
-  errors?: string[];
-  updates?: { productId: string; currentPrice: number }[];
+export interface ZenvixOrderRequest {
+  items: {
+    sku: string;
+    quantity: number;
+  }[];
+  customer?: {
+    email: string;
+    name?: string;
+  };
+  payment_method: string;
+  payment_status: "PENDING" | "PAID";
 }
 
-export interface ZenvixCheckoutSession {
-  checkoutUrl: string;
-  sessionId: string;
-  expiresAt: string;
+export interface ZenvixOrderResponse {
+  order_id: string;
+  status: string;
+  reservationTimeout?: string;
+  totals: {
+    subtotal: number;
+    tax: number;
+    grand_total: number;
+  };
+  message: string;
 }
 
 // ---- Retry Queue ----
@@ -161,3 +131,4 @@ export interface QueuedEvent {
   nextRetryAt: number;
   status: "pending" | "failed" | "sent";
 }
+
