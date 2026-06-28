@@ -10,8 +10,8 @@ services:
     networks:
       - bfs_default
     restart: unless-stopped
-    volumes:
-      - ./.env.production:/app/.env.production:ro
+    env_file:
+      - .env.production
 
 networks:
   bfs_default:
