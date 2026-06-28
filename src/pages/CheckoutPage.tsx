@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
+import { SEO } from "@/components/SEO";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { useDocumentTitle } from "@/hooks/use-document-title";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ArrowLeft, Loader2, ShieldCheck, CreditCard, Wallet, Building2 } from "lucide-react";
 import { checkout, type CheckoutPayload } from "@/services/orderService";
+import { verifyCartPrices } from "@/api/zenvix-api";
+import { trackEvent } from "@/api/zenvix-events";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -43,8 +45,6 @@ const CheckoutPage = () => {
     paymentMethod: "card",
   });
 
-  useDocumentTitle("Checkout — Bambu Silver");
-
   if (!isAuthenticated) return <Navigate to="/login" replace />;
   if (items.length === 0) return <Navigate to="/cart" replace />;
 
@@ -67,6 +67,40 @@ const CheckoutPage = () => {
 
     setLoading(true);
     try {
+      // Track checkout.start event
+      trackEvent('checkout.start', user?.id || 'anonymous', {
+        items: items.map(i => ({ product_id: i.product.id, quantity: i.quantity, price: i.product.price })),
+        total_price: subtotal,
+      });
+
+      // Step 1: Verify prices haven't changed since cart was loaded
+      const priceCheck = await verifyCartPrices(
+        items.map(i => ({ productId: i.product.id, expectedPrice: i.product.price, quantity: i.quantity }))
+      );
+
+      if (!priceCheck.valid) {
+        if (priceCheck.outOfStock.length > 0) {
+          const stockItems = priceCheck.outOfStock.map(s => 
+            s.available === 0 
+              ? `${s.productTitle} is out of stock`
+              : `${s.productTitle} (only ${s.available} available)`
+          );
+          toast.error(`Stock issue: ${stockItems.join(', ')}. Please update your cart.`, { duration: 8000 });
+          setLoading(false);
+          return;
+        }
+        if (priceCheck.updates.length > 0) {
+          const changedItems = priceCheck.updates.map(u => {
+            const item = items.find(i => i.product.id === u.productId);
+            return item ? `${item.product.title}: $${item.product.price} → $${u.currentPrice}` : u.productId;
+          });
+          toast.error(`Prices have changed for: ${changedItems.join(', ')}. Please review your cart.`, { duration: 8000 });
+          setLoading(false);
+          return;
+        }
+      }
+
+      // Step 2: Submit the order
       const payload: CheckoutPayload = {
         customerName: result.data.customerName,
         customerEmail: result.data.customerEmail,
@@ -80,15 +114,32 @@ const CheckoutPage = () => {
         })),
       };
       const order = await checkout(payload);
+
+      // Step 3: Handle payment redirect or success
       if (order.paymentUrl) {
+        // Track payment event before redirect
+        trackEvent('order.placed', user?.id || 'anonymous', {
+          order_id: order.orderId,
+          total_price: order.total.toNumber(),
+          payment_method: result.data.paymentMethod,
+          items: items.map(i => ({ product_id: i.product.id, quantity: i.quantity })),
+        });
         window.location.href = order.paymentUrl;
       } else {
+        // Track order placed
+        trackEvent('order.placed', user?.id || 'anonymous', {
+          order_id: order.orderId,
+          total_price: order.total.toNumber(),
+          payment_method: result.data.paymentMethod,
+          items: items.map(i => ({ product_id: i.product.id, quantity: i.quantity })),
+        });
         clearCart();
         toast.success(`Order placed successfully! Order #${order.orderId}`, { duration: 6000 });
-        navigate("/");
+        navigate(`/order-confirmation?orderId=${order.orderId}&total=${order.totalDisplay}`);
       }
-    } catch (err: any) {
-      toast.error(err?.message || "Checkout failed. Please try again.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Checkout failed. Please try again.";
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -96,6 +147,7 @@ const CheckoutPage = () => {
 
   return (
     <Layout>
+      <SEO title="Secure Checkout" description="Complete your order securely. Free worldwide shipping on all handcrafted silver jewelry." noIndex={true} url="/checkout" />
       <div className="container min-h-screen pt-32 md:pt-40 pb-20">
         <Link
           to="/cart"
@@ -213,7 +265,6 @@ const CheckoutPage = () => {
                   className="w-full h-16 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all font-black uppercase tracking-[0.2em] text-xs shadow-xl"
                   size="lg"
                   disabled={loading}
-                  onClick={handleSubmit}
                 >
                   {loading ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

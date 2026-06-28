@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Layout } from "@/components/Layout";
+import { SEO } from "@/components/SEO";
 import { useAuth } from "@/contexts/AuthContext";
-import { useDocumentTitle } from "@/hooks/use-document-title";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,8 +16,6 @@ const LoginPage = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  useDocumentTitle("Sign In — Bambu Silver by Estela");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,6 +44,7 @@ const LoginPage = () => {
   if (isAuthenticated) {
     return (
       <Layout>
+        <SEO title="Sign In" noIndex={true} url="/login" />
         <div className="container flex items-center justify-center min-h-[60vh]">
           <div className="w-full max-w-sm space-y-8 text-center">
             <Sparkles className="mx-auto h-12 w-12 text-primary" />
@@ -80,6 +79,7 @@ const LoginPage = () => {
 
   return (
     <Layout>
+      <SEO title="Sign In" description="Sign in to your Bambu Silver account to manage orders, track your wishlist, and checkout faster." noIndex={true} url="/login" />
       <div className="container flex items-center justify-center min-h-screen py-32 w-full overflow-hidden">
         <div className="w-full max-w-lg space-y-12 relative">
           {/* Decorative elements */}

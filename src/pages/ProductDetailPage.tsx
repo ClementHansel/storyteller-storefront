@@ -97,7 +97,33 @@ const ProductDetailPage = () => {
         title={product.title} 
         description={product.description} 
         image={product.images[0]} 
-        type="product" 
+        type="product"
+        url={`/product/${product.slug}`}
+        keywords={`${product.title}, ${product.material}, silver jewelry Bali, ${product.tags.join(', ')}`}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": product.title,
+          "description": product.description,
+          "image": product.images,
+          "sku": product.slug,
+          "brand": {
+            "@type": "Brand",
+            "name": "Bambu Silver by Estela"
+          },
+          "material": product.material,
+          "offers": {
+            "@type": "Offer",
+            "url": `https://bambusilver.com/product/${product.slug}`,
+            "priceCurrency": product.currency,
+            "price": product.price,
+            "availability": product.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            "seller": {
+              "@type": "Organization",
+              "name": "Bambu Silver by Estela"
+            }
+          }
+        }}
       />
       <div className="relative min-h-screen pt-32 pb-20 overflow-hidden">
 

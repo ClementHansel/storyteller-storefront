@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
+import { SEO } from '@/components/SEO';
 import { ProductImage } from '@/components/ProductImage';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { useDocumentTitle } from '@/hooks/use-document-title';
 import { Button } from '@/components/ui/button';
 import { Product } from '@/types';
 import { Heart, ShoppingBag, Trash2, ArrowRight, Loader2 } from 'lucide-react';
@@ -129,10 +129,9 @@ const WishlistPage = () => {
     [isAuthenticated, addItem],
   );
 
-  useDocumentTitle('Wishlist — Bambu Silver by Estela');
-
   return (
     <Layout>
+      <SEO title="Wishlist" description="Your saved Bambu Silver jewelry items. Keep track of your favorite handcrafted sterling silver pieces." noIndex={true} url="/wishlist" />
       <div className="container py-12 md:py-20">
         <div className="text-center mb-12">
           <p className="text-xs font-bold uppercase tracking-widest text-primary mb-3">Saved Items</p>

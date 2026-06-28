@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import { CartItem, Product } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
+import { trackEvent } from '@/api/zenvix-events';
 import { toast } from 'sonner';
 import {
   getCart,
@@ -100,6 +101,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
       });
       toast.success(`${product.title} added to cart`);
 
+      // Track cart.add event
+      trackEvent('cart.add', 'anonymous', {
+        product_id: product.id,
+        product_name: product.title,
+        quantity,
+        price: product.price,
+      });
+
       if (isAuthenticated) {
         try {
           const cart = await apiAddToCart(product.id, quantity);
@@ -117,7 +126,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const removeItem = useCallback(
     async (productId: string) => {
+      const removedItem = items.find(i => i.product.id === productId);
       setItems((prev) => prev.filter((i) => i.product.id !== productId));
+
+      // Track cart.remove event
+      if (removedItem) {
+        trackEvent('cart.remove', 'anonymous', {
+          product_id: productId,
+          product_name: removedItem.product.title,
+          quantity: removedItem.quantity,
+        });
+      }
 
       if (isAuthenticated) {
         const serverId = serverItemIds.get(productId);
@@ -134,7 +153,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         }
       }
     },
-    [isAuthenticated, serverItemIds]
+    [isAuthenticated, serverItemIds, items]
   );
 
   const updateQuantity = useCallback(

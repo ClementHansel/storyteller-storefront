@@ -25,9 +25,24 @@ const ChapterDetailPage = () => {
   return (
     <Layout>
       <SEO 
-        title={chapter.name} 
-        description={chapter.shortDescription} 
-        image={chapter.coverImage} 
+        title={chapter.metaTitle || chapter.name}
+        description={chapter.metaDescription || chapter.shortDescription}
+        image={chapter.coverImage}
+        url={`/chapters/${chapter.slug}`}
+        keywords={`${chapter.name}, silver jewelry, ${chapter.productTags?.join(', ')}, Bali artisan jewelry, Bambu Silver collection`}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": chapter.name,
+          "description": chapter.metaDescription || chapter.shortDescription,
+          "url": `https://bambusilver.com/chapters/${chapter.slug}`,
+          "image": chapter.coverImage,
+          "isPartOf": {
+            "@type": "WebSite",
+            "name": "Bambu Silver by Estela",
+            "url": "https://bambusilver.com"
+          }
+        }}
       />
 
       {/* Editorial Hero */}

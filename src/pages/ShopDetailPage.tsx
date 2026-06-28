@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { Layout } from "@/components/Layout";
+import { SEO } from "@/components/SEO";
 import { Button } from "@/components/ui/button";
-import { useDocumentTitle } from "@/hooks/use-document-title";
 import { MapPin, Clock, Phone, Navigation, Instagram, ArrowLeft } from "lucide-react";
 
 const SHOPS: Record<string, {
@@ -74,8 +74,6 @@ const ShopDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const shop = slug ? SHOPS[slug] : undefined;
 
-  useDocumentTitle(shop ? `${shop.fullName} — Bambu Silver` : "Store — Bambu Silver");
-
   if (!shop) {
     return (
       <Layout>
@@ -91,6 +89,27 @@ const ShopDetailPage = () => {
 
   return (
     <Layout>
+      <SEO 
+        title={shop.fullName}
+        description={`Visit ${shop.fullName} in Bali. ${shop.description.slice(0, 140)}`}
+        url={`/shop/${slug}`}
+        keywords={`Bambu Silver ${shop.name}, silver jewelry store Bali, ${shop.name} jewelry shop`}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "JewelryStore",
+          "name": shop.fullName,
+          "description": shop.description,
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": shop.address,
+            "addressRegion": "Bali",
+            "addressCountry": "ID"
+          },
+          "telephone": shop.phone,
+          "openingHours": shop.hours,
+          "url": `https://bambusilver.com/shop/${slug}`
+        }}
+      />
       {/* Hero */}
       <section className="relative min-h-[60vh] flex items-end overflow-hidden">
         <div className="absolute inset-0 z-0">

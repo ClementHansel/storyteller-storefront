@@ -21,8 +21,38 @@ const Index = () => {
   return (
     <Layout>
       <SEO 
-        title="Bold Artisan Silver Jewelry" 
-        description="Explore the soul of Bali through hand-forged .925 sterling silver jewelry. Unapologetic pieces for the bold and visionary."
+        title="Handcrafted Sterling Silver Jewelry from Bali"
+        description="Explore the soul of Bali through hand-forged .925 sterling silver jewelry. Shop artisan rings, necklaces, bracelets, and exclusive collections. Free worldwide shipping."
+        url="/"
+        keywords="silver jewelry Bali, handcrafted sterling silver, artisan silver rings, Bali necklace, Bambu Silver, Estela jewelry, handmade bracelet, 925 sterling silver"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": "Bambu Silver by Estela — Handcrafted Sterling Silver Jewelry",
+          "description": "Hand-forged .925 sterling silver jewelry crafted by Balinese artisans. Shop rings, necklaces, bracelets, and exclusive collections.",
+          "url": "https://bambusilver.com",
+          "mainEntity": {
+            "@type": "ItemList",
+            "name": "Featured Collections",
+            "numberOfItems": featured.length,
+            "itemListElement": featured.slice(0, 6).map((p, i) => ({
+              "@type": "ListItem",
+              "position": i + 1,
+              "item": {
+                "@type": "Product",
+                "name": p.title,
+                "url": `https://bambusilver.com/product/${p.slug}`,
+                "image": p.images[0],
+                "offers": {
+                  "@type": "Offer",
+                  "price": p.price,
+                  "priceCurrency": p.currency,
+                  "availability": p.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+                }
+              }
+            }))
+          }
+        }}
       />
 
       {/* Hero — Extreme Impact */}

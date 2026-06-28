@@ -4,14 +4,26 @@
 // ============================================================
 
 import type { ZenvixConfig } from "@/types/zenvix";
+import {
+  getZenvixApiUrl,
+  getZenvixTenantId,
+  getZenvixClientId,
+  getZenvixClientSecret,
+  getZenvixApiKey,
+  getZenvixBranchId,
+  isZenvixConfigured as isRuntimeConfigured,
+  checkZenvixReachable,
+} from "@/config/runtime-env";
 
 const STORAGE_KEY = "zenvix_gateway_config";
 
 const DEFAULT_CONFIG: ZenvixConfig = {
-  gatewayUrl: import.meta.env.VITE_ZENVIX_API_URL || "",
-  tenantId: import.meta.env.VITE_ZENVIX_TENANT_ID || "",
-  clientId: import.meta.env.VITE_ZENVIX_CLIENT_ID || "",
-  clientSecret: import.meta.env.VITE_ZENVIX_CLIENT_SECRET || "",
+  gatewayUrl: getZenvixApiUrl(),
+  tenantId: getZenvixTenantId(),
+  clientId: getZenvixClientId(),
+  clientSecret: getZenvixClientSecret(),
+  apiKey: getZenvixApiKey() || undefined,
+  branchId: getZenvixBranchId() || undefined,
   channel: "ecommerce",
 };
 
@@ -22,12 +34,11 @@ export function getZenvixConfig(): ZenvixConfig {
     return {
       ...DEFAULT_CONFIG,
       ...local,
-      // Always prioritize ENV if set
-      gatewayUrl: import.meta.env.VITE_ZENVIX_API_URL || local.gatewayUrl || "",
-      tenantId: import.meta.env.VITE_ZENVIX_TENANT_ID || local.tenantId || "",
-      clientId: import.meta.env.VITE_ZENVIX_CLIENT_ID || local.clientId || "",
-      clientSecret:
-        import.meta.env.VITE_ZENVIX_CLIENT_SECRET || local.clientSecret || "",
+      // Always prioritize runtime env (window.__ENV__ > import.meta.env > localStorage)
+      gatewayUrl: getZenvixApiUrl() || local.gatewayUrl || "",
+      tenantId: getZenvixTenantId() || local.tenantId || "",
+      clientId: getZenvixClientId() || local.clientId || "",
+      clientSecret: getZenvixClientSecret() || local.clientSecret || "",
     };
   } catch {
     return DEFAULT_CONFIG;
@@ -47,6 +58,11 @@ export function clearZenvixConfig(): void {
 
 /** Returns true when gateway URL and all required IDs/Secrets are set */
 export function isZenvixConfigured(): boolean {
-  const cfg = getZenvixConfig();
-  return !!(cfg.gatewayUrl && cfg.tenantId && cfg.clientId && cfg.clientSecret);
+  return isRuntimeConfigured();
 }
+
+/**
+ * Checks whether Zenvix API is reachable (5-second timeout).
+ * Falls back to mock data if unreachable. Result is cached per page load.
+ */
+export { checkZenvixReachable };

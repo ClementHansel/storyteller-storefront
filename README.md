@@ -1,73 +1,104 @@
-# Welcome to your Lovable project
+# Bambu Silver by Estela — Headless Ecommerce Storefront
 
-## Project info
+A production-ready headless ecommerce storefront for **Bambu Silver by Estela**, an artisan sterling silver jewelry brand based in Bali. Built with React + TypeScript and powered by the **Zenvix Retail Module** backend.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Tech Stack
 
-## How can I edit this code?
+- **React 18** + **TypeScript** — UI framework
+- **Vite** — Build tool with fast HMR
+- **TanStack React Query** — Server state management and caching
+- **React Router v6** — Client-side routing with lazy-loaded pages
+- **Tailwind CSS** + **shadcn/ui** — Design system and utility CSS
+- **Axios** — HTTP client with JWT interceptors
+- **Zod** — Runtime validation for forms and API data
+- **Decimal.js** — Precise financial calculations
+- **Fuse.js** — Client-side fuzzy search
 
-There are several ways of editing your application.
+## Architecture
 
-**Use Lovable**
+```
+src/
+├── api/            # Zenvix gateway clients (catalog, events, webhooks)
+├── assets/         # Static images (logo, hero)
+├── components/     # Reusable UI components
+├── config/         # Store configuration (chapters, branding)
+├── contexts/       # React contexts (Auth, Cart)
+├── hooks/          # Custom hooks (Zenvix data, session)
+├── lib/            # Axios client, token manager
+├── pages/          # Route pages (lazy-loaded)
+├── services/       # Business logic (auth, cart, orders)
+└── types/          # TypeScript type definitions
+```
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js 18+ or Bun
+- A running Zenvix Retail Module backend (or use mock mode)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```bash
+git clone <repository-url>
+cd bambusilver-by-estela
+npm install
+```
 
-Follow these steps:
+### Configuration
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Copy the environment template and fill in your Zenvix credentials:
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+```bash
+cp .env.example .env.local
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+Required variables:
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+| Variable | Description |
+|----------|-------------|
+| `VITE_ZENVIX_API_URL` | Zenvix Retail Gateway URL |
+| `VITE_ZENVIX_TENANT_ID` | Your tenant identifier |
+| `VITE_ZENVIX_CLIENT_ID` | OAuth2 Client ID |
+| `VITE_ZENVIX_CLIENT_SECRET` | OAuth2 Client Secret |
+| `VITE_ZENVIX_CHANNEL_RECORD_ID` | Channel attribution ID |
+
+### Development
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Open http://localhost:8080. The app runs in mock mode if Zenvix credentials are not configured.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Verify Zenvix Connection
 
-**Use GitHub Codespaces**
+```bash
+npx tsx scripts/test-zenvix-connection.ts
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Production Build
 
-## What technologies are used for this project?
+```bash
+npm run build
+```
 
-This project is built with:
+Output is in `dist/` — deploy to any static host (Netlify, Vercel, Cloudflare Pages).
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Deployment (Netlify)
 
-## How can I deploy this project?
+The project includes `netlify.toml` with SPA routing, caching headers, and security headers pre-configured. Push to your Git provider and connect to Netlify.
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## Key Features
 
-## Can I connect a custom domain to my Lovable project?
+- **Story-first merchandising** — Products organized into narrative "chapters" with rich SEO content
+- **Dual-mode API** — Auto-switches between mock data and live Zenvix gateway
+- **Session persistence** — JWT tokens + refresh flow survive page reloads
+- **Event forwarding** — All user actions (views, cart, checkout) sent to Zenvix with retry queue
+- **Optimistic UI** — Cart updates are instant with background sync
+- **Structured data** — JSON-LD schema markup for products, organization, and breadcrumbs
+- **Full SEO** — Server-rendered meta tags, sitemap, Open Graph, Twitter Cards
 
-Yes, you can!
+## License
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Proprietary — Bambu Silver by Estela. All rights reserved.

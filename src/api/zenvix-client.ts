@@ -11,6 +11,8 @@ import type {
   InventoryStatusResponse,
   ZenvixCheckoutValidation,
   ZenvixCheckoutSession,
+  ZenvixOrderRequest,
+  ZenvixOrderResponse,
   ZenvixUserEvent,
 } from "@/types/zenvix";
 
@@ -21,6 +23,10 @@ function buildHeaders(config: ZenvixConfig): ZenvixHeaders {
     "x-client-secret": config.clientSecret,
     "Content-Type": "application/json",
   };
+  // If apiKey is available, use it as fallback bearer
+  if (config.apiKey) {
+    headers.Authorization = `Bearer ${config.apiKey}`;
+  }
   return headers;
 }
 
@@ -82,6 +88,43 @@ export function createZenvixOrder(
   return zenvixFetch<ZenvixOrderResponse>(config, "/orders", {
     method: "POST",
     body: JSON.stringify(order),
+  });
+}
+
+// ---- Inventory ----
+
+export function fetchInventoryStatus(
+  config: ZenvixConfig,
+  productIds?: string[],
+) {
+  const qs = new URLSearchParams();
+  if (productIds?.length) qs.set("productIds", productIds.join(","));
+  const query = qs.toString();
+  return zenvixFetch<InventoryStatusResponse>(
+    config,
+    `/inventory/status${query ? `?${query}` : ""}`,
+  );
+}
+
+// ---- Checkout Validation ----
+
+export function validateCheckout(
+  config: ZenvixConfig,
+  items: { sku: string; quantity: number }[],
+) {
+  return zenvixFetch<ZenvixCheckoutValidation>(config, "/checkout/validate", {
+    method: "POST",
+    body: JSON.stringify({ items }),
+  });
+}
+
+export function createCheckoutSession(
+  config: ZenvixConfig,
+  orderId: string,
+) {
+  return zenvixFetch<ZenvixCheckoutSession>(config, "/checkout/session", {
+    method: "POST",
+    body: JSON.stringify({ orderId }),
   });
 }
 

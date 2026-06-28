@@ -7,7 +7,8 @@
 // ============================================================
 
 import { Product } from '@/types';
-import { isZenvixConfigured, getZenvixConfig } from '@/api/zenvix-config';
+import { storeCurrency } from '@/config/store-config';
+import { isZenvixConfigured, getZenvixConfig, checkZenvixReachable } from '@/api/zenvix-config';
 import {
   fetchCatalogProducts,
   createZenvixOrder,
@@ -28,6 +29,11 @@ const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 export async function fetchAllProducts(): Promise<Product[]> {
   if (isZenvixConfigured()) {
+    // Check reachability on first call (5s timeout, cached thereafter)
+    const reachable = await checkZenvixReachable();
+    if (!reachable) {
+      return MOCK_PRODUCTS;
+    }
     const config = getZenvixConfig();
     const products = await fetchCatalogProducts(config, { pageSize: 200 });
     return products.map(mapZenvixProduct);
@@ -66,24 +72,39 @@ export async function fetchProductsByTags(tags: string[]): Promise<Product[]> {
   return MOCK_PRODUCTS.filter((p) => p.tags.some((t) => tags.includes(t)));
 }
 
-/** Re-verify prices before checkout (Zenvix safety check) */
+/** Re-verify prices and stock before checkout (Zenvix safety check) */
 export async function verifyCartPrices(
-  items: { productId: string; expectedPrice: number }[]
-): Promise<{ valid: boolean; updates: { productId: string; currentPrice: number }[] }> {
+  items: { productId: string; expectedPrice: number; quantity?: number }[]
+): Promise<{ 
+  valid: boolean; 
+  updates: { productId: string; currentPrice: number }[];
+  outOfStock: { productId: string; productTitle: string; available: number }[];
+}> {
   if (isZenvixConfigured()) {
     const all = await fetchAllProducts();
     const updates: { productId: string; currentPrice: number }[] = [];
+    const outOfStock: { productId: string; productTitle: string; available: number }[] = [];
     
     for (const item of items) {
       const p = all.find(x => x.id === item.productId);
-      if (p && p.price !== item.expectedPrice) {
+      if (!p) continue;
+      
+      // Check price change
+      if (p.price !== item.expectedPrice) {
         updates.push({ productId: p.id, currentPrice: p.price });
       }
+      
+      // Check stock availability
+      if (!p.inStock) {
+        outOfStock.push({ productId: p.id, productTitle: p.title, available: 0 });
+      } else if (item.quantity && p.stockQuantity < item.quantity) {
+        outOfStock.push({ productId: p.id, productTitle: p.title, available: p.stockQuantity });
+      }
     }
-    return { valid: updates.length === 0, updates };
+    return { valid: updates.length === 0 && outOfStock.length === 0, updates, outOfStock };
   }
   await delay(300);
-  return { valid: true, updates: [] };
+  return { valid: true, updates: [], outOfStock: [] };
 }
 
 /** Create order — returns success or redirect */
@@ -130,7 +151,7 @@ function mapZenvixProduct(zp: import('@/types/zenvix').ZenvixProduct): Product {
     description: zp.description || '',
     price: zp.price,
     compareAtPrice: undefined,
-    currency: 'IDR', 
+    currency: storeCurrency, 
     images: zp.images || ['https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80'],
     tags: zp.tags || [zp.category],
     material: zp.material || 'Sterling Silver',

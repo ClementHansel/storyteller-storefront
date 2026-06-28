@@ -25,6 +25,7 @@ const BASE_URL =
 const TENANT_ID = import.meta.env.VITE_ZENVIX_TENANT_ID || "";
 const CLIENT_ID = import.meta.env.VITE_ZENVIX_CLIENT_ID || "";
 const CLIENT_SECRET = import.meta.env.VITE_ZENVIX_CLIENT_SECRET || "";
+const API_KEY = import.meta.env.VITE_ZENVIX_API_KEY || "";
 
 // ---- Structured API Error ----
 
@@ -71,10 +72,12 @@ zenvixClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   config.headers.set("ngrok-skip-browser-warning", "true");
   config.headers.set("Bypass-Tunnel-Reminder", "true");
 
-  // Bearer token if available
+  // Bearer token if available; fall back to API key
   const token = getAccessToken();
   if (token) {
     config.headers.set("Authorization", `Bearer ${token}`);
+  } else if (API_KEY) {
+    config.headers.set("Authorization", `Bearer ${API_KEY}`);
   }
 
   return config;

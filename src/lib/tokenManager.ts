@@ -1,10 +1,11 @@
 // ============================================================
 // Zenvix Token Manager
-// Handles accessToken (sessionStorage) and refresh flow
+// Handles accessToken (localStorage) and refresh flow.
+// Refresh token is stored in localStorage for session persistence.
 // ============================================================
 
 const ACCESS_TOKEN_KEY = "zenvix_access_token";
-let memoryRefreshToken: string | null = null;
+const REFRESH_TOKEN_KEY = "zenvix_refresh_token";
 
 export function getAccessToken(): string | null {
   try {
@@ -23,17 +24,25 @@ export function setAccessToken(token: string): void {
 }
 
 export function getRefreshToken(): string | null {
-  return memoryRefreshToken;
+  try {
+    return localStorage.getItem(REFRESH_TOKEN_KEY);
+  } catch {
+    return null;
+  }
 }
 
 export function setRefreshToken(token: string): void {
-  memoryRefreshToken = token;
+  try {
+    localStorage.setItem(REFRESH_TOKEN_KEY, token);
+  } catch {
+    // localStorage unavailable
+  }
 }
 
 export function clearTokens(): void {
   try {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
-    memoryRefreshToken = null;
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
   } catch {
     // silent
   }

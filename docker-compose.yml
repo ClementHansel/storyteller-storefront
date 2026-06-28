@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  bambusilver-storefront:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bambusilver-storefront
+    ports:
+      - "3020:80"
+    networks:
+      - bfs_default
+    restart: unless-stopped
+    volumes:
+      - ./.env.production:/app/.env.production:ro
+
+networks:
+  bfs_default:
+    external: true

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Layout } from "@/components/Layout";
+import { SEO } from "@/components/SEO";
 import { useAuth } from "@/contexts/AuthContext";
-import { useDocumentTitle } from "@/hooks/use-document-title";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,8 +19,6 @@ const RegisterPage = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  useDocumentTitle("Create Account — Bambu Silver by Estela");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,6 +63,7 @@ const RegisterPage = () => {
 
   return (
     <Layout>
+      <SEO title="Create Account" description="Join Bambu Silver by Estela. Create your account to shop handcrafted sterling silver jewelry, save your wishlist, and track orders." noIndex={true} url="/register" />
       <div className="container flex items-center justify-center min-h-screen py-32 w-full overflow-hidden">
         <div className="w-full max-w-lg space-y-12 relative">
           {/* Decorative elements */}

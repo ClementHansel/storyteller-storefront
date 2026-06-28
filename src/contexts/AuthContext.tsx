@@ -3,11 +3,12 @@ import {
   loginCustomer,
   registerCustomer,
   logoutCustomer,
+  refreshToken as refreshTokenService,
   type LoginPayload,
   type RegisterPayload,
   type AuthResponse,
 } from '@/services/authService';
-import { getAccessToken, clearTokens } from '@/lib/tokenManager';
+import { getAccessToken, getRefreshToken, clearTokens } from '@/lib/tokenManager';
 
 interface User {
   id: string;
@@ -27,6 +28,8 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const USER_STORAGE_KEY = 'zenvix_user';
+
 function userFromResponse(res: AuthResponse): User {
   return {
     id: res.customer.id,
@@ -36,25 +39,72 @@ function userFromResponse(res: AuthResponse): User {
   };
 }
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+function persistUser(user: User): void {
+  try {
+    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+  } catch {
+    // localStorage unavailable
+  }
+}
 
-  // Restore session from token on mount
-  useEffect(() => {
+function loadPersistedUser(): User | null {
+  try {
+    const raw = localStorage.getItem(USER_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function clearPersistedUser(): void {
+  try {
+    localStorage.removeItem(USER_STORAGE_KEY);
+  } catch {
+    // silent
+  }
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(() => {
+    // Restore user from localStorage on mount if token exists
     const token = getAccessToken();
     if (token) {
-      // Token exists — we have an active session but no user object cached.
-      // A full restore would call /auth/me. For now we mark as "possibly authenticated"
-      // and let the next authenticated API call handle 401 refresh.
+      return loadPersistedUser();
     }
-  }, []);
+    return null;
+  });
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Attempt to validate the session on mount if we have a token but no user
+  useEffect(() => {
+    const token = getAccessToken();
+    const refresh = getRefreshToken();
+    if (token && !user && refresh) {
+      // Try to refresh token to validate the session
+      setIsLoading(true);
+      refreshTokenService(refresh)
+        .then((res) => {
+          const restored = userFromResponse(res);
+          setUser(restored);
+          persistUser(restored);
+        })
+        .catch(() => {
+          // Token invalid — clear everything
+          clearTokens();
+          clearPersistedUser();
+          setUser(null);
+        })
+        .finally(() => setIsLoading(false));
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const login = useCallback(async (payload: LoginPayload) => {
     setIsLoading(true);
     try {
       const res = await loginCustomer(payload);
-      setUser(userFromResponse(res));
+      const u = userFromResponse(res);
+      setUser(u);
+      persistUser(u);
     } finally {
       setIsLoading(false);
     }
@@ -64,7 +114,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     try {
       const res = await registerCustomer(payload);
-      setUser(userFromResponse(res));
+      const u = userFromResponse(res);
+      setUser(u);
+      persistUser(u);
     } finally {
       setIsLoading(false);
     }
@@ -73,6 +125,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(() => {
     logoutCustomer();
     clearTokens();
+    clearPersistedUser();
     setUser(null);
   }, []);
 

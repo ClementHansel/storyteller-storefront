@@ -58,15 +58,73 @@ export interface ZenvixPromotion {
   scope: "CATEGORY" | "GLOBAL";
 }
 
+// ---- Inventory ----
+
+export interface ZenvixInventoryStatus {
+  productId: string;
+  sku: string;
+  stockLevel: "IN_STOCK" | "LOW_STOCK" | "OUT_OF_STOCK";
+  quantity: number;
+  reservedQuantity?: number;
+  updatedAt: string;
+}
+
 // ---- Responses ----
 
 export type CatalogProductsResponse = ZenvixProduct[];
-export type CatalogCategoriesResponse = ZenvixCategory[];
-export type CatalogPromotionsResponse = ZenvixPromotion[];
+
+export interface CatalogCategoriesResponse {
+  categories: ZenvixCategory[];
+}
+
+export interface CatalogPromotionsResponse {
+  promotions: ZenvixPromotion[];
+}
+
+export interface InventoryStatusResponse {
+  inventory: ZenvixInventoryStatus[];
+}
+
+// ---- Checkout Validation ----
+
+export interface ZenvixCheckoutValidation {
+  valid: boolean;
+  errors?: string[];
+  priceChanges?: { productId: string; oldPrice: number; newPrice: number }[];
+}
+
+export interface ZenvixCheckoutSession {
+  sessionId: string;
+  checkoutUrl: string;
+  expiresAt: string;
+}
+
+// ---- Webhooks ----
+
+export type ZenvixWebhookEventType =
+  | "product.created"
+  | "product.updated"
+  | "product.deleted"
+  | "inventory.changed"
+  | "price.changed"
+  | "promo.updated"
+  | "category.updated";
+
+export interface ZenvixWebhookPayload {
+  event: ZenvixWebhookEventType;
+  timestamp: string;
+  tenantId: string;
+  branchId: string;
+  data: Record<string, unknown>;
+}
 
 // ---- User / Storefront Events ----
 
 export type ZenvixUserEventType =
+  | "session.start"
+  | "page.view"
+  | "product.view"
+  | "search.query"
   | "user.register"
   | "user.login"
   | "user.logout"
@@ -75,9 +133,12 @@ export type ZenvixUserEventType =
   | "cart.add"
   | "cart.remove"
   | "cart.update"
+  | "cart.checkout"
   | "checkout.start"
   | "payment.completed"
   | "order.placed"
+  | "order.stage_transition"
+  | "order.quotation_recorded"
   | "chat.initiated";
 
 
@@ -86,6 +147,11 @@ export interface ZenvixUserEvent {
   actor: {
     id: string;
     type: "customer" | "guest";
+    tenant_id: string;
+    branch_id: string;
+  };
+  context: {
+    channel_record_id: string;
   };
   timestamp: string;
   payload: Record<string, unknown>;

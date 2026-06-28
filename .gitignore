@@ -1,24 +1,58 @@
+# ============================================================
+# Bambu Silver by Estela — .gitignore
+# ============================================================
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+
+# Environment files with secrets (only .example templates go to git)
+.env
+.env.local
+.env.production
+.env.*.local
+
+# VPS reference (contains credentials)
+vps_reference.md
+
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# OS files
 .DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+*.swp
+*.swo
+*~
+
+# Testing
+coverage/
+
+# Bun (if switching back)
+bun.lock
+bun.lockb
+
+# Lovable (legacy)
+.lovable/
+
+# Misc
+*.tgz
+*.tsbuildinfo

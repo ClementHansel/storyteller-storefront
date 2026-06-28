@@ -1,5 +1,7 @@
-import { useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { storeName } from '@/config/store-config';
+
+const SITE_URL = 'https://bambusilver.com';
 
 interface SEOProps {
   title?: string;
@@ -7,55 +9,65 @@ interface SEOProps {
   image?: string;
   url?: string;
   type?: 'website' | 'product' | 'article';
+  keywords?: string;
+  canonicalUrl?: string;
+  noIndex?: boolean;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-export function SEO({ 
-  title, 
-  description, 
-  image = '/og-image.jpg', 
-  url, 
-  type = 'website' 
+export function SEO({
+  title,
+  description,
+  image = `${SITE_URL}/og-image.jpg`,
+  url,
+  type = 'website',
+  keywords,
+  canonicalUrl,
+  noIndex = false,
+  jsonLd,
 }: SEOProps) {
-  const fullTitle = title ? `${title} | ${storeName}` : `${storeName} — Bold Artisan Silver Jewelry`;
-  const defaultDescription = "Hand-forged .925 sterling silver jewelry. Unapologetic, artisan-crafted pieces inspired by the soul of Bali.";
-  const metaDescription = description || defaultDescription;
+  const fullTitle = title
+    ? `${title} | ${storeName}`
+    : `${storeName} — Handcrafted Sterling Silver Jewelry from Bali`;
+  const metaDescription =
+    description ||
+    'Hand-forged .925 sterling silver jewelry crafted by Balinese artisans. Shop rings, necklaces, bracelets, and exclusive collections from Bambu Silver by Estela.';
+  const pageUrl = url ? `${SITE_URL}${url}` : SITE_URL;
+  const canonical = canonicalUrl || pageUrl;
+  const imageUrl = image.startsWith('http') ? image : `${SITE_URL}${image}`;
 
-  useEffect(() => {
-    // Update basic tags
-    document.title = fullTitle;
-    
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) metaDesc.setAttribute('content', metaDescription);
+  return (
+    <Helmet>
+      {/* Basic */}
+      <title>{fullTitle}</title>
+      <meta name="description" content={metaDescription} />
+      {keywords && <meta name="keywords" content={keywords} />}
+      <link rel="canonical" href={canonical} />
+      {noIndex && <meta name="robots" content="noindex, nofollow" />}
 
-    // Update OpenGraph tags
-    const ogTitle = document.querySelector('meta[property="og:title"]');
-    if (ogTitle) ogTitle.setAttribute('content', fullTitle);
+      {/* Open Graph */}
+      <meta property="og:title" content={fullTitle} />
+      <meta property="og:description" content={metaDescription} />
+      <meta property="og:type" content={type} />
+      <meta property="og:url" content={pageUrl} />
+      <meta property="og:image" content={imageUrl} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:site_name" content={storeName} />
+      <meta property="og:locale" content="en_US" />
 
-    const ogDesc = document.querySelector('meta[property="og:description"]');
-    if (ogDesc) ogDesc.setAttribute('content', metaDescription);
+      {/* Twitter */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={fullTitle} />
+      <meta name="twitter:description" content={metaDescription} />
+      <meta name="twitter:image" content={imageUrl} />
 
-    const ogImage = document.querySelector('meta[property="og:image"]');
-    if (ogImage) ogImage.setAttribute('content', image);
-
-    const ogType = document.querySelector('meta[property="og:type"]');
-    if (ogType) ogType.setAttribute('content', type);
-
-    if (url) {
-      const ogUrl = document.querySelector('meta[property="og:url"]');
-      if (ogUrl) ogUrl.setAttribute('content', url);
-    }
-
-    // Update Twitter tags
-    const twitterTitle = document.querySelector('meta[name="twitter:title"]');
-    if (twitterTitle) twitterTitle.setAttribute('content', fullTitle);
-
-    const twitterDesc = document.querySelector('meta[name="twitter:description"]');
-    if (twitterDesc) twitterDesc.setAttribute('content', metaDescription);
-
-    const twitterImage = document.querySelector('meta[name="twitter:image"]');
-    if (twitterImage) twitterImage.setAttribute('content', image);
-
-  }, [fullTitle, metaDescription, image, url, type]);
-
-  return null; // This component doesn't render anything
+      {/* JSON-LD Structured Data */}
+      {jsonLd && (
+        <script type="application/ld+json">
+          {JSON.stringify(Array.isArray(jsonLd) ? jsonLd : jsonLd)}
+        </script>
+      )}
+    </Helmet>
+  );
 }

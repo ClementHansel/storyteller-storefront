@@ -1,11 +1,8 @@
-import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { SEO } from "@/components/SEO";
-import { checkout, type CheckoutPayload } from "@/services/orderService";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,45 +22,12 @@ const CartPage = () => {
     itemCount,
     isLoading: cartLoading,
   } = useCart();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
-
-  const handleCheckout = async () => {
-    if (!user) return;
-    setLoading(true);
-    try {
-      const payload: CheckoutPayload = {
-        customerName: user.name,
-        customerEmail: user.email,
-        customerPhone: user.phone || "",
-        shippingAddress: "",
-        items: items.map((i) => ({
-          productId: i.product.id,
-          quantity: i.quantity,
-          price: String(i.product.price),
-        })),
-        paymentMethod: "card",
-      };
-      const order = await checkout(payload);
-      if (order.paymentUrl) {
-        window.location.href = order.paymentUrl;
-      } else {
-        toast.success(
-          `Order ${order.orderId} placed! Total: ${order.totalDisplay}`,
-          { duration: 5000 },
-        );
-      }
-    } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : "Checkout failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (cartLoading) {
     return (
@@ -223,7 +187,7 @@ const CartPage = () => {
               <Button
                 className="w-full h-16 rounded-full bg-foreground text-background hover:bg-primary hover:text-primary-foreground transition-all font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-black/10"
                 size="lg"
-                onClick={handleCheckout}
+                onClick={() => navigate("/checkout")}
               >
                 Proceed to Checkout
               </Button>
