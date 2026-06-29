@@ -9,6 +9,7 @@
 // ============================================================
 
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import { getZenvixApiUrl, getZenvixTenantId, getZenvixClientId, getZenvixClientSecret, getZenvixApiKey } from "@/config/runtime-env";
 import {
   getAccessToken,
   getRefreshToken,
@@ -19,13 +20,11 @@ import {
 
 // ---- Config from env ----
 
-const BASE_URL =
-  import.meta.env.VITE_ZENVIX_API_URL ||
-  "https://brown-ducks-stare.loca.lt/api/retail/public";
-const TENANT_ID = import.meta.env.VITE_ZENVIX_TENANT_ID || "";
-const CLIENT_ID = import.meta.env.VITE_ZENVIX_CLIENT_ID || "";
-const CLIENT_SECRET = import.meta.env.VITE_ZENVIX_CLIENT_SECRET || "";
-const API_KEY = import.meta.env.VITE_ZENVIX_API_KEY || "";
+const BASE_URL = getZenvixApiUrl() || "";
+const TENANT_ID = getZenvixTenantId();
+const CLIENT_ID = getZenvixClientId();
+const CLIENT_SECRET = getZenvixClientSecret();
+const API_KEY = getZenvixApiKey();
 
 // ---- Structured API Error ----
 
