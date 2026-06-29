@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { FilterState, Product, SortOption } from "@/types";
 import { deriveCategoriesFromProducts, PRICE_RANGES } from "@/config/category-mapping";
 import {
@@ -9,6 +9,8 @@ import {
   SelectValue,
 } from "./ui/select";
 
+const INITIAL_CATEGORY_COUNT = 10;
+
 interface SmartFilterProps {
   filters: FilterState;
   onChange: (filters: FilterState) => void;
@@ -16,10 +18,14 @@ interface SmartFilterProps {
 }
 
 export function SmartFilter({ filters, onChange, products = [] }: SmartFilterProps) {
+  const [showAllCategories, setShowAllCategories] = useState(false);
   const categories = useMemo(
     () => deriveCategoriesFromProducts(products),
     [products],
   );
+  const visibleCategories = showAllCategories
+    ? categories
+    : categories.slice(0, INITIAL_CATEGORY_COUNT);
   const toggleArrayItem = (arr: string[], item: string) =>
     arr.includes(item) ? arr.filter((v) => v !== item) : [...arr, item];
 
@@ -85,7 +91,7 @@ export function SmartFilter({ filters, onChange, products = [] }: SmartFilterPro
           Categories
         </h4>
         <div className="flex flex-wrap gap-2">
-          {categories.map((cat) => (
+          {visibleCategories.map((cat) => (
             <button
               key={cat.id}
               onClick={() =>
@@ -100,10 +106,20 @@ export function SmartFilter({ filters, onChange, products = [] }: SmartFilterPro
                   : "bg-black/[0.03] text-foreground/40 hover:bg-black/[0.05] border border-black/5"
               }`}
             >
-              {cat.name}
+              {cat.name} ({cat.count})
             </button>
           ))}
         </div>
+        {categories.length > INITIAL_CATEGORY_COUNT && (
+          <button
+            onClick={() => setShowAllCategories(!showAllCategories)}
+            className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary/80 transition-colors"
+          >
+            {showAllCategories
+              ? "Show Less"
+              : `Show More (${categories.length - INITIAL_CATEGORY_COUNT} more)`}
+          </button>
+        )}
       </div>
 
       {/* Price Range */}

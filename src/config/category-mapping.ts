@@ -150,7 +150,7 @@ export function getAllCategories(): CategoryDisplay[] {
  */
 export function deriveCategoriesFromProducts(
   products: Array<{ tags: string[] }>
-): CategoryDisplay[] {
+): (CategoryDisplay & { count: number })[] {
   const counts = new Map<string, number>();
   for (const p of products) {
     for (const tag of p.tags) {
@@ -164,8 +164,9 @@ export function deriveCategoriesFromProducts(
     .sort((a, b) => b[1] - a[1])
     .map(([id, count]) => ({
       id,
-      name: `${CATEGORY_MAP[id]} (${count})`,
+      name: CATEGORY_MAP[id],
       slug: CATEGORY_MAP[id].toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
+      count,
     }));
 }
 

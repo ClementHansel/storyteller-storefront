@@ -480,13 +480,17 @@ async function fetchProductsSafe(): Promise<Product[]> {
 }
 
 async function fetchProductByIdSafe(id: string): Promise<Product | undefined> {
+  // Look up from the full catalog (already cached by useProducts)
+  // This avoids a per-product API call and handles slug-based lookups
   try {
-    const cp = await getProductById(id);
-    return mapCatalogProduct(cp);
+    const allProducts = await fetchProductsSafe();
+    const found = allProducts.find((p) => p.id === id || p.slug === id);
+    if (found) return found;
   } catch {
-    // Fallback to mock data by ID or Slug
-    return MOCK_PRODUCTS.find((p) => p.id === id || p.slug === id);
+    // If catalog fetch fails, fall through
   }
+  // Fallback to mock data
+  return MOCK_PRODUCTS.find((p) => p.id === id || p.slug === id);
 }
 
 // ---- Hooks ----
