@@ -14,6 +14,7 @@ import { useEffect, useRef } from 'react';
 import { sendSessionStart, processRetryQueue } from '@/api/zenvix-events';
 import { startPolling, stopPolling } from '@/api/zenvix-notification-poller';
 import { processSyncQueue } from '@/api/zenvix-order-sync';
+import { getExchangeRate } from '@/config/currency';
 
 const QUEUE_PROCESSING_INTERVAL_MS = 30_000;
 
@@ -35,6 +36,9 @@ export function useZenvixSession() {
 
     // 1. Fire session.start event on page load (Requirement 9.4)
     sendSessionStart();
+
+    // 1b. Prefetch exchange rate (IDR→USD) for price conversion
+    getExchangeRate();
 
     // 2. Start Notification_Poller for all eligible orders in localStorage (Requirements 7.3, 7.5)
     startPolling();

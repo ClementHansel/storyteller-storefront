@@ -171,12 +171,13 @@ export function deriveCategoriesFromProducts(
 }
 
 /**
- * Price range presets in IDR (the tenant's currency).
+ * Price range presets in USD (converted from IDR with ~10% markup).
+ * Based on typical price distribution of the catalog.
  */
 export const PRICE_RANGES = [
-  { label: "Under 350K", min: 0, max: 350000 },
-  { label: "350K - 500K", min: 350000, max: 500000 },
-  { label: "500K - 1M", min: 500000, max: 1000000 },
-  { label: "1M - 5M", min: 1000000, max: 5000000 },
-  { label: "Over 5M", min: 5000000, max: Infinity },
+  { label: "Under $5", min: 0, max: 5 },
+  { label: "$5 - $25", min: 5, max: 25 },
+  { label: "$25 - $50", min: 25, max: 50 },
+  { label: "$50 - $100", min: 50, max: 100 },
+  { label: "Over $100", min: 100, max: Infinity },
 ] as const;

@@ -144,7 +144,7 @@ const CartPage = () => {
                     ${(item.product.price * item.quantity).toFixed(2)}
                   </p>
                   <p className="text-[10px] font-black text-foreground/20 mt-2 uppercase tracking-widest">
-                    ${item.product.price} / PC
+                    ${item.product.price.toFixed(2)} / PC
                   </p>
                 </div>
               </div>

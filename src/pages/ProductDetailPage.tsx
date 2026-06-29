@@ -200,11 +200,11 @@ const ProductDetailPage = () => {
 
                   <div className="flex items-end gap-4">
                     <span className="text-4xl font-black text-foreground leading-none">
-                      ${product.price}
+                      ${product.price.toFixed(2)}
                     </span>
                     {product.compareAtPrice && (
                       <span className="text-xl text-foreground/30 line-through font-light decoration-primary decoration-2 decoration-slice">
-                        ${product.compareAtPrice}
+                        ${product.compareAtPrice.toFixed(2)}
                       </span>
                     )}
                   </div>

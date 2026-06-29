@@ -74,12 +74,12 @@ export function ProductCard({ product }: ProductCardProps) {
                 Handcrafted
               </span>
               <span className="text-2xl font-black text-black leading-none">
-                ${product.price}
+                ${product.price.toFixed(2)}
               </span>
             </div>
             {product.compareAtPrice && (
               <span className="text-xs text-black/50 line-through font-light">
-                ${product.compareAtPrice}
+                ${product.compareAtPrice.toFixed(2)}
               </span>
             )}
           </div>

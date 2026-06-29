@@ -4,6 +4,7 @@
 
 import zenvixClient from "@/lib/zenvixClient";
 import Decimal from "decimal.js";
+import { convertIDRtoUSD, getExchangeRateSync, formatUSD } from "@/config/currency";
 
 export interface CatalogProduct {
   id: string;
@@ -55,19 +56,30 @@ export interface CategoriesResponse {
   categories: CatalogCategory[];
 }
 
-/** Normalize raw product prices to Decimal instances */
+/** Normalize raw product prices to Decimal instances with IDR→USD conversion + 10% markup */
 function normalizeProduct(p: CatalogProduct): CatalogProductNormalized {
-  const price = new Decimal(p.price || "0");
-  const compareAtPrice = p.compareAtPrice
-    ? new Decimal(p.compareAtPrice)
-    : undefined;
+  const rawPrice = Number(p.price || "0");
+  const rate = getExchangeRateSync();
+
+  // Convert IDR → USD with 10% markup
+  const usdPrice = convertIDRtoUSD(rawPrice, rate);
+  const price = new Decimal(usdPrice);
+
+  let compareAtPrice: Decimal | undefined;
+  if (p.compareAtPrice) {
+    const rawCompare = Number(p.compareAtPrice);
+    const usdCompare = convertIDRtoUSD(rawCompare, rate);
+    compareAtPrice = new Decimal(usdCompare);
+  }
+
   return {
     ...p,
+    currency: "USD",
     price,
     compareAtPrice,
-    priceDisplay: `$${price.toFixed(2)}`,
+    priceDisplay: formatUSD(usdPrice),
     compareAtPriceDisplay: compareAtPrice
-      ? `$${compareAtPrice.toFixed(2)}`
+      ? formatUSD(compareAtPrice.toNumber())
       : undefined,
   };
 }
