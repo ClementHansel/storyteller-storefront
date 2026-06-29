@@ -14,8 +14,8 @@ export type ZenvixStatus =
   | "QUOTATION_SENT"
   | "PAYMENT_PENDING"
   | "PAYMENT_CONFIRMED"
-  | "ORDER_PREPARED"
-  | "DELIVERY"
+  | "PREPARED"
+  | "SHIPPED"
   | "COMPLETED";
 
 /**
@@ -42,8 +42,8 @@ export const STAGE_TO_ZENVIX: Record<OrderStage, ZenvixStatus> = {
   Quotation_Sent: "QUOTATION_SENT",
   Payment_Pending: "PAYMENT_PENDING",
   Payment_Confirmed: "PAYMENT_CONFIRMED",
-  Order_Prepared: "ORDER_PREPARED",
-  Delivery: "DELIVERY",
+  Order_Prepared: "PREPARED",
+  Delivery: "SHIPPED",
   Complete: "COMPLETED",
 };
 
@@ -56,8 +56,8 @@ export const ZENVIX_TO_STAGE: Record<ZenvixStatus, OrderStage> = {
   QUOTATION_SENT: "Quotation_Sent",
   PAYMENT_PENDING: "Payment_Pending",
   PAYMENT_CONFIRMED: "Payment_Confirmed",
-  ORDER_PREPARED: "Order_Prepared",
-  DELIVERY: "Delivery",
+  PREPARED: "Order_Prepared",
+  SHIPPED: "Delivery",
   COMPLETED: "Complete",
 };
 
