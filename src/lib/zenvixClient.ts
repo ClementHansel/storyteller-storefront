@@ -53,7 +53,7 @@ export class ZenvixApiError extends Error {
 
 const zenvixClient = axios.create({
   baseURL: BASE_URL.endsWith("/") ? BASE_URL : `${BASE_URL}/`,
-  timeout: 15_000,
+  timeout: 60_000, // 60s — large catalog (10k+ products) can take 30s on first load
   headers: {
     "Content-Type": "application/json",
   },
