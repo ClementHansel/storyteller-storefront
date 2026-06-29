@@ -6,6 +6,8 @@ export type OrderStage =
   | "Quotation_Sent"
   | "Payment_Pending"
   | "Payment_Confirmed"
+  | "Order_Prepared"
+  | "Delivery"
   | "Complete";
 
 /** Sync status for Zenvix order creation */
@@ -143,6 +145,8 @@ export const VALID_TRANSITIONS: Record<OrderStage, OrderStage | null> = {
   Quotation_Pending: "Quotation_Sent",
   Quotation_Sent: "Payment_Pending",
   Payment_Pending: "Payment_Confirmed",
-  Payment_Confirmed: "Complete",
+  Payment_Confirmed: "Order_Prepared",
+  Order_Prepared: "Delivery",
+  Delivery: "Complete",
   Complete: null,
 };

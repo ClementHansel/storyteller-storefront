@@ -16,6 +16,8 @@ const STAGES: OrderStage[] = [
   "Quotation_Sent",
   "Payment_Pending",
   "Payment_Confirmed",
+  "Order_Prepared",
+  "Delivery",
   "Complete",
 ];
 
@@ -25,6 +27,8 @@ const STAGE_LABELS: Record<OrderStage, string> = {
   Quotation_Sent: "Quotation Sent",
   Payment_Pending: "Payment Pending",
   Payment_Confirmed: "Payment Confirmed",
+  Order_Prepared: "Order Prepared",
+  Delivery: "Out for Delivery",
   Complete: "Complete",
 };
 
@@ -39,9 +43,13 @@ function getContextualMessage(order: OrderRecord): string {
     case "Payment_Pending":
       return `Please complete payment of $${order.quotedTotal?.toFixed(2)}. Delivery cost: $${order.quotedDeliveryCost?.toFixed(2)}`;
     case "Payment_Confirmed":
-      return "Payment confirmed! Your order is being processed.";
+      return "Payment confirmed! We are preparing your order.";
+    case "Order_Prepared":
+      return "Your order has been prepared and is ready for shipping.";
+    case "Delivery":
+      return "Your order is on its way! You will receive it soon.";
     case "Complete":
-      return `Order complete! Paid $${order.paidAmount?.toFixed(2)}. Reference: #${order.id}`;
+      return `Order delivered! Paid $${order.paidAmount?.toFixed(2)}. Reference: #${order.id}`;
   }
 }
 

@@ -81,16 +81,7 @@ export async function confirmPayment(
   syncPaymentCompletedApi(orderId, paidAmount).catch(() => {});
   logAudit(createAuditEntry('payment.confirmed', orderId, order.traceId || '', actor, { amount: paidAmount })).catch(() => {});
 
-  // Transition to Complete (local state first)
-  transitionStage(orderId, 'Complete');
-  // Fire-and-forget sync & audit (non-blocking)
-  syncStageTransition(orderId, 'Payment_Confirmed', 'Complete', userId).catch(() => {});
-  syncStageTransitionApi(orderId, 'Payment_Confirmed', 'Complete').catch(() => {});
-  logAudit(createAuditEntry('stage.transition', orderId, order.traceId || '', actor, { from_stage: 'Payment_Confirmed', to_stage: 'Complete' })).catch(() => {});
-
-  // Sales completion on reaching Complete stage
-  syncSalesCompletion(order).catch(() => {});
-  logAudit(createAuditEntry('order.completed', orderId, order.traceId || '', actor, { final_stage: 'Complete' })).catch(() => {});
+  // Note: Order_Prepared → Delivery → Complete stages are triggered from Zenvix admin
 }
 
 /**
