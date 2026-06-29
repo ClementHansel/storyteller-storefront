@@ -1,10 +1,8 @@
 import { Link } from "react-router-dom";
-import { useMemo } from "react";
 import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
-import { useProducts } from "@/hooks/use-store";
+import { useProducts, useCategories } from "@/hooks/use-store";
 import { storeName, storeTagline } from "@/config/store-config";
-import { getAllCategories, deriveCategoriesFromProducts } from "@/config/category-mapping";
 import { SEO } from "@/components/SEO";
 
 import { Button } from "@/components/ui/button";
@@ -13,22 +11,12 @@ import { HomeBlogSection } from "@/components/HomeBlogSection";
 import heroModel from "@/assets/hero-model.jpg";
 import modelRings from "@/assets/model-rings.jpg";
 
-// Static categories for immediate render (no product load needed)
-const staticCategories = getAllCategories().slice(0, 8);
 
 const Index = () => {
   const { data: products = [], isLoading } = useProducts();
-  const featured = products.filter((p) => p.inStock).slice(0, 8).length > 0
-    ? products.filter((p) => p.inStock).slice(0, 8)
-    : products.slice(0, 8);
-
-  // Once products load, show categories with counts; otherwise show static names
-  const topCategories = useMemo(() => {
-    if (products.length > 0) {
-      return deriveCategoriesFromProducts(products).slice(0, 8);
-    }
-    return staticCategories.map((c) => ({ ...c, count: 0 }));
-  }, [products]);
+  const { data: categories = [] } = useCategories();
+  const featured = products.slice(0, 8);
+  const topCategories = categories.slice(0, 8);
 
   return (
     <Layout>
@@ -146,8 +134,8 @@ const Index = () => {
                 </div>
                 <div className="absolute inset-x-0 bottom-0 p-4 md:p-8 z-20 flex flex-col justify-end">
                   <h3 className="text-lg md:text-2xl font-black text-foreground group-hover:text-white leading-tight mb-2 transition-colors">{cat.name}</h3>
-                  {cat.count > 0 && (
-                    <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest mb-2">{cat.count} pieces</p>
+                  {cat.product_count && cat.product_count > 0 && (
+                    <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest mb-2">{cat.product_count} pieces</p>
                   )}
                   <Button variant="outline" className="w-fit rounded-full border-border/30 text-foreground/60 bg-white/50 group-hover:border-white/20 group-hover:text-white group-hover:bg-white/5 hover:bg-white hover:text-foreground font-black text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity hidden sm:inline-flex">
                     Shop Now

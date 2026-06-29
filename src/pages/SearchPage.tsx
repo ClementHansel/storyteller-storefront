@@ -118,7 +118,7 @@ const SearchPage = () => {
           <div className="grid gap-12 lg:grid-cols-[280px_1fr]">
             <aside className="lg:sticky lg:top-32 h-fit">
               <div className="glass p-8 rounded-[2rem] border-black/5 shadow-xl ring-1 ring-black/5">
-                <SmartFilter filters={filters} onChange={handleFilterChange} products={products} />
+                <SmartFilter filters={filters} onChange={handleFilterChange} />
               </div>
             </aside>
 

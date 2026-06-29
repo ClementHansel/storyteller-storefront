@@ -1,22 +1,10 @@
 import { Link } from "react-router-dom";
-import { useMemo } from "react";
 import { Layout } from "@/components/Layout";
-import { useProducts } from "@/hooks/use-store";
-import { deriveCategoriesFromProducts, getAllCategories } from "@/config/category-mapping";
+import { useCategories } from "@/hooks/use-store";
 import { SEO } from "@/components/SEO";
-import { Button } from "@/components/ui/button";
 
 const ChaptersPage = () => {
-  const { data: products = [], isLoading } = useProducts();
-
-  // Use derived categories (with counts) when products are loaded,
-  // fall back to static category list while loading
-  const categories = useMemo(() => {
-    if (products.length > 0) {
-      return deriveCategoriesFromProducts(products);
-    }
-    return getAllCategories().map((c) => ({ ...c, count: 0 }));
-  }, [products]);
+  const { data: categories = [], isLoading } = useCategories();
 
   return (
     <Layout>
@@ -38,7 +26,7 @@ const ChaptersPage = () => {
           <p className="mt-6 text-lg text-muted-foreground max-w-lg">
             {isLoading
               ? "Loading catalog..."
-              : `${categories.length} categories across ${products.length.toLocaleString()} products`}
+              : `${categories.length} categories`}
           </p>
         </div>
 
@@ -58,9 +46,9 @@ const ChaptersPage = () => {
                 <h3 className="text-sm md:text-base font-black text-foreground group-hover:text-primary transition-colors uppercase tracking-wide leading-tight mb-2">
                   {cat.name}
                 </h3>
-                {cat.count > 0 && (
+                {cat.product_count && cat.product_count > 0 && (
                   <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                    {cat.count} {cat.count === 1 ? "piece" : "pieces"}
+                    {cat.product_count} {cat.product_count === 1 ? "piece" : "pieces"}
                   </p>
                 )}
               </div>

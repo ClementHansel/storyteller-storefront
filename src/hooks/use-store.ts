@@ -466,7 +466,10 @@ function mapCatalogProduct(cp: CatalogProductNormalized): Product {
 async function fetchProductsSafe(): Promise<Product[]> {
   try {
     const res = await getProducts({ pageSize: 100 });
-    return res.products.map(mapCatalogProduct);
+    const products = res.products.map(mapCatalogProduct);
+    // Store total count for display purposes
+    (fetchProductsSafe as any).__total = res.total;
+    return products;
   } catch (err) {
     if (err instanceof ZenvixApiError && err.status === 0) {
       console.warn("[Catalog] Proxy unreachable, using mock data");

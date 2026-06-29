@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { FilterState, Product, SortOption } from "@/types";
-import { deriveCategoriesFromProducts, PRICE_RANGES } from "@/config/category-mapping";
+import { useCategories } from "@/hooks/use-store";
+import { PRICE_RANGES } from "@/config/category-mapping";
 import {
   Select,
   SelectContent,
@@ -17,11 +18,13 @@ interface SmartFilterProps {
   products?: Product[];
 }
 
-export function SmartFilter({ filters, onChange, products = [] }: SmartFilterProps) {
+export function SmartFilter({ filters, onChange }: SmartFilterProps) {
   const [showAllCategories, setShowAllCategories] = useState(false);
+  const { data: allCategories = [] } = useCategories();
+
   const categories = useMemo(
-    () => deriveCategoriesFromProducts(products),
-    [products],
+    () => allCategories.map((c) => ({ id: c.id, name: c.name, count: c.product_count || 0 })),
+    [allCategories],
   );
   const visibleCategories = showAllCategories
     ? categories

@@ -115,8 +115,8 @@ function mapProxyProduct(p: ProxyProduct): CatalogProductNormalized {
     material: "",
     style: "",
     categoryIds: [p.categoryId].filter(Boolean),
-    inStock: p.inStock,
-    stockQuantity: p.maxQuantity,
+    inStock: true, // All products shown as available — stock validated at checkout
+    stockQuantity: p.maxQuantity || 999,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     price,
