@@ -465,7 +465,7 @@ function mapCatalogProduct(cp: CatalogProductNormalized): Product {
 
 async function fetchProductsSafe(): Promise<Product[]> {
   try {
-    const res = await getProducts({ pageSize: 200 });
+    const res = await getProducts({ pageSize: 10000 });
     return res.products.map(mapCatalogProduct);
   } catch (err) {
     if (err instanceof ZenvixApiError && err.status === 0) {
@@ -495,7 +495,8 @@ export function useProducts() {
   return useQuery<Product[]>({
     queryKey: ["products"],
     queryFn: fetchProductsSafe,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 10 * 60 * 1000, // 10 minutes — avoid refetching 10k+ products
+    gcTime: 30 * 60 * 1000,    // Keep in cache for 30 minutes
   });
 }
 
