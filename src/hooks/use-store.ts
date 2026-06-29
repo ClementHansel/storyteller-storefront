@@ -480,16 +480,7 @@ async function fetchProductsSafe(): Promise<Product[]> {
 }
 
 async function fetchProductByIdSafe(id: string): Promise<Product | undefined> {
-  // Look up from the full catalog (already cached by useProducts)
-  // This avoids a per-product API call and handles slug-based lookups
-  try {
-    const allProducts = await fetchProductsSafe();
-    const found = allProducts.find((p) => p.id === id || p.slug === id);
-    if (found) return found;
-  } catch {
-    // If catalog fetch fails, fall through
-  }
-  // Fallback to mock data
+  // Fallback to mock data only — the primary lookup is handled by useProduct below
   return MOCK_PRODUCTS.find((p) => p.id === id || p.slug === id);
 }
 
@@ -504,11 +495,26 @@ export function useProducts() {
   });
 }
 
+/**
+ * Look up a single product by ID or slug.
+ * Uses the already-cached products list from useProducts() — no extra API call.
+ * Falls back to mock data if products haven't loaded yet.
+ */
 export function useProduct(id: string) {
+  const { data: products } = useProducts();
+
   return useQuery<Product | undefined>({
-    queryKey: ["product", id],
-    queryFn: () => fetchProductByIdSafe(id),
-    staleTime: 5 * 60 * 1000,
+    queryKey: ["product", id, products?.length ?? 0],
+    queryFn: () => {
+      // First try to find in the loaded products array
+      if (products && products.length > 0) {
+        const found = products.find((p) => p.id === id || p.slug === id);
+        if (found) return found;
+      }
+      // Fallback to mock
+      return fetchProductByIdSafe(id);
+    },
+    staleTime: 10 * 60 * 1000,
     enabled: !!id,
   });
 }
