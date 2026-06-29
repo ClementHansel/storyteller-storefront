@@ -12,6 +12,26 @@ services:
     restart: unless-stopped
     env_file:
       - .env.production
+    depends_on:
+      - bambusilver-proxy
+
+  bambusilver-proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    container_name: bambusilver-proxy
+    ports:
+      - "3025:3025"
+    networks:
+      - bfs_default
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    volumes:
+      - proxy-data:/app/data
+
+volumes:
+  proxy-data:
 
 networks:
   bfs_default:
