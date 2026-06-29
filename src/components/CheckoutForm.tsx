@@ -9,6 +9,7 @@ import { openWhatsAppCheckout } from "@/lib/whatsapp-connector";
 import { syncOrderCreation, processSyncQueue } from "@/api/zenvix-order-sync";
 import { logAudit, createAuditEntry } from "@/api/zenvix-audit-logger";
 import { startPolling } from "@/api/zenvix-notification-poller";
+import { getWhatsAppOfficePhone } from "@/config/runtime-env";
 import type { CheckoutFormData } from "@/types/order";
 
 import { Button } from "@/components/ui/button";
@@ -97,7 +98,7 @@ export function CheckoutForm({ items, subtotal, onOrderCreated }: CheckoutFormPr
       transitionStage(order.id, "Quotation_Pending");
       onOrderCreated?.(order.id);
     } catch {
-      const officePhone = import.meta.env.VITE_WHATSAPP_OFFICE_PHONE || "";
+      const officePhone = getWhatsAppOfficePhone() || "";
       const phoneDisplay = officePhone
         ? `+${officePhone.slice(0, 2)} ${officePhone.slice(2)}`
         : "our office";

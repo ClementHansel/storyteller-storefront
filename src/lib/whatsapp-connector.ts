@@ -1,4 +1,5 @@
 import type { WhatsAppMessage, WhatsAppConnectorResult } from "@/types/order";
+import { getWhatsAppOfficePhone } from "@/config/runtime-env";
 
 /**
  * Maximum length for the encoded WhatsApp message text parameter.
@@ -98,7 +99,11 @@ export function openWhatsAppCheckout(
   data: WhatsAppMessage,
   officePhone?: string
 ): WhatsAppConnectorResult {
-  const phone = officePhone || import.meta.env.VITE_WHATSAPP_OFFICE_PHONE || "";
+  const phone = officePhone || getWhatsAppOfficePhone() || "";
+
+  if (!phone) {
+    console.warn("[WhatsApp] No office phone number configured (VITE_WHATSAPP_OFFICE_PHONE is empty)");
+  }
 
   // Build the full (non-truncated) message to check original length
   const fullMessage = buildFullMessage(data);
