@@ -4,7 +4,7 @@ import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
 import { useProducts } from "@/hooks/use-store";
 import { storeName, storeTagline } from "@/config/store-config";
-import { deriveCategoriesFromProducts } from "@/config/category-mapping";
+import { getAllCategories, deriveCategoriesFromProducts } from "@/config/category-mapping";
 import { SEO } from "@/components/SEO";
 
 import { Button } from "@/components/ui/button";
@@ -13,16 +13,22 @@ import { HomeBlogSection } from "@/components/HomeBlogSection";
 import heroModel from "@/assets/hero-model.jpg";
 import modelRings from "@/assets/model-rings.jpg";
 
+// Static categories for immediate render (no product load needed)
+const staticCategories = getAllCategories().slice(0, 8);
 
 const Index = () => {
-  const { data: products = [] } = useProducts();
+  const { data: products = [], isLoading } = useProducts();
   const featured = products.filter((p) => p.inStock).slice(0, 8).length > 0
     ? products.filter((p) => p.inStock).slice(0, 8)
     : products.slice(0, 8);
-  const topCategories = useMemo(
-    () => deriveCategoriesFromProducts(products).slice(0, 8),
-    [products],
-  );
+
+  // Once products load, show categories with counts; otherwise show static names
+  const topCategories = useMemo(() => {
+    if (products.length > 0) {
+      return deriveCategoriesFromProducts(products).slice(0, 8);
+    }
+    return staticCategories.map((c) => ({ ...c, count: 0 }));
+  }, [products]);
 
   return (
     <Layout>
@@ -127,8 +133,8 @@ const Index = () => {
               <p className="text-primary text-xs font-black uppercase tracking-[0.3em] mb-4">Browse By</p>
               <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-none">CATEGORIES</h2>
             </div>
-            <Link to="/search" className="text-xs font-black uppercase tracking-widest hover:text-primary transition-colors py-4 md:py-0 whitespace-nowrap">
-              View All Products →
+            <Link to="/chapters" className="text-xs font-black uppercase tracking-widest hover:text-primary transition-colors py-4 md:py-0 whitespace-nowrap">
+              View All Categories →
             </Link>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
@@ -140,6 +146,9 @@ const Index = () => {
                 </div>
                 <div className="absolute inset-x-0 bottom-0 p-4 md:p-8 z-20 flex flex-col justify-end">
                   <h3 className="text-lg md:text-2xl font-black text-foreground group-hover:text-white leading-tight mb-2 transition-colors">{cat.name}</h3>
+                  {cat.count > 0 && (
+                    <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest mb-2">{cat.count} pieces</p>
+                  )}
                   <Button variant="outline" className="w-fit rounded-full border-border/30 text-foreground/60 bg-white/50 group-hover:border-white/20 group-hover:text-white group-hover:bg-white/5 hover:bg-white hover:text-foreground font-black text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity hidden sm:inline-flex">
                     Shop Now
                   </Button>
@@ -156,13 +165,26 @@ const Index = () => {
           <h2 className="text-4xl sm:text-5xl md:text-8xl font-black tracking-[calc(-0.04em)] mb-4 md:mb-6 text-gradient-vibrant">MUST HAVES</h2>
           <p className="text-muted-foreground uppercase tracking-[0.5em] text-xs">Curated selection for the season</p>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 md:gap-x-8 gap-y-10 md:gap-y-16">
-          {featured.map((p) => (
-            <div key={p.id} className="group relative">
-              <ProductCard product={p} />
+        {isLoading ? (
+          <div className="text-center py-20">
+            <div className="animate-pulse text-primary font-display text-xl">Loading products...</div>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 md:gap-x-8 gap-y-10 md:gap-y-16">
+              {featured.map((p) => (
+                <div key={p.id} className="group relative">
+                  <ProductCard product={p} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+            <div className="mt-12 text-center">
+              <Button asChild variant="outline" className="rounded-full px-10 py-6 font-black text-xs uppercase tracking-widest">
+                <Link to="/search">View All {products.length.toLocaleString()} Products →</Link>
+              </Button>
+            </div>
+          </>
+        )}
       </section>
 
       {/* Visit Our Boutiques */}
