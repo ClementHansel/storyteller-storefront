@@ -46,9 +46,10 @@ export interface Cart {
 export type SortOption = 'price-asc' | 'price-desc' | 'narrative' | 'newest';
 
 export interface FilterState {
-  chapters: string[];
-  materials: string[];
-  styles: string[];
+  chapters: string[];       // Legacy — kept for backward compatibility
+  categories: string[];     // Zenvix category UUIDs
+  materials: string[];      // Legacy — no longer used
+  styles: string[];         // Legacy — no longer used
   sort: SortOption;
   priceRange?: [number, number];
 }

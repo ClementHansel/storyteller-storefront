@@ -1,7 +1,5 @@
 import { FilterState, SortOption } from "@/types";
-import { storyChapters } from "@/config/store-config";
-import { Checkbox } from "./ui/checkbox";
-import { Label } from "./ui/label";
+import { getAllCategories, PRICE_RANGES } from "@/config/category-mapping";
 import {
   Select,
   SelectContent,
@@ -10,31 +8,7 @@ import {
   SelectValue,
 } from "./ui/select";
 
-const MATERIALS = [
-  "Sterling Silver",
-  "Sterling Silver & Moonstone",
-  "Sterling Silver & Linen",
-  "Sterling Silver & Silk",
-  "Sterling Silver & Leather",
-  "Sterling Silver & Porcelain",
-  "Sterling Silver & Garnet",
-  "Fine Silver",
-];
-const STYLES = [
-  "Minimal",
-  "Rustic",
-  "Artisan",
-  "Elegant",
-  "Contemporary",
-  "Bold",
-  "Classic",
-  "Romantic",
-  "Bohemian",
-  "Rugged",
-  "Organic",
-  "Avant-Garde",
-  "Statement",
-];
+const categories = getAllCategories();
 
 interface SmartFilterProps {
   filters: FilterState;
@@ -45,8 +19,22 @@ export function SmartFilter({ filters, onChange }: SmartFilterProps) {
   const toggleArrayItem = (arr: string[], item: string) =>
     arr.includes(item) ? arr.filter((v) => v !== item) : [...arr, item];
 
+  const isPriceRangeActive = (min: number, max: number) => {
+    if (!filters.priceRange) return false;
+    return filters.priceRange[0] === min && filters.priceRange[1] === max;
+  };
+
+  const togglePriceRange = (min: number, max: number) => {
+    if (isPriceRangeActive(min, max)) {
+      onChange({ ...filters, priceRange: undefined });
+    } else {
+      onChange({ ...filters, priceRange: [min, max] });
+    }
+  };
+
   return (
     <div className="space-y-10">
+      {/* Sort */}
       <div className="space-y-4">
         <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
           Sort Selection
@@ -87,87 +75,66 @@ export function SmartFilter({ filters, onChange }: SmartFilterProps) {
         </Select>
       </div>
 
+      {/* Categories */}
       <div className="space-y-4">
         <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
-          Collections
+          Categories
         </h4>
         <div className="flex flex-wrap gap-2">
-          {storyChapters.map((ch) => (
+          {categories.map((cat) => (
             <button
-              key={ch.id}
+              key={cat.id}
               onClick={() =>
                 onChange({
                   ...filters,
-                  chapters: toggleArrayItem(filters.chapters, ch.slug),
+                  categories: toggleArrayItem(filters.categories, cat.id),
                 })
               }
               className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
-                filters.chapters.includes(ch.slug)
+                filters.categories.includes(cat.id)
                   ? "bg-primary text-white shadow-lg shadow-primary/20 scale-105"
                   : "bg-black/[0.03] text-foreground/40 hover:bg-black/[0.05] border border-black/5"
               }`}
             >
-              {ch.name}
+              {cat.name}
             </button>
           ))}
         </div>
       </div>
 
+      {/* Price Range */}
       <div className="space-y-4">
         <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
-          Materials
+          Price Range
         </h4>
         <div className="flex flex-col gap-3">
-          {MATERIALS.map((m) => (
+          {PRICE_RANGES.map((range) => (
             <div
-              key={m}
+              key={range.label}
               className="flex items-center gap-3 group cursor-pointer"
-              onClick={() =>
-                onChange({
-                  ...filters,
-                  materials: toggleArrayItem(filters.materials, m),
-                })
-              }
+              onClick={() => togglePriceRange(range.min, range.max)}
             >
               <div
-                className={`w-4 h-4 rounded flex items-center justify-center border transition-all ${filters.materials.includes(m) ? "bg-primary border-primary" : "bg-black/[0.03] border-black/10"}`}
+                className={`w-4 h-4 rounded flex items-center justify-center border transition-all ${
+                  isPriceRangeActive(range.min, range.max)
+                    ? "bg-primary border-primary"
+                    : "bg-black/[0.03] border-black/10"
+                }`}
               >
-                {filters.materials.includes(m) && (
+                {isPriceRangeActive(range.min, range.max) && (
                   <div className="w-1.5 h-1.5 bg-white rounded-full" />
                 )}
               </div>
               <span
-                className={`text-[10px] font-black uppercase tracking-widest transition-colors ${filters.materials.includes(m) ? "text-foreground" : "text-foreground/40 group-hover:text-foreground/60"}`}
+                className={`text-[10px] font-black uppercase tracking-widest transition-colors ${
+                  isPriceRangeActive(range.min, range.max)
+                    ? "text-foreground"
+                    : "text-foreground/40 group-hover:text-foreground/60"
+                }`}
               >
-                {m}
+                {range.label}
               </span>
             </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
-          Style Vibe
-        </h4>
-        <div className="flex flex-wrap gap-2">
-          {STYLES.map((s) => (
-            <button
-              key={s}
-              onClick={() =>
-                onChange({
-                  ...filters,
-                  styles: toggleArrayItem(filters.styles, s),
-                })
-              }
-              className={`px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all ${
-                filters.styles.includes(s)
-                  ? "bg-secondary text-white shadow-lg shadow-secondary/20 scale-105"
-                  : "bg-black/[0.03] text-foreground/40 hover:bg-black/[0.05]"
-              }`}
-            >
-              {s}
-            </button>
           ))}
         </div>
       </div>

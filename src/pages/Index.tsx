@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
-import { useProducts, useChapters } from "@/hooks/use-store";
+import { useProducts } from "@/hooks/use-store";
 import { storeName, storeTagline } from "@/config/store-config";
+import { getAllCategories } from "@/config/category-mapping";
 import { SEO } from "@/components/SEO";
 
 import { Button } from "@/components/ui/button";
@@ -11,12 +12,11 @@ import { HomeBlogSection } from "@/components/HomeBlogSection";
 import heroModel from "@/assets/hero-model.jpg";
 import modelRings from "@/assets/model-rings.jpg";
 
+const topCategories = getAllCategories().slice(0, 8);
 
 const Index = () => {
   const { data: products = [] } = useProducts();
-  const { data: chapters = [] } = useChapters();
   const featured = products.slice(0, 8);
-  const featuredChapters = chapters.slice(0, 4);
 
   return (
     <Layout>
@@ -113,30 +113,29 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Collections */}
+      {/* Collections — Category Grid */}
       <section className="py-20 md:py-32 bg-muted/30 backdrop-blur-3xl relative overflow-hidden">
         <div className="container relative z-10 w-full overflow-hidden">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 gap-6">
             <div className="max-w-full overflow-hidden">
-              <p className="text-primary text-xs font-black uppercase tracking-[0.3em] mb-4">The Narrative</p>
-              <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-none">COLLECTIONS</h2>
+              <p className="text-primary text-xs font-black uppercase tracking-[0.3em] mb-4">Browse By</p>
+              <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-none">CATEGORIES</h2>
             </div>
-            <Link to="/chapters" className="text-xs font-black uppercase tracking-widest hover:text-primary transition-colors py-4 md:py-0 whitespace-nowrap">
-              View All Chapters →
+            <Link to="/search" className="text-xs font-black uppercase tracking-widest hover:text-primary transition-colors py-4 md:py-0 whitespace-nowrap">
+              View All Products →
             </Link>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
-            {featuredChapters.map((ch, i) => (
-              <Link key={ch.id} to={`/chapters/${ch.slug}`} className={`group relative overflow-hidden rounded-2xl aspect-[3/4] ${i % 2 === 1 ? "md:mt-12" : ""}`}>
-                <div className="absolute inset-0 bg-black/60 opacity-20 group-hover:opacity-60 transition-opacity duration-700 z-10" />
-                <img src={ch.coverImage} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt={ch.name} loading="lazy" />
-                <div className="absolute inset-x-0 bottom-0 p-4 md:p-8 z-20 flex flex-col justify-end transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                  <p className="text-[10px] font-black uppercase text-primary tracking-widest mb-1 md:mb-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    Chapter {ch.narrativeOrder}
-                  </p>
-                  <h3 className="text-xl md:text-3xl font-black text-white leading-none mb-2 md:mb-4">{ch.name}</h3>
-                  <Button variant="outline" className="w-fit rounded-full border-white/20 text-white bg-white/5 hover:bg-white hover:text-foreground font-black text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity hidden sm:inline-flex">
-                    Explore Collection
+            {topCategories.map((cat, i) => (
+              <Link key={cat.id} to={`/search?cat=${cat.id}`} className={`group relative overflow-hidden rounded-2xl aspect-[3/4] bg-gradient-to-br from-primary/10 to-secondary/10 ${i % 2 === 1 ? "md:mt-12" : ""}`}>
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-60 transition-opacity duration-700 z-10" />
+                <div className="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-30 transition-opacity">
+                  <span className="text-[8rem] font-black text-primary/20">{cat.name.charAt(0)}</span>
+                </div>
+                <div className="absolute inset-x-0 bottom-0 p-4 md:p-8 z-20 flex flex-col justify-end">
+                  <h3 className="text-lg md:text-2xl font-black text-foreground group-hover:text-white leading-tight mb-2 transition-colors">{cat.name}</h3>
+                  <Button variant="outline" className="w-fit rounded-full border-border/30 text-foreground/60 bg-white/50 group-hover:border-white/20 group-hover:text-white group-hover:bg-white/5 hover:bg-white hover:text-foreground font-black text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity hidden sm:inline-flex">
+                    Shop Now
                   </Button>
                 </div>
               </Link>
