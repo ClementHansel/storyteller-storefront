@@ -53,7 +53,13 @@ function generateId(): string {
 export function getSessionId(): string {
   let sessionId = sessionStorage.getItem(SESSION_KEY);
   if (!sessionId) {
-    sessionId = crypto.randomUUID();
+    sessionId = typeof crypto !== 'undefined' && crypto.randomUUID
+      ? crypto.randomUUID()
+      : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+          const r = (Math.random() * 16) | 0;
+          const v = c === 'x' ? r : (r & 0x3) | 0x8;
+          return v.toString(16);
+        });
     sessionStorage.setItem(SESSION_KEY, sessionId);
   }
   return sessionId;

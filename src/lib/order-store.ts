@@ -63,6 +63,17 @@ function persistOrders(data: PersistedOrderData): void {
 // Initialize storage detection on module load
 initStorage();
 
+function generateUUID(): string {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 /**
  * Creates a new order with stage Order_Submitted and persists it.
  * Generates a traceId (UUID) for audit trail correlation across all events for this order.
@@ -73,8 +84,8 @@ export function createOrder(
   const now = new Date().toISOString();
   const order: OrderRecord = {
     ...data,
-    id: crypto.randomUUID(),
-    traceId: crypto.randomUUID(),
+    id: generateUUID(),
+    traceId: generateUUID(),
     stage: "Order_Submitted",
     createdAt: now,
     updatedAt: now,
