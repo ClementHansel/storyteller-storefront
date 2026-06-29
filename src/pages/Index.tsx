@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
+import { useMemo } from "react";
 import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
 import { useProducts } from "@/hooks/use-store";
 import { storeName, storeTagline } from "@/config/store-config";
-import { getAllCategories } from "@/config/category-mapping";
+import { deriveCategoriesFromProducts } from "@/config/category-mapping";
 import { SEO } from "@/components/SEO";
 
 import { Button } from "@/components/ui/button";
@@ -12,11 +13,16 @@ import { HomeBlogSection } from "@/components/HomeBlogSection";
 import heroModel from "@/assets/hero-model.jpg";
 import modelRings from "@/assets/model-rings.jpg";
 
-const topCategories = getAllCategories().slice(0, 8);
 
 const Index = () => {
   const { data: products = [] } = useProducts();
-  const featured = products.slice(0, 8);
+  const featured = products.filter((p) => p.inStock).slice(0, 8).length > 0
+    ? products.filter((p) => p.inStock).slice(0, 8)
+    : products.slice(0, 8);
+  const topCategories = useMemo(
+    () => deriveCategoriesFromProducts(products).slice(0, 8),
+    [products],
+  );
 
   return (
     <Layout>

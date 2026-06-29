@@ -128,6 +128,30 @@ export function getAllCategories(): CategoryDisplay[] {
 }
 
 /**
+ * Derive categories dynamically from product data.
+ * Returns categories found in the products, using mapped names when available,
+ * falling back to "Other" for unknown UUIDs.
+ * Sorted by product count (most products first).
+ */
+export function deriveCategoriesFromProducts(
+  products: Array<{ tags: string[] }>
+): CategoryDisplay[] {
+  const counts = new Map<string, number>();
+  for (const p of products) {
+    for (const tag of p.tags) {
+      if (CATEGORY_MAP[tag]) {
+        counts.set(tag, (counts.get(tag) || 0) + 1);
+      }
+    }
+  }
+
+  return Array.from(counts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .map(([id]) => CATEGORY_MAP[id])
+    .filter(Boolean);
+}
+
+/**
  * Price range presets in IDR (the tenant's currency).
  */
 export const PRICE_RANGES = [

@@ -1,5 +1,6 @@
-import { FilterState, SortOption } from "@/types";
-import { getAllCategories, PRICE_RANGES } from "@/config/category-mapping";
+import { useMemo } from "react";
+import { FilterState, Product, SortOption } from "@/types";
+import { deriveCategoriesFromProducts, PRICE_RANGES } from "@/config/category-mapping";
 import {
   Select,
   SelectContent,
@@ -8,14 +9,17 @@ import {
   SelectValue,
 } from "./ui/select";
 
-const categories = getAllCategories();
-
 interface SmartFilterProps {
   filters: FilterState;
   onChange: (filters: FilterState) => void;
+  products?: Product[];
 }
 
-export function SmartFilter({ filters, onChange }: SmartFilterProps) {
+export function SmartFilter({ filters, onChange, products = [] }: SmartFilterProps) {
+  const categories = useMemo(
+    () => deriveCategoriesFromProducts(products),
+    [products],
+  );
   const toggleArrayItem = (arr: string[], item: string) =>
     arr.includes(item) ? arr.filter((v) => v !== item) : [...arr, item];
 
