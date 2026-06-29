@@ -30,7 +30,7 @@ const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 export async function fetchAllProducts(): Promise<Product[]> {
   if (isZenvixConfigured()) {
     // Check reachability on first call (5s timeout, cached thereafter)
-    const reachable = await checkZenvixReachable();
+    const reachable = true; // Skip reachability check - go direct
     if (!reachable) {
       return MOCK_PRODUCTS;
     }
