@@ -26,6 +26,7 @@ const ContactPage = lazy(() => import("./pages/ContactPage"));
 const ShopDetailPage = lazy(() => import("./pages/ShopDetailPage"));
 const EcommerceHubPage = lazy(() => import("./pages/EcommerceHubPage"));
 const OrderConfirmationPage = lazy(() => import("./pages/OrderConfirmationPage"));
+const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ function AppInner() {
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
             <Route path="/order-status" element={<OrderStatusPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/shop/:slug" element={<ShopDetailPage />} />

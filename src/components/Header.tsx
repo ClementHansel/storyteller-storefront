@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { storeName } from "@/config/store-config";
 import { FastSearch } from "./FastSearch";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { ShoppingBag, Menu, Heart, User, X } from "lucide-react";
+import { ShoppingBag, Menu, Heart, User, X, Package, LogOut } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   Sheet,
@@ -100,15 +101,41 @@ export function Header() {
 
             {/* User/Auth */}
             {isAuthenticated ? (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="hidden md:flex items-center gap-2 h-9 px-4 text-[10px] font-black uppercase tracking-widest text-foreground/60 hover:text-primary hover:bg-black/5 rounded-full"
-                onClick={logout}
-              >
-                <User className="h-3.5 w-3.5" />
-                <span>{user?.name?.split(" ")[0]}</span>
-              </Button>
+              <div className="hidden md:block relative group">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="flex items-center gap-2 h-9 px-4 text-[10px] font-black uppercase tracking-widest text-foreground/60 hover:text-primary hover:bg-black/5 rounded-full"
+                >
+                  <User className="h-3.5 w-3.5" />
+                  <span>{user?.name?.split(" ")[0]}</span>
+                </Button>
+                <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-xl shadow-xl border border-black/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <div className="p-2">
+                    <Link
+                      to="/profile"
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest text-foreground/60 hover:text-primary hover:bg-primary/5 transition-colors"
+                    >
+                      <User className="h-3.5 w-3.5" />
+                      Profile
+                    </Link>
+                    <Link
+                      to="/order-status"
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest text-foreground/60 hover:text-primary hover:bg-primary/5 transition-colors"
+                    >
+                      <Package className="h-3.5 w-3.5" />
+                      My Orders
+                    </Link>
+                    <button
+                      onClick={logout}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest text-foreground/60 hover:text-red-500 hover:bg-red-50 transition-colors"
+                    >
+                      <LogOut className="h-3.5 w-3.5" />
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              </div>
             ) : (
               <Link to="/login" className="hidden md:block">
                 <Button
@@ -155,6 +182,22 @@ export function Header() {
                   >
                     Shop All
                   </Link>
+                  {isAuthenticated && (
+                    <>
+                      <Link
+                        to="/profile"
+                        className="font-display text-4xl font-black text-foreground hover:text-primary tracking-tighter uppercase transition-all"
+                      >
+                        Profile
+                      </Link>
+                      <Link
+                        to="/order-status"
+                        className="font-display text-4xl font-black text-foreground hover:text-primary tracking-tighter uppercase transition-all"
+                      >
+                        My Orders
+                      </Link>
+                    </>
+                  )}
                   <Link
                     to="/contact"
                     className="font-display text-4xl font-black text-foreground hover:text-primary tracking-tighter uppercase transition-all"
